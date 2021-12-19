@@ -76,9 +76,8 @@ class CampaignMonitorApi {
 
 		if ( empty( $client_id ) || empty( $api_key ) ) {
 
-
-			$client_id = $this->options['api_client_id'];
-			$api_key   = $this->options['api_client_secret'];
+			$client_id = array_key_exists('api_client_id', $this->options)? $this->options['api_client_id'] :'';
+			$api_key   = array_key_exists('api_client_secret', $this->options)? $this->options['api_client_secret'] :'';
 		}
 
 		$this->client_id = $client_id;
