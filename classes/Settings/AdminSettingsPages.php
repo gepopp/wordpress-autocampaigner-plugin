@@ -4,8 +4,8 @@ namespace Autocampaigner\Settings;
 
 
 use Autocampaigner\Templates;
-use Autocampaigner\Pages\ListPage;
-use Autocampaigner\Pages\TemplatesListPage;
+use Autocampaigner\pages\ListPage;
+use Autocampaigner\pages\TemplatesListPage;
 use Autocampaigner\Settings\Sections\MainSettings;
 
 class AdminSettingsPages {

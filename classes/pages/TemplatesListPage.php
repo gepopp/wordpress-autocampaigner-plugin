@@ -1,8 +1,7 @@
 <?php
 
-namespace Autocampaigner\Pages;
+namespace Autocampaigner\pages;
 
-use Autocampaigner\CampaignMonitor\Lists;
 use Autocampaigner\CampaignMonitor\Templates;
 
 class TemplatesListPage extends Pages {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Autocampaigner\Pages;
+namespace Autocampaigner\pages;
 
 use Autocampaigner\CampaignMonitor\Lists;
 
