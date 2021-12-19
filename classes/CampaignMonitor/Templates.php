@@ -44,11 +44,11 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 	public function saved_local_templates() {
 
 		$saved = get_option( 'autocampaigner-uploaded-templates' );
-		if ( ! $saved ) {
+		if ( !is_array($saved) ) {
 			$saved = [];
 		}
 
-		return maybe_unserialize( $saved );
+		return  $saved;
 
 
 	}
@@ -74,6 +74,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 	public function save_template_on_cm( $template_name ) {
 
 		$saved = $this->saved_local_templates();
+
 
 		if ( array_key_exists( $template_name, $saved ) ) {
 			$route  = $this->get_endpoint( $this->endpoints['update'] );
