@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.ac-admin-input{
+  @apply ac-block ac-w-full ac-border-none ac-rounded-none !important;
+  @apply focus:ac-border-plugin focus:ac-border-2 focus:ac-shadow-none !important;
+}
