@@ -52,7 +52,7 @@ class AdminSettingsPages {
 			'administrator',
 			'autocampaigner_tepmplates_page',
 			[ $this, 'tempplates_page_content' ],
-			1 );
+			2 );
 
 		add_submenu_page(
 			'autocampaigner_admin_page',
@@ -61,7 +61,7 @@ class AdminSettingsPages {
 			'administrator',
 			'autocampaigner_settings_page',
 			[ $this, 'settings_page_content' ],
-			2 );
+			3 );
 
 	}
 
