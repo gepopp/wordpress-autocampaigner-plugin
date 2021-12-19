@@ -91,7 +91,9 @@ class CampaignMonitorApi {
 
 		$status = wp_remote_retrieve_response_code( $result );
 		if ( $status < 300 && $status > 199 ) {
+
 			return json_decode( wp_remote_retrieve_body( $result ) );
+
 		} else {
 
 			$report_to = array_key_exists('error_report_email', $this->options)
