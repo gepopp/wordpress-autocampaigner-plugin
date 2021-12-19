@@ -80,7 +80,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 			$method = 'PUT';
 		} else {
 			$route  = $this->get_endpoint( $this->endpoints['create'] );
-			$method = 'POST';
+			$method = 'post';
 		}
 
 		$index_url = AUTOCAMPAIGNER_URL . '/email_templates/' . $template_name . '/index.html';
@@ -93,7 +93,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 		$id = $this->call( $route, $method, [ 'Name' => $template_name, 'HtmlPageURL' => $index_url, 'ZipFileURL' => $assets ] );
 
-		wp_die($id);
+		wp_die(wp_remote_retrieve_body($id));
 
 	}
 }

@@ -53,6 +53,8 @@ class CampaignMonitorApi {
 
 		$result = $funciton( $this->get_endpoint($endpoint), $content );
 
+		wp_die(wp_remote_retrieve_body($result));
+
 		return $this->isSuccess( $result );
 
 
