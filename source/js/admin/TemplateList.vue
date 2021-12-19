@@ -47,8 +47,7 @@ export default {
         nonce: xhr.nonce,
         template_name: template
       }))
-          .then((rsp) => {
-          })
+          .then((rsp) => {console.log(rsp.data)})
           .catch((rsp) => console.log(rsp.response));
     }
   }
