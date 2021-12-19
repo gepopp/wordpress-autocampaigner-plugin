@@ -85,17 +85,20 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 		$index_url = AUTOCAMPAIGNER_URL . '/email_templates/' . $template_name . '/index.html';
 
-		if ( file_exists( AUTOCAMPAIGNER_DIR . '/email_templates/' . $template_name . 'images.zip' ) ) {
+		if ( file_exists( AUTOCAMPAIGNER_DIR . '/email_templates/' . $template_name . '/images.zip' ) ) {
+			$assets = AUTOCAMPAIGNER_URL . '/email_templates/' . $template_name . '/images.zip';
 		} else {
 			$assets = '';
 		}
 
-		$assets = AUTOCAMPAIGNER_URL . '/email_templates/' . $template_name . '/images.zip';
-
-
 		$id = $this->call( $route, $method, [ 'Name' => $template_name, 'HtmlPageURL' => $index_url, 'ZipFileURL' => $assets ] );
 
-		wp_die(wp_remote_retrieve_body($id));
+
+		$saved[$template_name] = $id;
+
+
+		update_option('autocampaigner-uploaded-templates', $saved);
+
 
 	}
 }
