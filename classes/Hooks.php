@@ -18,7 +18,6 @@ class Hooks {
 	public function autocampainger_upload_template(){
 
 		$this->verify_nonce();
-
 		wp_die( ( new \Autocampaigner\CampaignMonitor\Templates())->save_template_on_cm(sanitize_text_field($_POST['template_name'])));
 
 	}
@@ -26,7 +25,6 @@ class Hooks {
 	public function autocampainger_load_list_details() {
 
 		$this->verify_nonce();
-
 		wp_die( json_encode( ( new Lists() )->stats( sanitize_text_field( $_POST['list_id'] ) ) ) );
 
 	}

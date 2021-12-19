@@ -11,7 +11,9 @@ class CampaignMonitorApi {
 
 	public function __construct() {
 
-		$this->options = get_option( 'autocampaigner_general_settings' );
+		$this->options = (array) get_option( 'autocampaigner_general_settings' );
+
+
 
 		$this->load_keys();
 
@@ -91,7 +93,12 @@ class CampaignMonitorApi {
 		if ( $status < 300 && $status > 199 ) {
 			return json_decode( wp_remote_retrieve_body( $result ) );
 		} else {
-			wp_mail( $this->options['error_report_email'], __( 'Autocampaigner Errror', 'autocampaigner' ), print_r( wp_remote_retrieve_body( $result ), true ) );
+
+			$report_to = array_key_exists('error_report_email', $this->options)
+				? $this->options['error_report_email']
+				: get_option('admin_email');
+
+			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), print_r( wp_remote_retrieve_body( $result ), true ) );
 
 			return false;
 		}

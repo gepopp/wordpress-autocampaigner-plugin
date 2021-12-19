@@ -25,7 +25,7 @@ class ListPage extends Pages {
 	}
 
 
-	public function render() {
+	protected function render() {
 		ob_start();
 		?>
             <subscriber-lists

@@ -25,7 +25,7 @@ class TemplatesListPage extends Pages {
 	}
 
 
-	public function render() {
+	protected function render() {
 		$templates = htmlentities( json_encode( $this->templatesModel->list() ) );
         $existing = htmlentities( json_encode( $this->templatesModel->get_existing_templates() ));
         $saved = htmlentities( json_encode( $this->templatesModel->saved_local_templates() ));
