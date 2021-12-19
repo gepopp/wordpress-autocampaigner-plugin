@@ -1,0 +1,12 @@
+{
+    "name": "gerha/autocampaigner",
+    "authors": [
+        {
+            "name": "Gerhard Popp",
+            "email": "gerhrad@poppgerhard.at"
+        }
+    ],
+    "require": {
+        "a7/autoload": "^2.1"
+    }
+}

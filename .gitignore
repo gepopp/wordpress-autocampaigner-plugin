@@ -3,5 +3,3 @@ package.json
 tailwind.js
 tsconfig.json
 webpack.config.js
-composer.json
-composer.lock
