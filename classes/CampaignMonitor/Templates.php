@@ -94,11 +94,15 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 		$id = $this->call( $route, $method, [ 'Name' => $template_name, 'HtmlPageURL' => $index_url, 'ZipFileURL' => $assets ] );
 
 
+		if(!$id) return false;
+
+
 		$saved[$template_name] = $id;
 
 
 		update_option('autocampaigner-uploaded-templates', $saved);
 
+		return $id;
 
 	}
 }
