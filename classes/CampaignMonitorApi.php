@@ -100,7 +100,7 @@ class CampaignMonitorApi {
 				? $this->options['error_report_email']
 				: get_option('admin_email');
 
-			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), print_r( wp_remote_retrieve_body( $result ), true ) );
+			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), '<pre><code>' . print_r(  $result, true ) . '</code></pre>' );
 
 			return false;
 		}
