@@ -81,7 +81,7 @@ class CampaignMonitorApi {
 	public function isSuccess( $result, $endpoint, $request, $type ) {
 
 		$status = wp_remote_retrieve_response_code( $result );
-		if ( $status < 300 && $status > 199 ) {
+		if ( $status < 300 && $status >= 200 ) {
 
 			return json_decode( wp_remote_retrieve_body( $result ) );
 
