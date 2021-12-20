@@ -73,6 +73,8 @@ class TemplatesController extends BaseController {
 
 		$template_id = $this->is_saved_on_cm($template_name);
 
+		wp_die($template_id);
+
 		if($template_id){
 			return  $this->update_template_on_cm($template_name, $template_id) ;
 		}
