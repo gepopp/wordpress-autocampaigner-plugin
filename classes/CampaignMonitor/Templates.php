@@ -99,7 +99,7 @@ class Templates extends CampaignMonitorApi {
 
 		$id = $this->call( $route, $method, [ 'Name' => $template_name, 'HtmlPageURL' => $index_url, 'ZipFileURL' => $assets ] );
 
-		wp_die($id);
+
 
 		if(!$id) return false;
 
