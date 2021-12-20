@@ -13,7 +13,6 @@ class CampaignMonitorApi {
 
 		$this->options = (array) get_option( 'autocampaigner_general_settings' );
 
-
 		$this->load_keys();
 
 		return $this;
@@ -45,7 +44,6 @@ class CampaignMonitorApi {
 		$result = $funciton( $this->get_endpoint( $endpoint ), $content );
 
 		return $this->isSuccess( $result, $endpoint, $content, $type );
-
 
 	}
 
@@ -103,7 +101,7 @@ class CampaignMonitorApi {
 				: get_option( 'admin_email' );
 
 			$answer  = wp_remote_retrieve_body( $result );
-			$headers = wp_remote_retrieve_headers($result);
+//			$headers = wp_remote_retrieve_headers($result);
 			$request = print_r( $request, true );
 			$message = <<<EOM
 <p>Type = $type</p>
@@ -113,8 +111,6 @@ class CampaignMonitorApi {
 <hr>
 <p>$request</p>
 <hr>
-<p>$headers</p>
-
 EOM;
 
 
