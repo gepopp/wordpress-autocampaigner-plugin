@@ -10,7 +10,7 @@ class TemplatesController extends BaseController {
 		'list'   => 'https://api.createsend.com/api/v3.2/clients/{clientid}/templates.json',
 		'create' => 'https://api.createsend.com/api/v3.2/templates/{clientid}.json',
 		'update' => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
-		'get'    => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
+		'details'    => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
 	];
 
 
@@ -34,7 +34,8 @@ class TemplatesController extends BaseController {
 			return false;
 		}
 
-		$template_details = $this->get( $local_templates_saved[ $template_name ] );
+		$template_details = $this->details( $local_templates_saved[ $template_name ] );
+
 
 		if ( ! $template_details ) {
 			unset( $local_templates_saved[ $template_name ] );
@@ -72,8 +73,6 @@ class TemplatesController extends BaseController {
 	public function create_or_update_on_cm($template_name){
 
 		$template_id = $this->is_saved_on_cm($template_name);
-
-		wp_die($template_id);
 
 		if($template_id){
 			return  $this->update_template_on_cm($template_name, $template_id) ;

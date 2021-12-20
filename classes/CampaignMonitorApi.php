@@ -43,6 +43,7 @@ class CampaignMonitorApi {
 
 		$result = wp_remote_request( $endpoint, $args );
 
+
 		return $this->isSuccess( $result, $endpoint, $args, $type );
 
 	}
