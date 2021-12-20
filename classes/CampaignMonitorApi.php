@@ -37,13 +37,11 @@ class CampaignMonitorApi {
 			$content['body'] = json_encode( $body );
 		}
 
-		if(!in_array($type, ['post', 'get', 'POST', 'GET'])){
-			$type = 'request';
-		}
-
-		$funciton = 'wp_remote_' . strtolower( $type );
-
-		$result = $funciton( $this->get_endpoint( $endpoint ), $content );
+		$result = wp_remote_request($endpoint, [
+			'method' => strtoupper($type),
+			'headers' => $this->create_headers(),
+			'body' => json_encode($body)
+		]);
 
 		return $this->isSuccess( $result, $endpoint, $content, $type );
 
@@ -51,20 +49,10 @@ class CampaignMonitorApi {
 
 
 	public function create_headers( $method = '' ) {
-		$headers = [
+		return [
 			'authorization' => 'Basic ' . base64_encode( $this->api_key ),
 			'Content-Type'  => 'application/json',
 		];
-
-		if ( $method == 'PUT' ) {
-			$headers['method'] = 'PUT';
-		}
-
-		if ( $method == 'DELETE' ) {
-			$headers['method'] = 'DELETE';
-		}
-
-		return $headers;
 	}
 
 
