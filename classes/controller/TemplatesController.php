@@ -73,7 +73,7 @@ class TemplatesController extends BaseController {
 
 		$template_id = $this->is_saved_on_cm($template_name);
 
-		return $template_id ? $this->update_template_on_cm($template_name) : $this->create_template_on_cm($template_name);
+		return $template_id ? $this->update_template_on_cm($template_name, $template_id) : $this->create_template_on_cm($template_name);
 
 	}
 
