@@ -37,7 +37,9 @@ class CampaignMonitorApi {
 			$content['body'] = json_encode( $body );
 		}
 
-		$type = $type != 'get' ? 'post' : 'get';
+		if(!in_array($type, ['post', 'get', 'POST', 'GET'])){
+			$type = 'request';
+		}
 
 		$funciton = 'wp_remote_' . strtolower( $type );
 
