@@ -11,7 +11,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 		'update' => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
 	];
 
-	private $listid = '';
+	private $templateID = '';
 
 	public function list() {
 
@@ -25,7 +25,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 		if ( array_key_exists( $name, $this->endpoints ) ) {
 
-			$this->listid = $arguments[0];
+			$this->templateID = $arguments[0];
 
 			return $this->call( $this->get_endpoint( $this->endpoints[ $name ] ) );
 		}
@@ -35,7 +35,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 	public function get_endpoint( $endpoint ) {
 
 		if ( str_contains( $endpoint, 'templateid' ) ) {
-			$endpoint = str_replace( '{templateid}', $this->listid, $endpoint );
+			$endpoint = str_replace( '{templateid}', $this->templateID, $endpoint );
 		}
 
 		return parent::get_endpoint( $endpoint );
@@ -77,9 +77,13 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 
 		if ( array_key_exists( $template_name, $saved ) ) {
+
+			$this->templateID = $saved[$template_name];
+
 			$route  = $this->get_endpoint( $this->endpoints['update'] );
 			$method = 'PUT';
 		} else {
+
 			$route  = $this->get_endpoint( $this->endpoints['create'] );
 			$method = 'post';
 		}
