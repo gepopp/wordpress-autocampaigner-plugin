@@ -33,7 +33,7 @@ class CampaignMonitorApi {
 
 	public function call( $endpoint, $type = 'get', $body = [], $args = [], $headers = [] ) {
 
-		$content['headers'] = $this->create_headers( $headers );
+		$content['headers'] = $this->create_headers( $headers, $type );
 
 		if ( ! empty( $body ) ) {
 			$content['body'] = json_encode( $body );
