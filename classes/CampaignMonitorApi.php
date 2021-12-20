@@ -46,7 +46,7 @@ class CampaignMonitorApi {
 
 		$result = $funciton( $this->get_endpoint($endpoint), $content );
 
-		return $this->isSuccess( $result );
+		return $this->isSuccess( $result, $endpoint, $content );
 
 
 	}
@@ -90,7 +90,7 @@ class CampaignMonitorApi {
 
 	}
 
-	public function isSuccess( $result ) {
+	public function isSuccess( $result, $endpoint, $request ) {
 
 		$status = wp_remote_retrieve_response_code( $result );
 		if ( $status < 300 && $status > 199 ) {
@@ -102,6 +102,21 @@ class CampaignMonitorApi {
 			$report_to = array_key_exists('error_report_email', $this->options)
 				? $this->options['error_report_email']
 				: get_option('admin_email');
+
+			$answer = wp_remote_retrieve_body($result);
+			$request = print_r($request);
+			$message = <<<EOM
+<p>Endpoint = $endpoint</p>
+<hr>
+<p>$answer</p>
+<hr>
+<p>
+$request
+</p>
+
+EOM;
+
+
 
 			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), '<pre><code>' . print_r(  $result, true ) . '</code></pre>' );
 
