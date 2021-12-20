@@ -3,14 +3,14 @@
 namespace Autocampaigner\Settings;
 
 
-use Autocampaigner\Templates;
-use Autocampaigner\pages\ListPage;
-use Autocampaigner\pages\TemplatesListPage;
+use Autocampaigner\Templates as TemplateHandler;
 use Autocampaigner\Settings\Sections\MainSettings;
+use Autocampaigner\models\TemplatesModel;
+use Autocampaigner\models\ListsModel;
 
 class AdminSettingsPages {
 
-	use SettingsFieldsOutput, Templates;
+	use SettingsFieldsOutput, TemplateHandler;
 
 	public function __construct() {
 
@@ -71,7 +71,7 @@ class AdminSettingsPages {
 		    'base',
 		    [
 			    'title'   => __( 'Templates', 'autocampaigner' ),
-			    'content' => (new TemplatesListPage())->render()
+			    'content' => (new TemplatesModel())->render()
 		    ] );
     }
 
@@ -81,7 +81,7 @@ class AdminSettingsPages {
 			'base',
 			[
 				'title'   => __( 'Subscriber lists', 'autocampaigner' ),
-				'content' => (new ListPage())->render()
+				'content' => (new ListsModel())->render()
 			] );
 
 	}
@@ -145,6 +145,4 @@ class AdminSettingsPages {
         </div>
 		<?php
 	}
-
-
 }

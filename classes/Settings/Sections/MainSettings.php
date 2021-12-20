@@ -2,7 +2,6 @@
 
 namespace Autocampaigner\Settings\Sections;
 
-
 use Autocampaigner\Settings\SettingsFieldsOutput;
 
 class MainSettings {

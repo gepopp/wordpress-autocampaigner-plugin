@@ -1,11 +1,12 @@
 <?php
 
-namespace Autocampaigner\Pages;
+namespace Autocampaigner\models;
 
 use Autocampaigner\CampaignMonitorApi;
 
-abstract class Pages {
+abstract class BaseModel {
 
+	public $contoller;
 
 	abstract protected function render();
 
@@ -27,5 +28,7 @@ abstract class Pages {
 		}
 
 	}
+
+
 
 }

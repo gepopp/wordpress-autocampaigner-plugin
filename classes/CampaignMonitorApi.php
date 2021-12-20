@@ -2,8 +2,6 @@
 
 namespace Autocampaigner;
 
-use function GuzzleHttp\Psr7\_caseless_remove;
-
 class CampaignMonitorApi {
 
 	private $client_id;
@@ -34,17 +32,16 @@ class CampaignMonitorApi {
 	public function call( $endpoint, $type = 'get', $body = [], $args = [], $headers = [] ) {
 
 		$args = [
-			'method'  => strtoupper( $type ),
-			'headers' => $this->create_headers()
+			'method'   => strtoupper( $type ),
+			'headers'  => $this->create_headers(),
+			'blocking' => true,
 		];
 
-		if(!empty($body)){
-			$args['body'] = json_encode($body);
+		if ( ! empty( $body ) ) {
+			$args['body'] = json_encode( $body );
 		}
 
-		$result = wp_remote_request( $endpoint, $args);
-
-		wp_die($result);
+		$result = wp_remote_request( $endpoint, $args );
 
 		return $this->isSuccess( $result, $endpoint, $args, $type );
 

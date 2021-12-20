@@ -2,8 +2,9 @@
 
 namespace Autocampaigner;
 
-use Autocampaigner\CampaignMonitor\Lists;
-use Autocampaigner\CampaignMonitor\Templates;
+
+use Autocampaigner\controller\ListsController;
+use Autocampaigner\controller\TemplatesController;
 
 class Hooks {
 
@@ -19,21 +20,21 @@ class Hooks {
 	public function autocampainger_upload_template(){
 
 		$this->verify_nonce();
-		wp_die( ( new Templates())->save_template_on_cm(sanitize_text_field($_POST['template_name'])));
+		wp_die( ( new TemplatesController())->create_or_update_on_cm(sanitize_text_field($_POST['template_name'])));
 
 	}
 
 	public function autocampainger_load_list_details() {
 
 		$this->verify_nonce();
-		wp_die( json_encode( ( new Lists() )->stats( sanitize_text_field( $_POST['list_id'] ) ) ) );
+		wp_die( json_encode( ( new ListsController() )->stats( sanitize_text_field( $_POST['list_id'] ) ) ) );
 
 	}
 
 	public function autocampainger_update_used_lists() {
 
 		$this->verify_nonce();
-		wp_die( json_encode( ( new Lists() )->toggle_used_list( $_POST['list_id'] ) ) );
+		wp_die( json_encode( ( new ListsController() )->toggle_used_list( $_POST['list_id'] ) ) );
 
 
 	}

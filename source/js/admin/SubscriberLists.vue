@@ -71,7 +71,7 @@ export default {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: 'autocampainger_update_used_lists',
         nonce: xhr.nonce,
-        list_id: this.setLists
+        lists: this.setLists
       })).then((rsp) => this.isLoading = false)
     }
   }
