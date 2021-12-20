@@ -118,7 +118,7 @@ EOM;
 
 
 
-			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), '<pre><code>' . print_r(  $result, true ) . '</code></pre>' );
+			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), $message );
 
 			return false;
 		}
