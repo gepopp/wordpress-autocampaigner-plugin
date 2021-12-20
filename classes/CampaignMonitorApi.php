@@ -44,7 +44,7 @@ class CampaignMonitorApi {
 
 		$result = $funciton( $this->get_endpoint( $endpoint ), $content );
 
-		return $this->isSuccess( $result, $endpoint, $content );
+		return $this->isSuccess( $result, $endpoint, $content, $type );
 
 
 	}
@@ -89,7 +89,7 @@ class CampaignMonitorApi {
 
 	}
 
-	public function isSuccess( $result, $endpoint, $request ) {
+	public function isSuccess( $result, $endpoint, $request, $type ) {
 
 		$status = wp_remote_retrieve_response_code( $result );
 		if ( $status < 300 && $status > 199 ) {
@@ -105,6 +105,7 @@ class CampaignMonitorApi {
 			$answer  = wp_remote_retrieve_body( $result );
 			$request = print_r( $request, true );
 			$message = <<<EOM
+<p>Type = $type</p>
 <p>Endpoint = $endpoint</p>
 <hr>
 <p>$answer</p>
