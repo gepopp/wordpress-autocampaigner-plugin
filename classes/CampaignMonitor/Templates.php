@@ -81,7 +81,7 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 			$this->templateID = $saved[$template_name];
 
 			$route  = $this->get_endpoint( $this->endpoints['update'] );
-			$method = 'PUT';
+			$method = 'DELETE';
 		} else {
 
 			$route  = $this->get_endpoint( $this->endpoints['create'] );

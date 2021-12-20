@@ -101,8 +101,8 @@ class CampaignMonitorApi {
 				: get_option( 'admin_email' );
 
 			$answer  = wp_remote_retrieve_body( $result );
-//			$headers = wp_remote_retrieve_headers($result);
 			$request = print_r( $request, true );
+
 			$message = <<<EOM
 <p>Type = $type</p>
 <p>Endpoint = $endpoint</p>
@@ -112,7 +112,6 @@ class CampaignMonitorApi {
 <p>$request</p>
 <hr>
 EOM;
-
 
 			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), $message, [ 'Content-Type: text/html; charset=UTF-8' ] );
 
