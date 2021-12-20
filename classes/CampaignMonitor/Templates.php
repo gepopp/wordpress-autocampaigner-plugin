@@ -2,22 +2,19 @@
 
 namespace Autocampaigner\CampaignMonitor;
 
-class Templates extends \Autocampaigner\CampaignMonitorApi {
+use Autocampaigner\CampaignMonitorApi;
+
+class Templates extends CampaignMonitorApi {
 
 
 	private $endpoints = [
-		'get'    => 'https://api.createsend.com/api/v3.2/clients/{clientid}/templates.json',
+		'list'    => 'https://api.createsend.com/api/v3.2/clients/{clientid}/templates.json',
 		'create' => 'https://api.createsend.com/api/v3.2/templates/{clientid}.json',
 		'update' => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
 	];
 
 	private $templateID = '';
 
-	public function list() {
-
-		return $this->call( $this->endpoints['get'] );
-
-	}
 
 
 	public function __call( string $name, array $arguments ) {
@@ -25,7 +22,9 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 		if ( array_key_exists( $name, $this->endpoints ) ) {
 
-			$this->templateID = $arguments[0];
+			if(!empty($arguments)){
+				$this->templateID = $arguments[0];
+			}
 
 			return $this->call( $this->get_endpoint( $this->endpoints[ $name ] ) );
 		}
@@ -34,11 +33,13 @@ class Templates extends \Autocampaigner\CampaignMonitorApi {
 
 	public function get_endpoint( $endpoint ) {
 
+		$endpoint = parent::get_endpoint( $endpoint );
+
 		if ( str_contains( $endpoint, 'templateid' ) ) {
 			$endpoint = str_replace( '{templateid}', $this->templateID, $endpoint );
 		}
 
-		return parent::get_endpoint( $endpoint );
+		return $endpoint;
 	}
 
 	public function saved_local_templates() {

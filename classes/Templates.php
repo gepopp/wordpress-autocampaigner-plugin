@@ -2,8 +2,6 @@
 
 namespace Autocampaigner;
 
-use phpseclib3\Exception\UnableToConnectException;
-
 trait Templates {
 
 

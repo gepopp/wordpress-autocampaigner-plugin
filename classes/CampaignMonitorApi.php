@@ -2,6 +2,8 @@
 
 namespace Autocampaigner;
 
+use function GuzzleHttp\Psr7\_caseless_remove;
+
 class CampaignMonitorApi {
 
 	private $client_id;
@@ -108,7 +110,9 @@ EOM;
 		}
 	}
 
+
 	public function get_endpoint( $endpoint ) {
+
 		return str_replace( '{clientid}', $this->client_id, $endpoint );
 	}
 
