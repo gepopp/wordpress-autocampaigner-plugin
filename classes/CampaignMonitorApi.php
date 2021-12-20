@@ -103,6 +103,7 @@ class CampaignMonitorApi {
 				: get_option( 'admin_email' );
 
 			$answer  = wp_remote_retrieve_body( $result );
+			$headers = wp_remote_retrieve_headers($result);
 			$request = print_r( $request, true );
 			$message = <<<EOM
 <p>Type = $type</p>
@@ -110,9 +111,9 @@ class CampaignMonitorApi {
 <hr>
 <p>$answer</p>
 <hr>
-<p>
-$request
-</p>
+<p>$request</p>
+<hr>
+<p>$headers</p>
 
 EOM;
 
