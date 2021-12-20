@@ -35,7 +35,6 @@ class CampaignMonitorApi {
 
 		$content['headers'] = $this->create_headers( $headers );
 
-
 		if ( ! empty( $body ) ) {
 			$content['body'] = json_encode( $body );
 		}
@@ -104,7 +103,7 @@ class CampaignMonitorApi {
 				: get_option('admin_email');
 
 			$answer = wp_remote_retrieve_body($result);
-			$request = print_r($request);
+			$request = print_r($request, true);
 			$message = <<<EOM
 <p>Endpoint = $endpoint</p>
 <hr>
