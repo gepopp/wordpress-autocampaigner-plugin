@@ -14,7 +14,7 @@ class TemplatesController extends BaseController {
 	];
 
 
-	public function saved_local_templates() {
+	public function get_saved_option() {
 
 		$saved = get_option( 'autocampaigner-uploaded-templates' );
 		if ( ! is_array( $saved ) ) {
@@ -25,10 +25,14 @@ class TemplatesController extends BaseController {
 
 	}
 
+	function update_saved_option( $templates ) {
+		update_option( 'autocampaigner-uploaded-templates', $templates );
+	}
+
 
 	function is_saved_on_cm( $template_name ) {
 
-		$local_templates_saved = $this->saved_local_templates();
+		$local_templates_saved = $this->get_saved_option();
 
 		if ( ! array_key_exists( $template_name, $local_templates_saved ) ) {
 			return false;
@@ -46,7 +50,7 @@ class TemplatesController extends BaseController {
 
 		if ( ( empty($found) || count($found) > 1 ) || $found[0]->TemplateID != $local_templates_saved[$template_name]) {
 			unset( $local_templates_saved[ $template_name ] );
-			$this->save_templates_on_cm( $local_templates_saved );
+			$this->update_saved_option( $local_templates_saved );
 
 			return false;
 		}
@@ -56,9 +60,7 @@ class TemplatesController extends BaseController {
 	}
 
 
-	function save_templates_on_cm( $templates ) {
-		update_option( 'autocampaigner-uploaded-templates', $templates );
-	}
+	
 
 	public function get_existing_templates() {
 
@@ -103,12 +105,20 @@ class TemplatesController extends BaseController {
 
 	public function create_template_on_cm( $template_name ) {
 
-		return $this->call(
+		$template_id = $this->call(
 			$this->get_endpoint( $this->endpoints['create'] ),
 			'post',
 			$this->request_body( $template_name )
 		);
 
+		if($template_id){
+			$saved = $this->get_saved_option();
+			$saved[$template_name] = $template_id;
+			$this->update_saved_option($saved);
+		}
+
+		return $template_id;
+		
 	}
 
 	public function request_body( $name ) {
