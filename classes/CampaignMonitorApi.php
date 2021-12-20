@@ -31,19 +31,18 @@ class CampaignMonitorApi {
 
 	public function call( $endpoint, $type = 'get', $body = [], $args = [], $headers = [] ) {
 
-		$content['headers'] = $this->create_headers( $type );
+		$args = [
+			'method'  => strtoupper( $type ),
+			'headers' => $this->create_headers()
+		];
 
-		if ( ! empty( $body ) ) {
-			$content['body'] = json_encode( $body );
+		if(!empty($body)){
+			$args['body'] = $body;
 		}
 
-		$result = wp_remote_head( $endpoint, [
-			'method'  => strtoupper( $type ),
-			'headers' => $this->create_headers(),
-			'body'    => json_encode($body),
-		] );
+		$result = wp_remote_request( $endpoint, $args);
 
-		return $this->isSuccess( $result, $endpoint, $content, $type );
+		return $this->isSuccess( $result, $endpoint, $args, $type );
 
 	}
 
