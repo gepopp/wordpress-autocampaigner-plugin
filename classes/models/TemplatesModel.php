@@ -16,8 +16,6 @@ class TemplatesModel extends BaseModel {
 
 	protected function render() {
 
-        $this->controller->template_description('default');
-
         ob_start();
 		?>
 			<template-list

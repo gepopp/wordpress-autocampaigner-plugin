@@ -24,8 +24,9 @@ class TemplatesController extends BaseController {
 
 		$details = $this->details();
 
-		var_dump($details);
+		if(empty($details->Name)) return false;
 
+		return $description;
 
 	}
 
@@ -45,7 +46,7 @@ class TemplatesController extends BaseController {
 		$dirs = glob( AUTOCAMPAIGNER_DIR . '/email_templates/*' );
 
 		foreach ( $dirs as $dir ) {
-			if ( file_exists( $dir . '/index.html' && file_exists($dir . 'description.json') ) ) {
+			if (  file_exists($dir . '/description.json') && file_exists( $dir . '/index.html' ) ){
 				$name        = explode( '/', $dir );
 				$templates[] = array_pop( $name );
 			}
@@ -56,13 +57,18 @@ class TemplatesController extends BaseController {
 
 	public function create_or_update_on_cm($template_name){
 
-		$template_id = $this->is_saved_on_cm($template_name);
+		$description = $this->is_saved_on_cm($template_name);
 
-		if($template_id){
-			return  $this->update_template_on_cm($template_name, $template_id) ;
+		if($description){
+			return  $this->update_template_on_cm($template_name, $description->TemplateID) ;
 		}
 
-		return $this->create_template_on_cm($template_name);
+		$template_id = $this->create_template_on_cm($template_name);
+
+		$description->TemplateID = $template_id;
+		file_put_contents( $this->template_folder . $template_name . '/description.json',  json_encode($description)  );
+
+		return $template_id;
 
 	}
 
@@ -80,14 +86,12 @@ class TemplatesController extends BaseController {
 
 	public function create_template_on_cm( $template_name ) {
 
-		$template_id = $this->call(
+		return $this->call(
 			$this->get_endpoint( $this->endpoints['create'] ),
 			'post',
 			$this->request_body( $template_name )
 		);
 
-		return $template_id;
-		
 	}
 
 	public function request_body( $name ) {
