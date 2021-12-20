@@ -15,7 +15,7 @@
     </div>
     <h3 class="ac-text-xl ac-font-semibold ac-mb-5">Templates auf Campaign Monitor</h3>
     <div class="ac-flex ac-space-x-5">
-      <div v-for="template in templates" :key="template.TemplateID">
+      <div v-for="template in dTemplates" :key="template.TemplateID">
         <a :href="template.PreviewURL" target="_blank">
           <h3 class="ac-font-semibold" v-text="template.Name"></h3>
           <img :src="template.ScreenshotURL" width="200" class="sc-border-none">
@@ -37,7 +37,8 @@ export default {
     return {
       listDetails: [],
       isLoading: true,
-      setLists: this.usedListsPreload
+      setLists: this.usedListsPreload,
+      dTemplates: this.templates
     }
   },
   methods: {
@@ -47,7 +48,16 @@ export default {
         nonce: xhr.nonce,
         template_name: template
       }))
-          .then((rsp) => {console.log(rsp.data)})
+          .then((rsp) => {
+            Axios.post(xhr.ajaxurl, Qs.stringify({
+              action: 'autocampainger_get_templates',
+              nonce: xhr.nonce,
+              template_name: template
+            }))
+                .then((rsp) => {
+                    this.dTemplates = rsp.data;
+                })
+          })
           .catch((rsp) => console.log(rsp.response));
     }
   }

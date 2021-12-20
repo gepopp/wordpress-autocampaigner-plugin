@@ -14,7 +14,14 @@ class Hooks {
 		add_action( 'wp_ajax_autocampainger_load_list_details', [ $this, 'autocampainger_load_list_details' ] );
 		add_action( 'wp_ajax_autocampainger_update_used_lists', [ $this, 'autocampainger_update_used_lists' ] );
 		add_action( 'wp_ajax_autocampainger_upload_template', [ $this, 'autocampainger_upload_template' ] );
+		add_action( 'wp_ajax_autocampainger_get_templates', [ $this, 'autocampainger_get_templates' ] );
 
+	}
+
+	public function autocampainger_get_templates(){
+
+		$this->verify_nonce();
+		wp_die(( new TemplatesController())->get_as_html_attribute('list'));
 	}
 
 	public function autocampainger_upload_template(){

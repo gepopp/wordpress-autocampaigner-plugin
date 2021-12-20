@@ -1,0 +1,49 @@
+{
+  "Name" : "Immolive Template",
+  "TemplateID" : "",
+  "TemplateContent": {
+    "Multilines": [
+      {
+        "Content": "<p>Die Immobilien Woche auf der unabhängigen Immobilien Redaktion</p>"
+      },
+      {
+        "Content": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, an unknown printer took a but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
+      },
+      {
+        "Content": "<p>Walter Senk</p>"
+      },
+      {
+        "Content": "<p>Journalist, Blogger, Moderator</p>"
+      },
+      {
+        "Content": "<p>Verpassen Sie keinen unserer Livestreams</p>"
+      },
+      {
+        "Content": "<p>Jetzt registrieren</p>"
+      },
+      {
+        "Content": "<a href=\"https://immobilien-redaktion.com/registrieren-3/\" style=\"text-decoration:none; color:#FFF;\">Registrierung</a>"
+      },
+      {
+        "Content": "Copyright &copy; Die unabh&auml;ngige Immobilien Redaktion. All Rights Reserved."
+      }
+    ],
+    "Images": [
+      {
+        "Content": "",
+        "Alt": "Logo",
+        "Href": ""
+      },
+      {
+        "Content": "https://picsum.photos/700/90?grayscale",
+        "Alt": "Header Banner",
+        "Href": ""
+      },
+      {
+        "Content": "",
+        "Alt": "Sender Avatar",
+        "Href": ""
+      }
+    ]
+  }
+}
