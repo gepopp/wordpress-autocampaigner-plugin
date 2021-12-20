@@ -22,6 +22,7 @@ class TemplatesModel extends BaseModel {
                     :exisitng="<?php $this->controller->as_html_attribute('get_existing_templates') ?>"
             ></template-list>
 		<?php
+
 		return ob_get_clean();
 	}
 
