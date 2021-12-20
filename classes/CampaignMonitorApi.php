@@ -39,7 +39,7 @@ class CampaignMonitorApi {
 		];
 
 		if(!empty($body)){
-			$args['body'] = $body;
+			$args['body'] = json_encode($body);
 		}
 
 		$result = wp_remote_request( $endpoint, $args);
