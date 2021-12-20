@@ -5,6 +5,7 @@ namespace Autocampaigner\controller;
 
 class TemplatesController extends BaseController {
 
+	protected $template_folder = AUTOCAMPAIGNER_DIR . '/email_templates/';
 
 	protected $endpoints = [
 		'list'   => 'https://api.createsend.com/api/v3.2/clients/{clientid}/templates.json',
@@ -14,51 +15,26 @@ class TemplatesController extends BaseController {
 	];
 
 
-	public function get_saved_option() {
-
-		$saved = get_option( 'autocampaigner-uploaded-templates' );
-		if ( ! is_array( $saved ) ) {
-			$saved = [];
-		}
-
-		return $saved;
-
-	}
-
-	function update_saved_option( $templates ) {
-		update_option( 'autocampaigner-uploaded-templates', $templates );
-	}
-
 
 	function is_saved_on_cm( $template_name ) {
 
-		$local_templates_saved = $this->get_saved_option();
+		$description = $this->template_description($template_name);
 
-		if ( ! array_key_exists( $template_name, $local_templates_saved ) ) {
-			return false;
-		}
+		if( empty($description->TemplateID)) return false;
 
-		$list = $this->list();
+		$details = $this->details();
 
-		$found = [];
+		var_dump($details);
 
-		foreach ( $list as $item ) {
-			if($item->name == $template_name){
-				$found[] = $item;
-			}
-		}
-
-		if ( ( empty($found) || count($found) > 1 ) || $found[0]->TemplateID != $local_templates_saved[$template_name]) {
-			unset( $local_templates_saved[ $template_name ] );
-			$this->update_saved_option( $local_templates_saved );
-
-			return false;
-		}
-
-		return $local_templates_saved[ $template_name ];
 
 	}
 
+	public function template_description($name){
+
+		$json = file_get_contents( $this->template_folder . $name .'/description.json' );
+		return json_decode($json);
+
+	}
 
 	
 
@@ -69,14 +45,13 @@ class TemplatesController extends BaseController {
 		$dirs = glob( AUTOCAMPAIGNER_DIR . '/email_templates/*' );
 
 		foreach ( $dirs as $dir ) {
-			if ( file_exists( $dir . '/index.html' ) ) {
+			if ( file_exists( $dir . '/index.html' && file_exists($dir . 'description.json') ) ) {
 				$name        = explode( '/', $dir );
 				$templates[] = array_pop( $name );
 			}
 		}
 
 		return $templates;
-
 	}
 
 	public function create_or_update_on_cm($template_name){
@@ -110,12 +85,6 @@ class TemplatesController extends BaseController {
 			'post',
 			$this->request_body( $template_name )
 		);
-
-		if($template_id){
-			$saved = $this->get_saved_option();
-			$saved[$template_name] = $template_id;
-			$this->update_saved_option($saved);
-		}
 
 		return $template_id;
 		
