@@ -34,10 +34,17 @@ class TemplatesController extends BaseController {
 			return false;
 		}
 
-		$template_details = $this->details( $local_templates_saved[ $template_name ] );
+		$list = $this->list();
 
+		$found = [];
 
-		if ( ! $template_details ) {
+		foreach ( $list as $item ) {
+			if($item->name == $template_name){
+				$found[] = $item;
+			}
+		}
+
+		if ( ( empty($found) || count($found) > 1 ) || $found[0]->TemplateID != $local_templates_saved[$template_name]) {
 			unset( $local_templates_saved[ $template_name ] );
 			$this->save_templates_on_cm( $local_templates_saved );
 
