@@ -57,11 +57,11 @@ class CampaignMonitorApi {
 		];
 
 		if ( $method == 'PUT' ) {
-			$headers['method'] = 'put';
+			$headers['method'] = 'PUT';
 		}
 
 		if ( $method == 'DELETE' ) {
-			$headers['method'] = 'delete';
+			$headers['method'] = 'DELETE';
 		}
 
 		return $headers;
