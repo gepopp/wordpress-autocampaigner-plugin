@@ -14,7 +14,6 @@ class CampaignMonitorApi {
 		$this->options = (array) get_option( 'autocampaigner_general_settings' );
 
 
-
 		$this->load_keys();
 
 		return $this;
@@ -26,7 +25,7 @@ class CampaignMonitorApi {
 
 		$endpoint = 'https://api.createsend.com/api/v3.2/systemdate.json';
 
-			return (bool) $this->call( $endpoint );
+		return (bool) $this->call( $endpoint );
 
 	}
 
@@ -43,7 +42,7 @@ class CampaignMonitorApi {
 
 		$funciton = 'wp_remote_' . strtolower( $type );
 
-		$result = $funciton( $this->get_endpoint($endpoint), $content );
+		$result = $funciton( $this->get_endpoint( $endpoint ), $content );
 
 		return $this->isSuccess( $result, $endpoint, $content );
 
@@ -54,14 +53,14 @@ class CampaignMonitorApi {
 	public function create_headers( $method = '' ) {
 		$headers = [
 			'authorization' => 'Basic ' . base64_encode( $this->api_key ),
-			'Content-Type'   => 'application/json',
+			'Content-Type'  => 'application/json',
 		];
 
-		if($method == 'PUT'){
+		if ( $method == 'PUT' ) {
 			$headers['method'] = 'put';
 		}
 
-		if($method == 'DELETE'){
+		if ( $method == 'DELETE' ) {
 			$headers['method'] = 'delete';
 		}
 
@@ -81,8 +80,8 @@ class CampaignMonitorApi {
 
 		if ( empty( $client_id ) || empty( $api_key ) ) {
 
-			$client_id = array_key_exists('api_client_id', $this->options)? $this->options['api_client_id'] :'';
-			$api_key   = array_key_exists('api_client_secret', $this->options)? $this->options['api_client_secret'] :'';
+			$client_id = array_key_exists( 'api_client_id', $this->options ) ? $this->options['api_client_id'] : '';
+			$api_key   = array_key_exists( 'api_client_secret', $this->options ) ? $this->options['api_client_secret'] : '';
 		}
 
 		$this->client_id = $client_id;
@@ -99,12 +98,12 @@ class CampaignMonitorApi {
 
 		} else {
 
-			$report_to = array_key_exists('error_report_email', $this->options)
+			$report_to = array_key_exists( 'error_report_email', $this->options )
 				? $this->options['error_report_email']
-				: get_option('admin_email');
+				: get_option( 'admin_email' );
 
-			$answer = wp_remote_retrieve_body($result);
-			$request = print_r($request, true);
+			$answer  = wp_remote_retrieve_body( $result );
+			$request = print_r( $request, true );
 			$message = <<<EOM
 <p>Endpoint = $endpoint</p>
 <hr>
@@ -117,15 +116,14 @@ $request
 EOM;
 
 
-
-			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), $message );
+			wp_mail( $report_to, __( 'Autocampaigner Errror', 'autocampaigner' ), $message, [ 'Content-Type: text/html; charset=UTF-8' ] );
 
 			return false;
 		}
 	}
 
-	public function get_endpoint($endpoint){
-		return str_replace('{clientid}', $this->client_id, $endpoint);
+	public function get_endpoint( $endpoint ) {
+		return str_replace( '{clientid}', $this->client_id, $endpoint );
 	}
 
 }
