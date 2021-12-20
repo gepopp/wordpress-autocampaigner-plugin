@@ -37,7 +37,7 @@ class CampaignMonitorApi {
 			$content['body'] = json_encode( $body );
 		}
 
-		$result = wp_remote_request( $endpoint, [
+		$result = wp_remote_head( $endpoint, [
 			'method'  => strtoupper( $type ),
 			'headers' => $this->create_headers(),
 			'body'    => json_encode($body),
