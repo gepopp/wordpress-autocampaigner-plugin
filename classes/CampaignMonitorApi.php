@@ -54,14 +54,15 @@ class CampaignMonitorApi {
 	public function create_headers( $method = '' ) {
 		$headers = [
 			'authorization' => 'Basic ' . base64_encode( $this->api_key ),
+			'Content-Type'   => 'application/json',
 		];
 
 		if($method == 'PUT'){
-			$headers['method'] = 'PUT';
+			$headers['method'] = 'put';
 		}
 
 		if($method == 'DELETE'){
-			$headers['method'] = 'DELETE';
+			$headers['method'] = 'delete';
 		}
 
 		return $headers;
