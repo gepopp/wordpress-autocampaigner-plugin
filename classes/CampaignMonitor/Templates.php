@@ -108,7 +108,7 @@ class Templates extends CampaignMonitorApi {
 
 		update_option('autocampaigner-uploaded-templates', $saved);
 
-		return wp_remote_retrieve_body($id);
+		return $id;
 
 	}
 }
