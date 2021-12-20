@@ -19,7 +19,6 @@ class TemplatesModel extends BaseModel {
         ob_start();
 		?>
 			<template-list
-                    :templates="<?php $this->controller->as_html_attribute('list') ?>"
                     :exisitng="<?php $this->controller->as_html_attribute('get_existing_templates') ?>"
             ></template-list>
 		<?php

@@ -15,7 +15,7 @@
     </div>
     <h3 class="ac-text-xl ac-font-semibold ac-mb-5">Templates auf Campaign Monitor</h3>
     <div class="ac-flex ac-space-x-5">
-      <div v-for="template in dTemplates" :key="template.TemplateID">
+      <div v-for="template in templates" :key="template.TemplateID">
         <a :href="template.PreviewURL" target="_blank">
           <h3 class="ac-font-semibold" v-text="template.Name"></h3>
           <img :src="template.ScreenshotURL" width="200" class="sc-border-none">
@@ -32,14 +32,17 @@ import Qs from "qs";
 
 export default {
   name: "TemplateList",
-  props: ['templates', 'exisitng'],
+  props: ['exisitng'],
   data() {
     return {
       listDetails: [],
       isLoading: true,
       setLists: this.usedListsPreload,
-      dTemplates: this.templates
+      templates: []
     }
+  },
+  mounted() {
+    this.getTemplates();
   },
   methods: {
     upload(template) {
@@ -49,16 +52,19 @@ export default {
         template_name: template
       }))
           .then((rsp) => {
-            Axios.post(xhr.ajaxurl, Qs.stringify({
-              action: 'autocampainger_get_templates',
-              nonce: xhr.nonce,
-              template_name: template
-            }))
-                .then((rsp) => {
-                    this.dTemplates = rsp.data;
-                })
+              this.getTemplates();
           })
           .catch((rsp) => console.log(rsp.response));
+    },
+    getTemplates() {
+      Axios.post(xhr.ajaxurl, Qs.stringify({
+        action: 'autocampainger_get_templates',
+        nonce: xhr.nonce,
+      }))
+          .then((rsp) => {
+            console.log(rsp.data);
+            this.templates = rsp.data;
+          })
     }
   }
 }

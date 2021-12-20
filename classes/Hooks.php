@@ -21,7 +21,12 @@ class Hooks {
 	public function autocampainger_get_templates(){
 
 		$this->verify_nonce();
-		wp_die(( new TemplatesController())->get_as_html_attribute('list'));
+
+		$controller = new TemplatesController();
+
+		$list = $controller->list();
+
+		wp_die(json_encode($list));
 	}
 
 	public function autocampainger_upload_template(){
