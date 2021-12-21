@@ -74,6 +74,70 @@ class MainSettings {
 			]
 		);
 
+		add_settings_field(
+			'from_email',
+			__( 'Default from E-Mail', 'autocampaigner' ),
+			[
+				$this,
+				'autocampaigner_settings_input_field',
+			],
+			'autocampaigner_main_settings_page',
+			'autocampaigner_main_settings_section',
+			[
+				'type'    => 'email',
+				'option_name' => 'autocampaigner_general_settings',
+				'name' => 'from_email'
+			]
+		);
+
+		add_settings_field(
+			'from_name',
+			__( 'Default from Name', 'autocampaigner' ),
+			[
+				$this,
+				'autocampaigner_settings_input_field',
+			],
+			'autocampaigner_main_settings_page',
+			'autocampaigner_main_settings_section',
+			[
+				'type'    => 'text',
+				'option_name' => 'autocampaigner_general_settings',
+				'name' => 'from_name'
+			]
+		);
+
+		add_settings_field(
+			'reply_email',
+			__( 'Reply E-Mail Address', 'autocampaigner' ),
+			[
+				$this,
+				'autocampaigner_settings_input_field',
+			],
+			'autocampaigner_main_settings_page',
+			'autocampaigner_main_settings_section',
+			[
+				'type'    => 'email',
+				'option_name' => 'autocampaigner_general_settings',
+				'name' => 'reply_email'
+			]
+		);
+
+		add_settings_field(
+			'confirm_email',
+			__( 'Confirm E-Mail Address', 'autocampaigner' ),
+			[
+				$this,
+				'autocampaigner_settings_input_field',
+			],
+			'autocampaigner_main_settings_page',
+			'autocampaigner_main_settings_section',
+			[
+				'type'    => 'text',
+				'option_name' => 'autocampaigner_general_settings',
+				'name' => 'confirm_email'
+			]
+		);
+
 
 		register_setting(
 			'autocampaigner_main_settings_section',

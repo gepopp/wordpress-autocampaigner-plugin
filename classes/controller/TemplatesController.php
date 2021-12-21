@@ -127,6 +127,19 @@ class TemplatesController extends BaseController {
 	}
 
 
+	public function get_templates_with_description(){
+
+		$templates = $this->get_existing_templates();
+		$with_description = [];
+
+		foreach ($templates as $template){
+			$with_description[$template] = $this->template_description($template);
+		}
+
+		return $with_description;
+	}
+
+
 	public function get_endpoint( $endpoint ) {
 
 		$endpoint = parent::get_endpoint( $endpoint );

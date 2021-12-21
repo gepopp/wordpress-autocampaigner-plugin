@@ -3,6 +3,7 @@
 namespace Autocampaigner\Settings;
 
 
+use Autocampaigner\models\CampaignModel;
 use Autocampaigner\Templates as TemplateHandler;
 use Autocampaigner\Settings\Sections\MainSettings;
 use Autocampaigner\models\TemplatesModel;
@@ -88,7 +89,13 @@ class AdminSettingsPages {
 
 
 	function admin_page_content() {
-		echo 'Hello Wolrd';
+		$this->admin_template(
+			'base',
+			[
+				'title'   => __( 'New Campaign', 'autocampaigner' ),
+				'content' => (new CampaignModel())->render()
+			] );
+
 	}
 
 	public function settings_page_content() {

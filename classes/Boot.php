@@ -14,6 +14,7 @@ class Boot {
 		Hooks::class,
 		Enqueue::class,
 		AdminSettingsPages::class,
+		Tables::class
 	];
 
 

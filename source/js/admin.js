@@ -36,11 +36,27 @@ import '../scss/admin.scss';
 import Vue from "vue";
 import SubscriberLists from "./admin/SubscriberLists.vue";
 import TemplateList from "./admin/TemplateList.vue";
+import CreateCampaign from "./admin/CreateCampaign.vue";
+import Editor from "./admin/Editor.vue";
+import MultilineEditor from "./admin/MultilineEditor.vue";
+Vue.component('multiline', MultilineEditor);
+import ImageEditable from "./admin/ImageEditable.vue";
+Vue.component('image-editable', ImageEditable);
+
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
+Vue.use(VueQuillEditor, /* { default global options } */)
 
 const app = new Vue({
     el: '#automailer-page',
     components: {
         SubscriberLists,
-        TemplateList
+        TemplateList,
+        CreateCampaign,
+        Editor,
     }
 })

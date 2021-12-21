@@ -4,6 +4,14 @@
 
 
 .ac-admin-input{
-  @apply ac-block ac-w-full ac-border-none ac-rounded-none !important;
+  @apply ac-block ac-w-full ac-border ac-border-gray-600 ac-p-1 ac-rounded-none ac-w-72 !important;
   @apply focus:ac-border-plugin focus:ac-border-2 focus:ac-shadow-none !important;
+}
+
+.ac-label{
+  @apply ac-block ac-w-full ac-text-gray-600 ac-font-semibold;
+}
+
+.ac-button{
+  @apply ac-bg-plugin ac-text-white ac-text-center ac-py-3 ac-w-full;
 }
