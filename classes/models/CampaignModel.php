@@ -28,13 +28,16 @@ class CampaignModel extends BaseModel {
 
             $settings = get_option('autocampaigner_general_settings');
 
-			ob_start();
+            $confirm_email = isset($settings['confirm_email'] )?$settings['confirm_email']:'';
+
+
+	            ob_start();
 			?>
             <editor
                     :draft="<?php echo sanitize_text_field( $_GET['draft'] ) ?>"
                     adminurl="<?php echo admin_url( 'admin-post.php' ) ?>"
                     nonce="<?php echo wp_create_nonce( 'create_campaign' ) ?>"
-                    confirm_email_setting="<?php echo $settings['confirm_email'] ?>"
+                    confirm_email_setting="<?php echo $confirm_email ?>"
             ><?php echo $html ?></editor>
 			<?php
 			return ob_get_clean();
