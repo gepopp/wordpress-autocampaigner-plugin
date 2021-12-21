@@ -69,11 +69,19 @@ class TemplatesController extends BaseController {
 
 		$this->itemId = $template_id;
 
-		return $this->call(
-			$this->get_endpoint( $this->endpoints['update'] ),
+		$endpoint = $this->get_endpoint($this->endpoints['update']);
+
+		$call = $this->call(
+			$endpoint,
 			'PUT',
 			$this->request_body( $template_name )
 		);
+
+		if($call){
+			return $template_id;
+		}else{
+			return false;
+		}
 	}
 
 
