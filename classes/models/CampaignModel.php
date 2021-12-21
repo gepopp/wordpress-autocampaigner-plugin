@@ -28,7 +28,7 @@ class CampaignModel extends BaseModel {
 
             $settings = get_option('autocampaigner_general_settings');
 
-            $confirm_email = isset($settings['confirm_email'] )?$settings['confirm_email']:'';
+            $confirm_email = isset($settings['confirm_email'] ) ? $settings['confirm_email'] : '';
 
 
 	            ob_start();
