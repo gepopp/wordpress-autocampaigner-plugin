@@ -87,9 +87,9 @@ export default {
     },
     saveData(){
       return {
-        src: this.editables.src,
-        href: this.editables.href,
-        alt: this.editables.alt
+        Content: this.editables.src,
+        Href: this.editables.href,
+        Alt: this.editables.alt
       }
     }
   }

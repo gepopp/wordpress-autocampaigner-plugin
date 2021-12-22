@@ -23,7 +23,9 @@ export default {
       this.layouts.forEach((layout) => {
         data.push(layout.saveData())
       })
-      return data;
+      return {
+        Items: data
+      }
     }
   }
 }

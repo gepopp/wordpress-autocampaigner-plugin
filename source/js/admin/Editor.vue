@@ -76,15 +76,16 @@ export default {
         repeaters.push(repeater.saveData());
       })
 
+      // console.error(repeaters)
 
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: 'autocampaigner_save_content',
         nonce: xhr.nonce,
         draft: this.draft,
         content: {
-          images: images,
-          multilines: multilines,
-          repeaters: repeaters
+          Images: images,
+          Multilines: multilines,
+          Repeaters: repeaters
         }
       })).then((rsp) => this.saved = rsp.data)
     }

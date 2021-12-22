@@ -60,7 +60,12 @@ class CampaignDrafts {
 		$campaign['ListIDs']    = get_option( 'autocampaigner_used_lists' );
 		$campaign['TemplateID'] = $template_id;
 
-		$campaign['TemplateContent'] = maybe_unserialize( $draft['content'] );
+		$content = maybe_unserialize( $draft['content'] );
+
+		$campaign['TemplateContent'] = $content;
+
+//		wp_die('<pre><code>' . print_r($content) . '</code></pre>');
+
 
 //		$images = [];
 //

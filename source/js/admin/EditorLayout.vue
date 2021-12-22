@@ -37,7 +37,7 @@ export default {
       })
 
       return {
-        Name: this.label,
+        Layout: this.label,
         Multilines: multilines,
         Images : images
       }
