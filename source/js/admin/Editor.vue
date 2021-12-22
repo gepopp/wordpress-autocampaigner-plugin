@@ -36,6 +36,7 @@ export default {
       multilines: [],
       images: [],
       repeaters: [],
+      singlelines: [],
       saved: false,
       campagne: {
         schedule: '',
@@ -53,6 +54,9 @@ export default {
     })
     this.repeaters = this.$children.filter(child => {
       return child.$options.name === "EditorRepeater";
+    })
+    this.singlelines = this.$children.filter(child => {
+      return child.$options.name === "Singleline";
     })
   },
   methods: {
@@ -76,7 +80,14 @@ export default {
         repeaters.push(repeater.saveData());
       })
 
-      // console.error(repeaters)
+      var singlelines = [];
+
+      this.singlelines.forEach((singleline) => {
+        singleline.push(singleline.saveData());
+      })
+
+       // console.error(singlelines)
+       // console.error(repeaters)
 
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: 'autocampaigner_save_content',
@@ -85,7 +96,8 @@ export default {
         content: {
           Images: images,
           Multilines: multilines,
-          Repeaters: repeaters
+          Repeaters: repeaters,
+          Singlelines: singlelines
         }
       })).then((rsp) => this.saved = rsp.data)
     }

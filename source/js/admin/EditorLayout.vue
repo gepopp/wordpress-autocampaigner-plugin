@@ -12,6 +12,7 @@ export default {
     return {
       multilines: [],
       images: [],
+      singlelines: []
     }
   },
   mounted() {
@@ -22,10 +23,14 @@ export default {
     this.images = this.$children.filter(child => {
       return child.$options.name === "ImageEditable";
     })
+    this.singlelines = this.$children.filter(child => {
+      return child.$options.name === "Singleline";
+    })
   },
   methods:{
     saveData(){
       var multilines = [];
+      var singlelines = [];
       var images = [];
 
       this.images.forEach((image) => {
@@ -36,10 +41,15 @@ export default {
         multilines.push(multiline.saveData())
       })
 
+      this.singlelines.forEach((singleline) => {
+        singlelines.push(singleline.saveData())
+      })
+
       return {
         Layout: this.label,
         Multilines: multilines,
-        Images : images
+        Images : images,
+        Singlelines: singlelines
       }
 
 

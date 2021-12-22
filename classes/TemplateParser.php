@@ -119,7 +119,9 @@ class TemplateParser {
 
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
 			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );
-			$post_table->getElementsByTagName( 'multiline' )->item( 2 )->setAttribute( 'text', '<a href="' . get_the_permalink( $post_id ) . '">jetzt lesen</a>' );
+			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'link', get_the_permalink( $post_id ) );
+			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'text', trim($post_table->getElementsByTagName( 'singleline' )->item(0)->textContent) );
+			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->textContent = '';
 
 		}
 

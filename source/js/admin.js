@@ -44,6 +44,9 @@ import Editor from "./admin/Editor.vue";
 import MultilineEditor from "./admin/MultilineEditor.vue";
 Vue.component('multiline', MultilineEditor);
 
+import Singleline from "./admin/Singleline.vue";
+Vue.component('singleline', Singleline);
+
 import ImageEditable from "./admin/ImageEditable.vue";
 Vue.component('image-editable', ImageEditable);
 
