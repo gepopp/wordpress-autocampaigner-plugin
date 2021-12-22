@@ -77,7 +77,7 @@ class TemplatesController extends BaseController {
 			$this->request_body( $template_name )
 		);
 
-		if($call){
+		if($call !== false){
 			return $template_id;
 		}else{
 			return false;

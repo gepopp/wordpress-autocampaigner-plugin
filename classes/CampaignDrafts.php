@@ -64,30 +64,6 @@ class CampaignDrafts {
 
 		$campaign['TemplateContent'] = $content;
 
-//		wp_die('<pre><code>' . print_r($content) . '</code></pre>');
-
-
-//		$images = [];
-//
-//		foreach ( $content['images'] as $image ) {
-//			$images[] = [
-//				"Content" => $image['src'],
-//				"Alt"     => $image['alt'],
-//				"Href"    => $image['href'],
-//			];
-//		}
-//
-//		$campaign['TemplateContent']['Images'] = $images;
-//
-//		$multilines = [];
-//
-//		foreach ( $content['multilines'] as $multiline ) {
-//			$multilines[] = [
-//				'Content' => $multiline,
-//			];
-//		}
-//
-//		$campaign['TemplateContent']['Multilines'] = $multilines;
 
 		$campaign_controller = new CampaignController();
 		$campaign_id         = $campaign_controller->create( $campaign );
