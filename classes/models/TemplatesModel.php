@@ -7,13 +7,6 @@ use Autocampaigner\controller\TemplatesController;
 class TemplatesModel extends BaseModel {
 
 
-	public function __construct() {
-
-		$this->controller = new TemplatesController();
-		return $this;
-	}
-
-
 	protected function render() {
 
         ob_start();

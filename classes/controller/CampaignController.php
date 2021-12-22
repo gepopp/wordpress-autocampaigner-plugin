@@ -2,98 +2,120 @@
 
 namespace Autocampaigner\controller;
 
-use function Clue\StreamFilter\fun;
+use Autocampaigner\Options;
+use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
 
 class CampaignController extends BaseController {
 
 
+	use Options;
+
+
+	/**
+	 * @var string to replace in endpoint
+	 */
+	protected $endpoint_str = 'campaignid';
+
+
+	/**
+	 * @var string[] used endpoints
+	 */
 	protected $endpoints = [
-		'create'    => 'https://api.createsend.com/api/v3.2/campaigns/{clientid}/fromtemplate.json',
-		'send'      => 'https://api.createsend.com/api/v3.2/campaigns/{campaignid}/send.json',
-		'sent'      => 'https://api.createsend.com/api/v3.2/clients/{clientid}/campaigns.json',
-		'scheduled' => 'https://api.createsend.com/api/v3.2/clients/{clientid}/scheduled.json',
-		'drafts'    => 'https://api.createsend.com/api/v3.2/clients/{clientid}/drafts.json',
+		'create'    => 'campaigns/{clientid}/fromtemplate.json',
+		'send'      => 'campaigns/{campaignid}/send.json',
+		'sent'      => 'clients/{clientid}/campaigns.json',
+		'scheduled' => 'clients/{clientid}/scheduled.json',
+		'drafts'    => 'clients/{clientid}/drafts.json',
 	];
 
 
-	public function send($date_time = false){
 
 
-		$settings = get_option('autocampaigner_general_settings');
 
-		$confirm_email = isset($settings['confirm_email']) ? $settings['confirm_email'] : get_option('admin_email');
+	/**
+	 * sends campaign immediatly or schedules it on given datetime
+	 *
+	 * @param false $date_time
+	 *
+	 * @return mixed|string|void|null
+	 * @throws \Autocampaigner\exceptions\CmApiCallUnsuccsessfull
+	 */
+	public function send( $date_time = false ) {
 
-		if(!$date_time){
+		if ( ! $date_time ) {
 			$date_time = 'Immediately';
 		}
 
-		$endpoint = $this->get_endpoint($this->endpoints['send']);
 
-
-		return $this->call($this->get_endpoint($this->endpoints['send']), 'post', ['ConfirmationEmail' => $confirm_email, 'SendDate' => $date_time]);
+		return $this->call(
+			$this->get_endpoint( 'send' ),
+			'post',
+			[ 'ConfirmationEmail' => $this->get_confirm_email(), 'SendDate' => $date_time ]
+		);
 	}
 
 
+
+
+
+	/**
+	 * creates draft on cm
+	 *
+	 * @param $content
+	 *
+	 * @return mixed|string|void|null
+	 * @throws \Autocampaigner\exceptions\CmApiCallUnsuccsessfull
+	 *
+	 */
 	public function create( $content ) {
 
-		return $this->call( $this->get_endpoint( $this->endpoints['create'] ), 'post', $content );
+		return $this->call( $this->get_endpoint( 'create' ), 'post', $content );
 
 	}
 
-	public function campaign_names(){
 
 
-		$drafts = $this->drafts();
-		$scheduled = $this->scheduled();
-		$sent = $this->sent();
 
-		if(empty($drafts)) $drafts = [];
-		if(empty($scheduled)) $scheduled = [];
-		if(empty($sent)) $sent = [];
 
-		$all = array_merge($drafts, $scheduled, $sent);
+	/**
+	 * return array of campaign names on cm to avoid duplicate error
+	 *
+	 *
+	 * @return array
+	 */
+	public function campaign_names() {
 
-		return array_map( function ($campaign){
-			return $campaign->Name;
-		}, $all);
+		try {
+			return array_map( function ( $campaign ) {
+
+				if ( isset( $campaign->Name ) ) {
+					return $campaign->Name;
+				}
+			}, array_merge( (array) $this->drafts(), (array) $this->scheduled(), (array) $this->sent() ) );
+
+		} catch ( CmApiCallUnsuccsessfull $e ) {
+			return [];
+		}
+
 	}
 
 
+
+
+
+	/**
+	 * prepopulates create form
+	 *
+	 * @return array
+	 */
 	public function default_values() {
 
-		$sender = (array) get_option( 'autocampaigner_general_settings' );
+		return [
+			'from_name'   => $this->get_from_name(),
+			'from_email'  => $this->get_from_email(),
+			'reply_email' => $this->get_reply_email(),
+		];
 
-
-		if ( ! array_key_exists( 'from_email', $sender ) ) {
-			$sender['from_email'] = get_option( 'admin_email' );
-		}
-
-		if ( ! array_key_exists( 'reply_email', $sender ) ) {
-			$sender['reply_email'] = get_option( 'admin_email' );
-		}
-
-		$fields = [ 'from_email', 'from_name', 'reply_email' ];
-
-		foreach ( $sender as $key => $item ) {
-			if ( ! in_array( $key, $fields ) ) {
-				unset( $sender[ $key ] );
-			}
-		}
-
-		return $sender;
-
-	}
-
-
-	public function get_endpoint( $endpoint ) {
-
-		$endpoint = parent::get_endpoint( $endpoint );
-
-		if ( str_contains( $endpoint, 'campaignid' ) ) {
-			$endpoint = str_replace( '{campaignid}', $this->itemId, $endpoint );
-		}
-
-		return $endpoint;
 	}
 
 }

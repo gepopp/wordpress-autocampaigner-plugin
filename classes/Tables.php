@@ -6,11 +6,23 @@ namespace Autocampaigner;
 
 class Tables {
 
-	const DRAFTS_TABLE  = 'ac_campaign_drafts';
+
+
+
+
+	const DRAFTS_TABLE = 'ac_campaign_drafts';
+
+
+
+
 
 	public function __construct() {
-		add_action( 'plugins_loaded', [$this, 'create_update_tables'] );
+
+		add_action( 'plugins_loaded', [ $this, 'create_update_tables' ] );
 	}
+
+
+
 
 
 	public function create_update_tables() {
@@ -31,7 +43,7 @@ class Tables {
 
 		$table_name = $wpdb->prefix . self::DRAFTS_TABLE;
 
-		$sql        = "CREATE TABLE $table_name (
+		$sql = "CREATE TABLE $table_name (
 		id BIGINT NOT NULL AUTO_INCREMENT,
 		header_data TEXT NULL,
 		template VARCHAR(255) NULL,		

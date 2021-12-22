@@ -6,7 +6,16 @@ namespace Autocampaigner;
 use Autocampaigner\controller\ListsController;
 use Autocampaigner\controller\TemplatesController;
 
+
+
 class Hooks {
+
+
+
+
+
+	use Queries;
+
 
 
 	public function __construct() {
@@ -26,111 +35,97 @@ class Hooks {
 
 	}
 
+
+
+
+
 	public function autocampaigner_search_posts() {
+
 		$this->verify_nonce();
-
-		$query = new \WP_Query( [
-			'post_type'      => sanitize_text_field( $_POST['type'] ) == '' ? 'post' : sanitize_text_field( $_POST['type'] ),
-			'posts_per_page' => 10,
-			's'              => sanitize_text_field( $_POST['search'] ),
-		] );
-
-		$result = [];
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) {
-				$query->the_post();
-
-				$result[] = [
-					'id'        => get_the_ID(),
-					'image'     => get_the_post_thumbnail_url( get_the_ID(), 'article' ),
-					'title'     => get_the_title(),
-					'excerpt'   => get_the_excerpt(),
-					'permalink' => get_the_permalink(),
-				];
-			}
-		}
-
-		wp_die(json_encode($result));
+		$results = $this->search_posts(
+			sanitize_text_field( $_POST['search'] ),
+			sanitize_text_field( $_POST['type'] ) == '' ? 'post' : sanitize_text_field( $_POST['type'] )
+		);
+		wp_die( json_encode( $results ) );
 
 	}
+
+
+
+
 
 	public function autocampaigner_sent_campaign() {
-		$draft = new CampaignDrafts();
-		wp_die( $draft->send() );
+
+		$this->verify_nonce('sent_campaign');
+		wp_die((new CampaignDrafts())->send() );
 	}
+
+
+
 
 
 	public function autocampaigner_schedule_campagin() {
-		$draft = new CampaignDrafts();
-		wp_die( $draft->create_draft() );
+
+		$this->verify_nonce('create_campaign');
+		wp_die( ( new CampaignDrafts() )->create_draft() );
+
 	}
+
+
+
 
 
 	public function autocampaigner_save_content() {
 
 		$this->verify_nonce();
-		$draft = new CampaignDrafts();
-		wp_die( $draft->save_content() );
+		wp_die( (  new CampaignDrafts() )->save_content() );
 	}
+
+
+
 
 
 	public function autocampaigner_load_tempalte_html() {
 
 		$this->verify_nonce();
-
 		$parser = new TemplateParser( sanitize_text_field( $_POST['folder'] ) );
-
-		wp_die( $parser->replace_multinines() );
+		wp_die( $parser->parse_template_html_for_editor() );
 
 	}
+
+
+
 
 
 	public function autocampaigner_search_image() {
 
 		$this->verify_nonce();
-
-		$args = [
-			'post_type'      => 'attachment',
-			'posts_per_page' => 15,
-			's'              => $_POST['search'],
-			'post_status'    => 'any',
-		];
-
-		$results = new \WP_Query( $args );
-
-		$titles = [];
-
-		if ( $results->have_posts() ) {
-			while ( $results->have_posts() ) {
-				$results->the_post();
-				$titles[] = [
-					'id'        => get_the_ID(),
-					'title'     => get_the_title(),
-					'thumbnail' => wp_get_attachment_thumb_url( get_the_ID(), 'thumbnail' ),
-					'full'      => wp_get_attachment_image_url( get_the_ID(), 'full' ),
-				];
-			}
-		}
-		wp_die( json_encode( $titles ) );
+		wp_die( json_encode( $this->search_images( sanitize_text_field( $_POST['search'] ) ) ) );
 	}
+
+
+
+
 
 	public function autocampaigner_create_campaign() {
 
-		$draft = new CampaignDrafts();
-		wp_die( $draft->save() );
+		( new CampaignDrafts() )->save();
 
 	}
+
+
+
+
 
 	public function autocampainger_get_templates() {
 
 		$this->verify_nonce();
-
-		$controller = new TemplatesController();
-
-		$list = $controller->list();
-
-		wp_die( json_encode( $list ) );
+		wp_die( json_encode( ( new TemplatesController() )->list() ) );
 	}
+
+
+
+
 
 	public function autocampainger_upload_template() {
 
@@ -139,12 +134,20 @@ class Hooks {
 
 	}
 
+
+
+
+
 	public function autocampainger_load_list_details() {
 
 		$this->verify_nonce();
 		wp_die( json_encode( ( new ListsController() )->stats( sanitize_text_field( $_POST['list_id'] ) ) ) );
 
 	}
+
+
+
+
 
 	public function autocampainger_update_used_lists() {
 
@@ -154,8 +157,15 @@ class Hooks {
 
 	}
 
-	public function verify_nonce() {
-		if ( ! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'wp_rest' ) ) {
+
+
+
+
+	public function verify_nonce($nonce = false) {
+
+		$nonce = !$nonce ? 'wp_rest' : $nonce;
+
+		if ( ! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $nonce ) ) {
 			wp_die( 'hack', 400 );
 		}
 	}

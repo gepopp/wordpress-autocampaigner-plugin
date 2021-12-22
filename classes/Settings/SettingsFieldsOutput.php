@@ -4,12 +4,17 @@ namespace Autocampaigner\Settings;
 
 trait SettingsFieldsOutput {
 
+
+
+
+
 	public function autocampaigner_settings_color_picker( $args ) {
+
 		$options = get_option( $args['option_name'] );
 		?>
         <input type="<?php echo esc_attr( $args['type'] ) ?>"
                id="<?php echo esc_attr( $args['name'] ) ?>"
-               name="<?php echo esc_attr( $args['option_name']) ?>[<?php echo esc_attr( $args['name'] ) ?>]"
+               name="<?php echo esc_attr( $args['option_name'] ) ?>[<?php echo esc_attr( $args['name'] ) ?>]"
                value="<?php echo $options[ esc_attr( $args['name'] ) ] ?? '' ?>"
                class="regular-text color-picker"
 			<?php echo isset( $args['placeholder'] ) ? 'placeholder="' . esc_attr( $args['placeholder'] ) . '" ' : '' ?>
@@ -21,7 +26,12 @@ trait SettingsFieldsOutput {
 
 	}
 
+
+
+
+
 	public function autocampaigner_settings_radio_field( $args ) {
+
 		// First, we read the options collection
 		$options = get_option( $args['option_name'] );
 
@@ -30,7 +40,7 @@ trait SettingsFieldsOutput {
 			?>
             <div>
                 <label>
-                    <input type="radio" name="<?php echo esc_attr( $args['option_name']) ?>[<?php echo esc_attr( $args['name'] ) ?>]" value="<?php echo esc_attr( $option['value'] ) ?>"
+                    <input type="radio" name="<?php echo esc_attr( $args['option_name'] ) ?>[<?php echo esc_attr( $args['name'] ) ?>]" value="<?php echo esc_attr( $option['value'] ) ?>"
 						<?php checked( $options[ $args['name'] ] ?? 'ajax', $option['value'], true ) ?>
                     >
 					<?php echo $option['label'] ?>
@@ -42,13 +52,17 @@ trait SettingsFieldsOutput {
 	}
 
 
+
+
+
 	public function autocampaigner_settings_input_field( $args ) {
+
 		// First, we read the options collection
-		$options = get_option(  $args['option_name'] );
+		$options = get_option( $args['option_name'] );
 		?>
         <input type="<?php echo esc_attr( $args['type'] ) ?>"
                id="<?php echo esc_attr( $args['name'] ) ?>"
-               name="<?php echo esc_attr( $args['option_name']) ?>[<?php echo esc_attr( $args['name'] ) ?>]"
+               name="<?php echo esc_attr( $args['option_name'] ) ?>[<?php echo esc_attr( $args['name'] ) ?>]"
                value="<?php echo $options[ esc_attr( $args['name'] ) ] ?? '' ?>"
                class="ac-admin-input"
 			<?php echo isset( $args['placeholder'] ) ? 'placeholder="' . esc_attr( $args['placeholder'] ) . '" ' : '' ?>

@@ -6,12 +6,7 @@ use Autocampaigner\controller\ListsController;
 
 class ListsModel extends BaseModel {
 
-	public function __construct() {
 
-        $this->controller = new ListsController();
-		return $this;
-
-	}
 
 	protected function render() {
 

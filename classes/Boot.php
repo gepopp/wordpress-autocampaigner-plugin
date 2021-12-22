@@ -11,9 +11,9 @@ class Boot {
 
 
 	private $boot_classes = [
+		AdminSettingsPages::class,
 		Hooks::class,
 		Enqueue::class,
-		AdminSettingsPages::class,
 		Tables::class
 	];
 

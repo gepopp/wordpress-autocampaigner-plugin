@@ -3,15 +3,23 @@
 namespace Autocampaigner\Settings;
 
 
+use Autocampaigner\models\ListsModel;
 use Autocampaigner\models\CampaignModel;
+use Autocampaigner\models\TemplatesModel;
 use Autocampaigner\Templates as TemplateHandler;
 use Autocampaigner\Settings\Sections\MainSettings;
-use Autocampaigner\models\TemplatesModel;
-use Autocampaigner\models\ListsModel;
+
+
 
 class AdminSettingsPages {
 
+
+
+
+
 	use SettingsFieldsOutput, TemplateHandler;
+
+
 
 	public function __construct() {
 
@@ -24,6 +32,9 @@ class AdminSettingsPages {
 		new MainSettings();
 
 	}
+
+
+
 
 
 	public function add_settings_page() {
@@ -67,14 +78,22 @@ class AdminSettingsPages {
 	}
 
 
-    function tempplates_page_content(){
-	    $this->admin_template(
-		    'base',
-		    [
-			    'title'   => __( 'Templates', 'autocampaigner' ),
-			    'content' => (new TemplatesModel())->render()
-		    ] );
-    }
+
+
+
+	function tempplates_page_content() {
+
+		$this->admin_template(
+			'base',
+			[
+				'title'   => __( 'Templates', 'autocampaigner' ),
+				'content' => ( new TemplatesModel() )->render(),
+			] );
+	}
+
+
+
+
 
 	function lists_page_content() {
 
@@ -82,23 +101,32 @@ class AdminSettingsPages {
 			'base',
 			[
 				'title'   => __( 'Subscriber lists', 'autocampaigner' ),
-				'content' => (new ListsModel())->render()
+				'content' => ( new ListsModel() )->render(),
 			] );
 
 	}
 
 
+
+
+
 	function admin_page_content() {
+
 		$this->admin_template(
 			'base',
 			[
 				'title'   => __( 'New Campaign', 'autocampaigner' ),
-				'content' => (new CampaignModel())->render()
+				'content' => ( new CampaignModel() )->render(),
 			] );
 
 	}
 
+
+
+
+
 	public function settings_page_content() {
+
 		?>
         <div class="wrap">
             <!-- Make a call to the WordPress function for rendering errors when settings are saved. -->

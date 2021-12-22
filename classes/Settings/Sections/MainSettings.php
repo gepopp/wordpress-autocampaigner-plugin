@@ -4,15 +4,26 @@ namespace Autocampaigner\Settings\Sections;
 
 use Autocampaigner\Settings\SettingsFieldsOutput;
 
+
+
 class MainSettings {
+
+
+
 
 
 	use SettingsFieldsOutput;
 
 
+
 	public function __construct() {
+
 		add_action( 'admin_init', [ $this, 'add_main_settings_section' ] );
 	}
+
+
+
+
 
 	public function add_main_settings_section() {
 
@@ -34,12 +45,11 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'password',
+				'type'        => 'password',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'api_client_id'
+				'name'        => 'api_client_id',
 			]
 		);
-
 
 
 		add_settings_field(
@@ -52,9 +62,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'password',
+				'type'        => 'password',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'api_client_secret'
+				'name'        => 'api_client_secret',
 			]
 		);
 
@@ -68,9 +78,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'email',
+				'type'        => 'email',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'error_report_email'
+				'name'        => 'error_report_email',
 			]
 		);
 
@@ -84,9 +94,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'email',
+				'type'        => 'email',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'from_email'
+				'name'        => 'from_email',
 			]
 		);
 
@@ -100,9 +110,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'text',
+				'type'        => 'text',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'from_name'
+				'name'        => 'from_name',
 			]
 		);
 
@@ -116,9 +126,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'email',
+				'type'        => 'email',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'reply_email'
+				'name'        => 'reply_email',
 			]
 		);
 
@@ -132,9 +142,9 @@ class MainSettings {
 			'autocampaigner_main_settings_page',
 			'autocampaigner_main_settings_section',
 			[
-				'type'    => 'text',
+				'type'        => 'text',
 				'option_name' => 'autocampaigner_general_settings',
-				'name' => 'confirm_email'
+				'name'        => 'confirm_email',
 			]
 		);
 
@@ -145,8 +155,13 @@ class MainSettings {
 		);
 	}
 
+
+
+
+
 	public function main_settings_section_content() {
-		 _e( 'Please insert your Campaign Monitor Api credentials.', 'autocampaigner' );
+
+		_e( 'Please insert your Campaign Monitor Api credentials.', 'autocampaigner' );
 	}
 
 }

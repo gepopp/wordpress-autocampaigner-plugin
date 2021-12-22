@@ -25,7 +25,7 @@ class CampaignDrafts {
 
 		$sent = $controller->send($schedule);
 
-		wp_die(var_dump($sent));
+		return $sent;
 
 	}
 
@@ -79,6 +79,8 @@ class CampaignDrafts {
 			exit;
 		}
 
+
+		return $campaign_id;
 
 	}
 
@@ -143,7 +145,6 @@ class CampaignDrafts {
 	public function load( $id ) {
 
 		global $wpdb;
-
 		return $wpdb->get_row( sprintf( 'SELECT * FROM %s WHERE id = %d LIMIT 1', $wpdb->prefix . $this->table_name, $id ), ARRAY_A );
 
 	}

@@ -4,36 +4,84 @@ namespace Autocampaigner;
 
 class TemplateParser {
 
+
+
+
+
+	use Options;
+
+
+
 	public $template_direcotry;
+
+
+
+
+
 	public $index_path;
+
+
+
+
+
 	public $content;
+
+
+
+
+
 	public $folder;
+
+
+
 
 
 	public function __construct( $folder ) {
 
-		$this->folder             = $folder;
+		$this->folder = $folder;
+
 		$this->template_direcotry = AUTOCAMPAIGNER_DIR . '/email_templates/' . $folder;
-		$this->index_path         = $this->template_direcotry . '/index.html';
-		$this->content            = file_get_contents( $this->index_path );
+
+		$this->index_path = $this->template_direcotry . '/index.html';
+
+		$this->content = file_get_contents( $this->index_path );
 
 	}
 
 
-	public function replace_multinines() {
 
-		$doc = new \DOMDocument();
-		@$doc->loadHTML( $this->content, LIBXML_ERR_NONE );
 
-		$d    = new \DOMDocument;
-		$mock = new \DOMDocument;
-		@$d->loadHTML( $this->content );
-		$body = $d->getElementsByTagName( 'body' )->item( 0 );
+
+	public function parse_template_html_for_editor() {
+
+
+		$raw_document = new \DOMDocument();
+		@$raw_document->loadHTML( $this->content, LIBXML_ERR_NONE );
+
+		$body = $raw_document->getElementsByTagName( 'body' )->item( 0 );
+
+		$document = new \DOMDocument();
+
 		foreach ( $body->childNodes as $child ) {
-			$mock->appendChild( $mock->importNode( $child, true ) );
+			$document->appendChild( $document->importNode( $child, true ) );
 		}
 
-		$document_images = $mock->getElementsByTagName( 'img' );
+		$this->make_images_editable( $document );
+		$this->replace_repeaters( $document );
+		$this->make_post_tables_editable($document);
+
+
+		return $document->saveHTML();
+
+	}
+
+
+
+
+
+	public function make_images_editable( $document ) {
+
+		$document_images = $document->getElementsByTagName( 'img' );
 
 		$editables = [];
 
@@ -62,7 +110,7 @@ class TemplateParser {
 
 			$parent->removeChild( $editable );
 
-			$child = $mock->createElement( 'image-editable' );
+			$child = $document->createElement( 'image-editable' );
 			$child->setAttribute( 'src', $editable->getAttribute( 'src' ) );
 			$child->setAttribute( 'width', $editable->getAttribute( 'width' ) );
 			$child->setAttribute( 'height', $editable->getAttribute( 'height' ) );
@@ -70,19 +118,33 @@ class TemplateParser {
 			$parent->appendChild( $child );
 		}
 
+	}
 
-		$document_multilines = $mock->getElementsByTagName( 'multiline' );
+
+
+
+
+	public function replace_repeaters( $document ) {
+
+		$document_multilines = $document->getElementsByTagName( 'multiline' );
 		foreach ( $document_multilines as $document_multiline ) {
 			$parent = $document_multiline->parentNode;
-			$child  = $mock->createElement( 'multiline' );
+			$child  = $document->createElement( 'multiline' );
 
 			$child->setAttribute( 'text', $document_multiline->textContent );
 
 			$parent->replaceChild( $child, $document_multiline );
 		}
 
+	}
 
-		$tables      = $mock->getElementsByTagName( 'table' );
+
+
+
+
+	public function make_post_tables_editable( $document ) {
+
+		$tables      = $document->getElementsByTagName( 'table' );
 		$post_tables = [];
 
 
@@ -101,17 +163,16 @@ class TemplateParser {
 
 		foreach ( $post_tables as $index => $post_table ) {
 
-			$type = $post_table->getAttribute('fill');
-			if(!array_key_exists($type, $offsets)){
-				$offsets[$type] = 1;
-			}else{
-				$offsets[$type] = $offsets[$type] + 1;
+			$type = $post_table->getAttribute( 'fill' );
+			if ( ! array_key_exists( $type, $offsets ) ) {
+				$offsets[ $type ] = 1;
+			} else {
+				$offsets[ $type ] = $offsets[ $type ] + 1;
 			}
 
 
-
-			$posts = get_posts( ['post_type' => $type, 'posts_per_page' => 1, 'offset' => $offsets[$type] ] );
-			$post = array_shift($posts);
+			$posts   = get_posts( [ 'post_type' => $type, 'posts_per_page' => 1, 'offset' => $offsets[ $type ] ] );
+			$post    = array_shift( $posts );
 			$post_id = $post->ID;
 
 			$post_image = $post_table->getElementsByTagName( 'image-editable' );
@@ -120,13 +181,10 @@ class TemplateParser {
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
 			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );
 			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'link', get_the_permalink( $post_id ) );
-			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'text', trim($post_table->getElementsByTagName( 'singleline' )->item(0)->textContent) );
+			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'text', trim( $post_table->getElementsByTagName( 'singleline' )->item( 0 )->textContent ) );
 			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->textContent = '';
 
 		}
-
-
-		return $mock->saveHTML();
 
 	}
 

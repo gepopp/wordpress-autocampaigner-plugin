@@ -3,99 +3,168 @@
 namespace Autocampaigner\controller;
 
 
+use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+
 class TemplatesController extends BaseController {
 
+
+	/**
+	 * @var string $template_folder where templates are stored
+	 */
 	protected $template_folder = AUTOCAMPAIGNER_DIR . '/email_templates/';
 
+
+	/**
+	 * @var string $endpoint_str to replace in endpoint with $item_id
+	 */
+	protected $endpoint_str = 'templateid';
+
+
+	/**
+	 * @var string[] used api endpoints
+	 */
 	protected $endpoints = [
-		'list'    => 'https://api.createsend.com/api/v3.2/clients/{clientid}/templates.json',
-		'create'  => 'https://api.createsend.com/api/v3.2/templates/{clientid}.json',
-		'update'  => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
-		'details' => 'https://api.createsend.com/api/v3.2/templates/{templateid}.json',
+		'list'    => 'clients/{clientid}/templates.json',
+		'create'  => 'templates/{clientid}.json',
+		'update'  => 'templates/{templateid}.json',
+		'details' => 'templates/{templateid}.json',
 	];
 
 
-	function is_saved_on_cm( $template_name ) {
 
-		$description = $this->template_description( $template_name );
 
-		if ( empty( $description->TemplateID ) ) {
-			return false;
+
+
+
+	/**
+	 * @param $folder where template lives
+	 *
+	 * @return string cm template id
+	 */
+	public function create_or_update_on_cm( $folder ) {
+
+		$template_id = $this->is_saved_on_cm( $folder );
+
+		if ( $template_id ) {
+			return $this->update_template_on_cm( $folder, $template_id );
 		}
 
-		$details = $this->details($description->TemplateID);
+		$template_id = $this->create_template_on_cm( $folder );
 
-		if ( empty( $details->Name ) ) {
-			return false;
-		}
-
-		return $description;
-
-	}
-
-
-	public function create_or_update_on_cm( $template_name ) {
-
-		$description = $this->is_saved_on_cm( $template_name );
-
-		if ( $description ) {
-			return $this->update_template_on_cm( $template_name, $description->TemplateID );
-		}
-
-		$description = $this->template_description($template_name);
-		$template_id = $this->create_template_on_cm( $template_name );
-
-		if($template_id){
-
-			$description->TemplateID = $template_id;
-			file_put_contents( $this->template_folder . $template_name . '/description.json', json_encode( $description ) );
-		}
+		$description             = $this->get_template_description( $folder );
+		$description->TemplateID = $template_id;
+		$this->save_template_description( $folder, $description );
 
 		return $template_id;
 
 	}
 
-	public function create_template_on_cm( $template_name ) {
 
-		return $this->call(
-			$this->get_endpoint( $this->endpoints['create'] ),
-			'post',
-			$this->request_body( $template_name )
-		);
+
+
+
+
+	/**
+	 * @param $folder of the local stored template
+	 *
+	 * @return false|mixed wether an template id exists in description and is not deleted on cm
+	 */
+	function is_saved_on_cm( $folder ) {
+
+		$description = $this->get_template_description( $folder );
+
+		if ( empty( $description->TemplateID ) ) {
+			// was never uploaded to cm
+			return false;
+		}
+
+		try {
+			$details = $this->details( $description->TemplateID );
+		} catch ( CmApiCallUnsuccsessfull $exception ) {
+			return false;
+		}
+
+		// template has been deleted on cm
+		if ( empty( $details->Name ) ) {
+			return false;
+		}
+
+		return $description->TemplateID;
 
 	}
 
-	public function update_template_on_cm( $template_name, $template_id ) {
+
+
+
+
+	/**
+	 * @param $template_name
+	 *
+	 * @return mixed|string|void|null
+	 */
+	public function create_template_on_cm( $template_name ) {
+
+		try{
+			return $this->call(
+				$this->get_endpoint( 'create' ),
+				'post',
+				$this->request_body( $template_name )
+			);
+		}catch (CmApiCallUnsuccsessfull $e){
+			wp_die($e->getMessage(), 400);
+		}
+
+
+	}
+
+
+
+
+
+
+	/**
+	 * @param $folder where template lives
+	 * @param $template_id on cm
+	 */
+	public function update_template_on_cm( $folder, $template_id ) {
 
 		$this->itemId = $template_id;
 
-		$endpoint = $this->get_endpoint($this->endpoints['update']);
+		$endpoint = $this->get_endpoint( 'update' );
 
-		$call = $this->call(
-			$endpoint,
-			'PUT',
-			$this->request_body( $template_name )
-		);
-
-		if($call !== false){
+		try{
+			$this->call(
+				$endpoint,
+				'PUT',
+				$this->request_body( $folder )
+			);
 			return $template_id;
-		}else{
-			return false;
+		}catch (CmApiCallUnsuccsessfull $e){
+			wp_die($e->getMessage(), 400);
 		}
+
 	}
 
 
-	public function request_body( $name ) {
 
-		$description = $this->template_description($name);
+
+
+	/**
+	 * @param $folder where template lives
+	 *
+	 * @return array
+	 */
+	public function request_body( $folder ) {
+
+		$description = $this->get_template_description( $folder );
 
 		$body = [
 			'Name'        => $description->Name,
-			'HtmlPageURL' => AUTOCAMPAIGNER_URL . '/email_templates/' . $name . '/index.html',
+			'HtmlPageURL' => $this->template_folder . $folder . '/index.html',
 		];
 
-		if ( $this->has_zip( $name ) ) {
-			$body['ZipFileURL'] = AUTOCAMPAIGNER_URL . '/email_templates/' . $name . '/images.zip';
+		if ( $this->has_zip( $folder ) ) {
+			$body['ZipFileURL'] = $this->template_folder . $folder . '/images.zip';
 		}
 
 		return $body;
@@ -103,60 +172,81 @@ class TemplatesController extends BaseController {
 	}
 
 
-	public function has_zip( $template_name ) {
 
-		return file_exists( AUTOCAMPAIGNER_DIR . '/email_templates/' . $template_name . '/images.zip' );
+
+
+	/**
+	 * @param $folder
+	 *
+	 * @return bool if zip file in template folder
+	 */
+	public function has_zip( $folder ) {
+
+		return file_exists( AUTOCAMPAIGNER_DIR . '/email_templates/' . $folder . '/images.zip' );
 
 	}
 
-	public function template_description( $name ) {
 
-		$json = file_get_contents( $this->template_folder . $name . '/description.json' );
+
+
+	/**
+	 * @param $folder
+	 *
+	 * @return mixed|null decoded json file
+	 */
+	public function get_template_description( $folder ) {
+
+		$json = file_get_contents( $this->template_folder . $folder . '/description.json' );
 
 		return json_decode( $json );
 
 	}
 
 
+
+
+	/**
+	 * @param $folder where template lives
+	 * @param $description json
+	 */
+	public function save_template_description( $folder, $description ) {
+		file_put_contents( $this->template_folder . $folder . '/description.json', json_encode( $description ) );
+	}
+
+
+
+
+	/**
+	 * @return array of folders in the templates directory that contains min index and description
+	 */
 	public function get_existing_templates() {
 
-		$templates = [];
+		$templates_folders = [];
 
-		$dirs = glob( AUTOCAMPAIGNER_DIR . '/email_templates/*' );
+		foreach ( glob( $this->template_folder . '*' ) as $dir ) {
 
-		foreach ( $dirs as $dir ) {
 			if ( file_exists( $dir . '/description.json' ) && file_exists( $dir . '/index.html' ) ) {
-				$name        = explode( '/', $dir );
-				$templates[] = array_pop( $name );
+				$folder              = explode( '/', $dir );
+				$templates_folders[] = array_pop( $folder );
 			}
 		}
 
-		return $templates;
+		return $templates_folders;
 	}
 
 
-	public function get_templates_with_description(){
+	/**
+	 * @return array of Template Folders with description.json file contents
+	 */
+	public function get_templates_with_description() {
 
-		$templates = $this->get_existing_templates();
 		$with_description = [];
 
-		foreach ($templates as $template){
-			$with_description[$template] = $this->template_description($template);
+		foreach ( $this->get_existing_templates() as $template ) {
+			$with_description[ $template ] = $this->get_template_description( $template );
 		}
 
 		return $with_description;
-	}
-
-
-	public function get_endpoint( $endpoint ) {
-
-		$endpoint = parent::get_endpoint( $endpoint );
-
-		if ( str_contains( $endpoint, 'templateid' ) ) {
-			$endpoint = str_replace( '{templateid}', $this->itemId, $endpoint );
-		}
-
-		return $endpoint;
 	}
 
 

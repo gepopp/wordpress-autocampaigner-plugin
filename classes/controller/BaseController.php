@@ -8,30 +8,33 @@ abstract class BaseController extends CampaignMonitorApi {
 
 
 	public $itemId;
+
+
 	protected $endpoints;
 
 
 	public function __call( string $name, array $arguments ) {
 
-
 		if ( array_key_exists( $name, $this->endpoints ) ) {
 
-			if(!empty($arguments)){
+			if ( ! empty( $arguments ) ) {
 				$this->itemId = $arguments[0];
 			}
 
-			return $this->call( $this->get_endpoint( $this->endpoints[ $name ] ) );
+			return $this->call( $this->get_endpoint( $name ) );
 		}
 
 	}
 
-	public function get_as_html_attribute($function){
+
+	public function get_as_html_attribute( $function ) {
 		$result = $this->{$function}();
 		return htmlentities( json_encode( $result ) );
 	}
 
-	public function as_html_attribute($function){
-		echo $this->get_as_html_attribute($function);
+
+	public function as_html_attribute( $function ) {
+		echo $this->get_as_html_attribute( $function );
 	}
 
 }
