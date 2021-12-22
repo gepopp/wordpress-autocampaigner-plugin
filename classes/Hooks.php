@@ -21,7 +21,14 @@ class Hooks {
 		add_action( 'wp_ajax_autocampaigner_save_content', [ $this, 'autocampaigner_save_content' ] );
 		add_action( 'admin_post_autocampaigner_create_campaign', [ $this, 'autocampaigner_create_campaign' ] );
 		add_action( 'admin_post_autocampaigner_schedule_campagin', [ $this, 'autocampaigner_schedule_campagin' ] );
+		add_action( 'admin_post_autocampaigner_sent_campaign', [ $this, 'autocampaigner_sent_campaign' ] );
 
+	}
+
+
+	public function autocampaigner_sent_campaign(){
+		$draft = new CampaignDrafts();
+		wp_die($draft->send());
 	}
 
 
@@ -33,6 +40,7 @@ class Hooks {
 
 
 	public function autocampaigner_save_content(){
+
 		$this->verify_nonce();
 		$draft = new CampaignDrafts();
 		wp_die($draft->save_content());
@@ -114,7 +122,7 @@ class Hooks {
 	public function autocampainger_update_used_lists() {
 
 		$this->verify_nonce();
-		wp_die( json_encode( ( new ListsController() )->toggle_used_list( $_POST['list_id'] ) ) );
+		wp_die( json_encode( ( new ListsController() )->toggle_used_list( $_POST['lists'] ) ) );
 
 
 	}

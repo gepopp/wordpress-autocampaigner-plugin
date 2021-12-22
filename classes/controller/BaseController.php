@@ -7,7 +7,7 @@ use Autocampaigner\CampaignMonitorApi;
 abstract class BaseController extends CampaignMonitorApi {
 
 
-	protected $itemId;
+	public $itemId;
 	protected $endpoints;
 
 

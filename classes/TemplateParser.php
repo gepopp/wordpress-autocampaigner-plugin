@@ -57,19 +57,18 @@ class TemplateParser {
 
 		}
 
-		foreach ($editables as $editable){
-				$parent = $editable->parentNode;
+		foreach ( $editables as $editable ) {
+			$parent = $editable->parentNode;
 
-				$parent->removeChild($editable);
+			$parent->removeChild( $editable );
 
-				$child = $mock->createElement('image-editable');
-				$child->setAttribute('src', $editable->getAttribute('src') );
-				$child->setAttribute('width', $editable->getAttribute('width'));
-				$child->setAttribute('height', $editable->getAttribute('height'));
+			$child = $mock->createElement( 'image-editable' );
+			$child->setAttribute( 'src', $editable->getAttribute( 'src' ) );
+			$child->setAttribute( 'width', $editable->getAttribute( 'width' ) );
+			$child->setAttribute( 'height', $editable->getAttribute( 'height' ) );
 
-				$parent->appendChild($child);
+			$parent->appendChild( $child );
 		}
-
 
 
 		$document_multilines = $mock->getElementsByTagName( 'multiline' );
@@ -80,6 +79,48 @@ class TemplateParser {
 			$child->setAttribute( 'text', $document_multiline->textContent );
 
 			$parent->replaceChild( $child, $document_multiline );
+		}
+
+
+		$tables      = $mock->getElementsByTagName( 'table' );
+		$post_tables = [];
+
+
+		$post_types = get_post_types();
+
+
+		foreach ( $tables as $table ) {
+			$fill = $table->getAttribute( 'fill' );
+			if ( in_array( $fill, $post_types ) ) {
+				$post_tables[] = $table;
+			}
+		}
+
+
+		$offsets = [];
+
+		foreach ( $post_tables as $index => $post_table ) {
+
+			$type = $post_table->getAttribute('fill');
+			if(!array_key_exists($type, $offsets)){
+				$offsets[$type] = 1;
+			}else{
+				$offsets[$type] = $offsets[$type] + 1;
+			}
+
+
+
+			$posts = get_posts( ['post_type' => $type, 'posts_per_page' => 1, 'offset' => $offsets[$type] ] );
+			$post = array_shift($posts);
+			$post_id = $post->ID;
+
+			$post_image = $post_table->getElementsByTagName( 'image-editable' );
+			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, 'horizontal_box' ) );
+
+			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
+			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );
+			$post_table->getElementsByTagName( 'multiline' )->item( 2 )->setAttribute( 'text', '<a href="' . get_the_permalink( $post_id ) . '">jetzt lesen</a>' );
+
 		}
 
 

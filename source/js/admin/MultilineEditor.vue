@@ -22,6 +22,13 @@ export default {
       textEditable: this.text.trim(),
       edit: false
     }
+  },
+  methods:{
+    saveData(){
+      return {
+        Content: this.textEditable
+      }
+    }
   }
 }
 </script>

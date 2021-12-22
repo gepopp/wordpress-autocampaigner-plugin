@@ -57,7 +57,7 @@
 
 export default {
   name: "CreateCampaign",
-  props: ['defaults', 'templates', 'adminurl', 'nonce'],
+  props: ['defaults', 'templates', 'adminurl', 'nonce', 'campaignnames'],
   data() {
     return {
       step: 1,
@@ -124,6 +124,11 @@ export default {
         }
 
       });
+
+      if(this.campaignnames.includes(this.campagne.name)){
+        this.errors.push('Dieser Kampagnen Name ist schon vergeben.')
+      }
+
 
       this.errors = [...new Set(this.errors)];
 

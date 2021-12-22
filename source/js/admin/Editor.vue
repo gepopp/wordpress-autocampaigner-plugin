@@ -2,7 +2,7 @@
   <div>
     <div v-show="!saved">
       <slot/>
-      <button class="ac-button" @click="saveCampaign">speichern</button>
+      <button class="ac-button save-button" @click="saveCampaign()">speichern</button>
     </div>
     <div v-show="saved">
       <form :action="adminurl" method="post">
@@ -12,11 +12,6 @@
         <div class="ac-my-48 ac-flex ac-justify-center ac-items-center">
           <div class="ac-w-3xl ac-p-10 ac-border ac-border-plugin">
             <h3 class="ac-text-3xl ac-mb-10">Newsletter Versand</h3>
-            <div class="ac-mb-4">
-              <label class="ac-label">Versand Termin</label>
-              <input class="ac-admin-input" type="datetime-local" v-model="campagne.schedule" name="cmpaign_schedule">
-              <p class="ac-text-red-900 ac-text-xs" v-show="campagne.schedule == ''">Wird sofort gesendet</p>
-            </div>
             <div class="ac-mb-4">
               <label class="ac-label">Bestätigung senden an:</label>
               <input class="ac-admin-input" type="text" v-model="campagne.confirm_email" name="confirm_email">
@@ -40,6 +35,7 @@ export default {
       content: '',
       multilines: [],
       images: [],
+      repeaters: [],
       saved: false,
       campagne: {
         schedule: '',
@@ -55,6 +51,9 @@ export default {
     this.images = this.$children.filter(child => {
       return child.$options.name === "ImageEditable";
     })
+    this.repeaters = this.$children.filter(child => {
+      return child.$options.name === "EditorRepeater";
+    })
   },
   methods: {
     saveCampaign() {
@@ -62,17 +61,19 @@ export default {
       var images = [];
 
       this.images.forEach((image) => {
-        images.push(
-            image.$data.editables
-        );
+       images.push( image.saveData() );
       })
 
       var multilines = [];
 
       this.multilines.forEach((multiline) => {
-        multilines.push(
-            multiline.$data.textEditable
-        );
+        multilines.push(multiline.saveData());
+      })
+
+      var repeaters = [];
+
+      this.repeaters.forEach((repeater) => {
+        repeaters.push(repeater.saveData());
       })
 
 
@@ -80,8 +81,11 @@ export default {
         action: 'autocampaigner_save_content',
         nonce: xhr.nonce,
         draft: this.draft,
-        images: images,
-        multilines: multilines
+        content: {
+          images: images,
+          multilines: multilines,
+          repeaters: repeaters
+        }
       })).then((rsp) => this.saved = rsp.data)
     }
   }

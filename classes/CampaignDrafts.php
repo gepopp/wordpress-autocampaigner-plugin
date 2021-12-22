@@ -2,7 +2,8 @@
 
 namespace Autocampaigner;
 
-use phpseclib3\Exception\UnableToConnectException;
+use Carbon\Carbon;
+use Autocampaigner\controller\CampaignController;
 use Autocampaigner\controller\TemplatesController;
 
 class CampaignDrafts {
@@ -10,29 +11,95 @@ class CampaignDrafts {
 	public $table_name = 'ac_campaign_drafts';
 
 
+	public function send() {
+
+		$schedule = sanitize_text_field($_POST['cmpaign_schedule']);
+		$controller = new CampaignController();
+		$controller->itemId = sanitize_text_field($_POST['draft']);
+
+		if(!empty($schedule)){
+			$schedule = Carbon::parse($schedule)->format('Y-m-d H:i');
+		}else{
+			$schedule = false;
+		}
+
+		$sent = $controller->send($schedule);
+
+		wp_die(var_dump($sent));
+
+	}
 
 
-
-	public function create_draft(){
+	public function create_draft() {
 
 		if ( ! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'create_campaign' ) ) {
 			wp_die( 'hack' );
 		}
 
-		$draft = $this->load(sanitize_text_field($_POST['draft']));
+		$draft = $this->load( sanitize_text_field( $_POST['draft'] ) );
 
 		$template = $draft['template'];
 
+		$header_data = maybe_unserialize( $draft['header_data'] );
+
 		$template_controller = new TemplatesController();
 
-		$template_id = $template_controller->create_or_update_on_cm($template);
+		$template_id = $template_controller->create_or_update_on_cm( $template );
 
-		wp_die(var_dump($template_id));
+		if ( home_url() == 'https://ir.test' ) {
+			$template_id = '7923400354e18f7be9d5dced1d7c8e01';
+		}
+
+		$campaign = [];
+
+		$campaign['Name']       = $header_data['campaign_name'];
+		$campaign['Subject']    = $header_data['subject'];
+		$campaign['FromName']   = $header_data['from_name'];
+		$campaign['FromEmail']  = $header_data['from_email'];
+		$campaign['ReplyTo']    = $header_data['reply_email'];
+		$campaign['ListIDs']    = get_option( 'autocampaigner_used_lists' );
+		$campaign['TemplateID'] = $template_id;
+
+		$campaign['TemplateContent'] = maybe_unserialize( $draft['content'] );
+
+//		$images = [];
+//
+//		foreach ( $content['images'] as $image ) {
+//			$images[] = [
+//				"Content" => $image['src'],
+//				"Alt"     => $image['alt'],
+//				"Href"    => $image['href'],
+//			];
+//		}
+//
+//		$campaign['TemplateContent']['Images'] = $images;
+//
+//		$multilines = [];
+//
+//		foreach ( $content['multilines'] as $multiline ) {
+//			$multilines[] = [
+//				'Content' => $multiline,
+//			];
+//		}
+//
+//		$campaign['TemplateContent']['Multilines'] = $multilines;
+
+		$campaign_controller = new CampaignController();
+		$campaign_id         = $campaign_controller->create( $campaign );
+
+		if ( $campaign_id ) {
+
+			global $wpdb;
+			$wpdb->update( $wpdb->prefix . $this->table_name, [ 'cm_id' => $campaign_id ], [ 'id' => $draft['id'] ] );
+
+			$redirect = add_query_arg( 'preview', $campaign_id, $_SERVER['HTTP_REFERER'] );
+			$redirect = remove_query_arg( 'draft', $redirect );
+			wp_safe_redirect( $redirect );
+			exit;
+		}
+
 
 	}
-
-
-
 
 
 	public function save() {
@@ -74,26 +141,22 @@ class CampaignDrafts {
 	public function save_content() {
 
 		$id      = sanitize_text_field( $_POST['draft'] );
-		$content = [
-			'images'     => $_POST['images'],
-			'multilines' => $_POST['multilines'],
-		];
 
 		global $wpdb;
 		$update = $wpdb->update(
 			$wpdb->prefix . $this->table_name,
 			[
-				'content' => maybe_serialize($content)
+				'content' => maybe_serialize( $_POST['content'] ),
 			],
 			[
-				'id' => $id
+				'id' => $id,
 			]
 		);
 
-		if(is_wp_error($update)){
-			wp_die('could not save', 400);
+		if ( is_wp_error( $update ) ) {
+			wp_die( 'could not save', 400 );
 		}
-		wp_die(1);
+		wp_die( 1 );
 	}
 
 	public function load( $id ) {

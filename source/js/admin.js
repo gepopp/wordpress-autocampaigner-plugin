@@ -1,4 +1,6 @@
 import '../scss/admin.scss';
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
 
 (function ($){
 
@@ -38,18 +40,23 @@ import SubscriberLists from "./admin/SubscriberLists.vue";
 import TemplateList from "./admin/TemplateList.vue";
 import CreateCampaign from "./admin/CreateCampaign.vue";
 import Editor from "./admin/Editor.vue";
+
 import MultilineEditor from "./admin/MultilineEditor.vue";
 Vue.component('multiline', MultilineEditor);
+
 import ImageEditable from "./admin/ImageEditable.vue";
 Vue.component('image-editable', ImageEditable);
 
+import EditorRepeater from "./admin/EditorRepeater.vue";
+Vue.component('repeater', EditorRepeater);
+
+import EditorLayout from "./admin/EditorLayout.vue";
+Vue.component('layout', EditorLayout);
+
 import VueQuillEditor from 'vue-quill-editor'
+Vue.use(VueQuillEditor)
 
-import 'quill/dist/quill.core.css' // import styles
-import 'quill/dist/quill.snow.css' // for snow theme
-import 'quill/dist/quill.bubble.css' // for bubble theme
-
-Vue.use(VueQuillEditor, /* { default global options } */)
+Vue.config.ignoredElements = ['unsubscribe']
 
 const app = new Vue({
     el: '#automailer-page',

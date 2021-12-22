@@ -10,7 +10,7 @@ class ListsController extends BaseController {
 	protected $endpoints = [
 		'list'     => 'https://api.createsend.com/api/v3.2/clients/{clientid}/lists.json',
 		'details' => 'https://api.createsend.com/api/v3.2/lists/{listid}.json',
-		'stats'   => 'https://api.createsend.com/api/v3.2/lists/{listid}/stats.json'
+		'stats'   => 'https://api.createsend.com/api/v3.2/lists/{listid}/stats.json',
 	];
 
 

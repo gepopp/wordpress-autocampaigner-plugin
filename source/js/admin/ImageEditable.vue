@@ -84,6 +84,13 @@ export default {
         search: this.search
       }))
           .then((rsp) => this.searchresluts = rsp.data);
+    },
+    saveData(){
+      return {
+        src: this.editables.src,
+        href: this.editables.href,
+        alt: this.editables.alt
+      }
     }
   }
 }

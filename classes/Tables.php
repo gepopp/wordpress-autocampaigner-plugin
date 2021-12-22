@@ -36,6 +36,7 @@ class Tables {
 		header_data TEXT NULL,
 		template VARCHAR(255) NULL,		
 		content TEXT NULL,
+		cm_id VARCHAR(255) NULL,
 		created_at TIMESTAMP NOT NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";
