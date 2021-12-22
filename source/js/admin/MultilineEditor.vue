@@ -24,6 +24,9 @@ export default {
     }
   },
   methods:{
+    setFromPost(post){
+      this.textEditable = post;
+    },
     saveData(){
       return {
         Content: this.textEditable

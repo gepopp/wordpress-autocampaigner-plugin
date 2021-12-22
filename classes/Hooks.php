@@ -19,31 +19,58 @@ class Hooks {
 		add_action( 'wp_ajax_autocampaigner_search_image', [ $this, 'autocampaigner_search_image' ] );
 		add_action( 'wp_ajax_autocampaigner_load_tempalte_html', [ $this, 'autocampaigner_load_tempalte_html' ] );
 		add_action( 'wp_ajax_autocampaigner_save_content', [ $this, 'autocampaigner_save_content' ] );
+		add_action( 'wp_ajax_autocampaigner_search_posts', [ $this, 'autocampaigner_search_posts' ] );
 		add_action( 'admin_post_autocampaigner_create_campaign', [ $this, 'autocampaigner_create_campaign' ] );
 		add_action( 'admin_post_autocampaigner_schedule_campagin', [ $this, 'autocampaigner_schedule_campagin' ] );
 		add_action( 'admin_post_autocampaigner_sent_campaign', [ $this, 'autocampaigner_sent_campaign' ] );
 
 	}
 
+	public function autocampaigner_search_posts() {
+		$this->verify_nonce();
 
-	public function autocampaigner_sent_campaign(){
+		$query = new \WP_Query( [
+			'post_type'      => sanitize_text_field( $_POST['type'] ) == '' ? 'post' : sanitize_text_field( $_POST['type'] ),
+			'posts_per_page' => 10,
+			's'              => sanitize_text_field( $_POST['search'] ),
+		] );
+
+		$result = [];
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				$query->the_post();
+
+				$result[] = [
+					'id'        => get_the_ID(),
+					'image'     => get_the_post_thumbnail_url( get_the_ID(), 'article' ),
+					'title'     => get_the_title(),
+					'excerpt'   => get_the_excerpt(),
+					'permalink' => get_the_permalink(),
+				];
+			}
+		}
+
+		wp_die(json_encode($result));
+
+	}
+
+	public function autocampaigner_sent_campaign() {
 		$draft = new CampaignDrafts();
-		wp_die($draft->send());
+		wp_die( $draft->send() );
 	}
 
 
-	public function autocampaigner_schedule_campagin(){
+	public function autocampaigner_schedule_campagin() {
 		$draft = new CampaignDrafts();
-		wp_die($draft->create_draft());
+		wp_die( $draft->create_draft() );
 	}
 
 
-
-	public function autocampaigner_save_content(){
+	public function autocampaigner_save_content() {
 
 		$this->verify_nonce();
 		$draft = new CampaignDrafts();
-		wp_die($draft->save_content());
+		wp_die( $draft->save_content() );
 	}
 
 
@@ -53,7 +80,7 @@ class Hooks {
 
 		$parser = new TemplateParser( sanitize_text_field( $_POST['folder'] ) );
 
-		wp_die($parser->replace_multinines());
+		wp_die( $parser->replace_multinines() );
 
 	}
 
@@ -90,7 +117,7 @@ class Hooks {
 	public function autocampaigner_create_campaign() {
 
 		$draft = new CampaignDrafts();
-		wp_die($draft->save());
+		wp_die( $draft->save() );
 
 	}
 

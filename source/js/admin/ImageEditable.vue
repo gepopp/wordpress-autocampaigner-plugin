@@ -77,6 +77,11 @@ export default {
     }
   },
   methods: {
+    setFromPost(post){
+      this.editables.src = post.image;
+      this.editables.href = post.permalink;
+      this.editables.alt = post.title;
+    },
     searchImages() {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: 'autocampaigner_search_image',

@@ -17,6 +17,9 @@ export default {
     }
   },
   methods:{
+    setFromPost(post){
+      this.editable.link = post.permalink
+    },
     saveData(){
       return{
         Content: this.editable.text,

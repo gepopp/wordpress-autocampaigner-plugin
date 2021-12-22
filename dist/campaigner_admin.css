@@ -680,6 +680,14 @@ video {
   width: 2.5rem;
 }
 
+.ac-w-64 {
+  width: 16rem;
+}
+
+.ac-w-72 {
+  width: 18rem;
+}
+
 @-webkit-keyframes ac-spin {
   to {
     -webkit-transform: rotate(360deg);
@@ -724,6 +732,12 @@ video {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.ac-justify-start {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .ac-justify-end {
@@ -926,6 +940,11 @@ video {
 
 .ac-text-xl {
   font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.ac-text-lg {
+  font-size: 1.125rem;
   line-height: 1.75rem;
 }
 
