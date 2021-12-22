@@ -43,9 +43,13 @@ class CampaignController extends BaseController {
 	public function campaign_names(){
 
 
-		$drafts = (array) $this->drafts();
-		$scheduled = (array) $this->scheduled();
-		$sent = (array) $this->sent();
+		$drafts = $this->drafts();
+		$scheduled = $this->scheduled();
+		$sent = $this->sent();
+
+		if(empty($drafts)) $drafts = [];
+		if(empty($scheduled)) $scheduled = [];
+		if(empty($sent)) $sent = [];
 
 		$all = array_merge($drafts, $scheduled, $sent);
 
