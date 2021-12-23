@@ -60,7 +60,7 @@ import Qs from "qs";
 
 export default {
   name: "ImageEditable",
-  props: ['src', 'width', 'height', 'size'],
+  props: ['src', 'width', 'height', 'size', 'href'],
   data() {
     return {
       search: '',
@@ -70,7 +70,7 @@ export default {
       alt: false,
       editables: {
         src: this.src,
-        href: '',
+        href: this.href,
         alt: ''
       },
       current: {}

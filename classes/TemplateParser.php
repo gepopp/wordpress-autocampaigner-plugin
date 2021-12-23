@@ -174,6 +174,7 @@ class TemplateParser {
 			$post_image = $post_table->getElementsByTagName( 'image-editable' );
 
 			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, $post_image[0]->getAttribute('size') ) );
+			$post_image[0]->setAttribute( 'href', get_the_permalink( $post_id ) );
 
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
 			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );
