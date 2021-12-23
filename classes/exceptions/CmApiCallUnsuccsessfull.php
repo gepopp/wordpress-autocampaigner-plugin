@@ -12,11 +12,9 @@ class CmApiCallUnsuccsessfull extends \Exception {
 
 	public function __construct( $result, $type, $body, $endpoint ) {
 
-		$code    = wp_remote_retrieve_response_code( $result );
-
+//		$code    = wp_remote_retrieve_response_code( $result );
+//
 		parent::__construct( wp_remote_retrieve_body( $result ), $code, null );
-
-
 
 		$this->send_error_mail($result, $type, $body, $endpoint);
 
