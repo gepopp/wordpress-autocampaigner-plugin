@@ -54,6 +54,7 @@ class CampaignMonitorApi {
 			'method'   => strtoupper( $type ),
 			'headers'  => $this->create_headers(),
 			'blocking' => true,
+			'timeout'  => 20
 		];
 
 		if ( ! empty( $body ) ) {
