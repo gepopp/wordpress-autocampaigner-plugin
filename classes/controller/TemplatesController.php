@@ -160,11 +160,11 @@ class TemplatesController extends BaseController {
 
 		$body = [
 			'Name'        => $description->Name,
-			'HtmlPageURL' => $this->template_folder . $folder . '/index.html',
+			'HtmlPageURL' => AUTOCAMPAIGNER_URL . '/email_templates/' . $folder . '/index.html',
 		];
 
 		if ( $this->has_zip( $folder ) ) {
-			$body['ZipFileURL'] = $this->template_folder . $folder . '/images.zip';
+			$body['ZipFileURL'] = AUTOCAMPAIGNER_URL . '/email_templates/' . $folder . '/images.zip';
 		}
 
 		return $body;
