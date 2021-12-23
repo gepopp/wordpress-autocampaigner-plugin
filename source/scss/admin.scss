@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+img{
+  @apply ac-border-none !important;
+}
 
 .ac-admin-input{
   @apply ac-block ac-w-full ac-border ac-border-gray-600 ac-p-1 ac-rounded-none ac-w-72 !important;

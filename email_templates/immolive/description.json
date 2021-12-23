@@ -1,5 +1,6 @@
 {
   "Name" : "Immolive Template",
+  "Description" : "Für die Aussendung einzelner ImmoLive",
   "TemplateID" : "",
   "TemplateContent": {
     "Multilines": [

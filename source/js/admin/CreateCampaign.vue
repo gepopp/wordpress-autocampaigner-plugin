@@ -11,42 +11,46 @@
               <li v-for="error in errors" v-text="error" class="ac-text-red-500"></li>
             </ul>
           </div>
-          <div v-show="step == 1">
-            <div class="ac-mb-4">
-              <label class="ac-label">Campagnen Name</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.name" name="cmpaign_name">
-            </div>
-            <div class="ac-mb-4">
-              <label class="ac-label">Betreff</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.subject" name="subject">
-            </div>
-            <div class="ac-mb-4">
-              <label class="ac-label">Sender Name</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.from_name" name="from_name">
-            </div>
-            <div class="ac-mb-4">
-              <label class="ac-label">Sender E-Mail</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.from_email" name="from_email">
-            </div>
-            <div class="ac-mb-4">
-              <label class="ac-label">Antwort E-Mail</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.reply_email" name="reply_email">
-            </div>
-            <button class="ac-button" @click="gotoStep(2)">weiter</button>
-          </div>
-          <div v-show="step == 2">
-            <ul>
-              <li v-for="template in template_radio">
-                <label class="ac-label">
-                  <input type="radio" v-model="template_name" :value="template[0]" @change="errors = []" name="template_name">{{ template[1].Name }}
-                </label>
-              </li>
-              <button class="ac-button" @click="gotoStep(3)">weiter</button>
-              <div class="ac-flex ac-justify-end">
-                <a class="ac-text-xs ac-cursor-pointer" @click="step = 1">zurück</a>
+          <div class="ac-grid ac-grid-cols-2 ac-gap-5">
+            <div>
+              <div class="ac-mb-4">
+                <label class="ac-label">Campagnen Name</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.name" name="cmpaign_name">
               </div>
-            </ul>
+              <div class="ac-mb-4">
+                <label class="ac-label">Betreff</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.subject" name="subject">
+              </div>
+              <div class="ac-mb-4">
+                <label class="ac-label">Sender Name</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.from_name" name="from_name">
+              </div>
+              <div class="ac-mb-4">
+                <label class="ac-label">Sender E-Mail</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.from_email" name="from_email">
+              </div>
+              <div class="ac-mb-4">
+                <label class="ac-label">Antwort E-Mail</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.reply_email" name="reply_email">
+              </div>
+            </div>
+            <div>
+              <ul>
+                <li v-for="template in template_radio" class="ac-pb-3 ac-mb-3 ac-border-b ac-border-plugin">
+                  <div class="ac-flex ac-space-x-4 ac-items-center">
+                    <input type="radio" v-model="template_name" :value="template[0]" @change="errors = []" name="template_name">
+                    <div>
+                      <label class="ac-label">
+                        {{ template[1].Name }}
+                      </label>
+                      <p v-text="template[1].Description"></p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
+          <button class="ac-button" @click="validateCampagne">weiter</button>
         </div>
       </div>
     </form>
@@ -91,21 +95,6 @@ export default {
     }
   },
   methods: {
-    gotoStep(goto) {
-      if (this.step == 1 && goto == 2) {
-        if (this.validateCampagne() == 0) this.step = goto;
-      }
-
-      if (this.step == 2 && goto == 3) {
-        if (this.template_name == false) {
-          this.errors = [];
-          this.errors.push('Bitte ein Template wählen');
-        } else {
-          this.$refs.form.submit();
-        }
-      }
-
-    },
     validateCampagne() {
 
       this.errors = [];
@@ -122,17 +111,21 @@ export default {
             this.errors.push('Bitte nur gültige E-Mail Adressen eingeben.')
           }
         }
-
       });
 
-      if(this.campaignnames.includes(this.campagne.name)){
+      if (this.campaignnames.includes(this.campagne.name)) {
         this.errors.push('Dieser Kampagnen Name ist schon vergeben.')
       }
 
+      if (this.template_name == false) {
+        this.errors.push('Bitte ein Template wählen');
+      }
 
       this.errors = [...new Set(this.errors)];
 
-      return this.errors.length;
+      if (!this.errors.length) {
+        this.$refs.form.submit();
+      }
 
     },
     validateEmail(email) {
