@@ -90,7 +90,7 @@ class Hooks {
 
 	public function autocampaigner_sent_campaign() {
 
-		$this->verify_nonce( 'sent_campaign' );
+//		$this->verify_nonce( 'sent_campaign' );
 		wp_die( ( new CampaignDrafts() )->send() );
 	}
 
