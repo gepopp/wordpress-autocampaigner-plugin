@@ -13,7 +13,7 @@
       <hr>
       <div class="ac-grid ac-grid-cols-3 ac-gap-2">
         <div v-for="image in searchresluts">
-          <img :src="image.thumbnail" width="100" height="100" @click="editables.src = image.full; edit = false; current = image">
+          <img :src="image.thumbnail" width="100" height="100" @click="editables.src = image.url; edit = false; current = image">
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ import Qs from "qs";
 
 export default {
   name: "ImageEditable",
-  props: ['src', 'width', 'height'],
+  props: ['src', 'width', 'height', 'size'],
   data() {
     return {
       search: '',
@@ -71,13 +71,13 @@ export default {
       editables: {
         src: this.src,
         href: '',
-        alt:''
+        alt: ''
       },
       current: {}
     }
   },
   methods: {
-    setFromPost(post){
+    setFromPost(post) {
       this.editables.src = post.image;
       this.editables.href = post.permalink;
       this.editables.alt = post.title;
@@ -86,11 +86,12 @@ export default {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: 'autocampaigner_search_image',
         nonce: xhr.nonce,
-        search: this.search
+        search: this.search,
+        size: this.size
       }))
           .then((rsp) => this.searchresluts = rsp.data);
     },
-    saveData(){
+    saveData() {
       return {
         Content: this.editables.src,
         Href: this.editables.href,

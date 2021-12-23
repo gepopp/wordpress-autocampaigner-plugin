@@ -68,7 +68,7 @@ class TemplateParser {
 
 		$this->make_images_editable( $document );
 		$this->replace_repeaters( $document );
-		$this->make_post_tables_editable($document);
+		$this->make_post_tables_editable( $document );
 
 
 		return $document->saveHTML();
@@ -91,11 +91,6 @@ class TemplateParser {
 			$info = pathinfo( $src );
 			$document_image->setAttribute( 'src', AUTOCAMPAIGNER_URL . "/email_templates/$this->folder/images/" . $info['basename'] );
 
-			$data = [
-				'src'    => $document_image->getAttribute( 'src' ),
-				'width'  => $document_image->getAttribute( 'width' ),
-				'height' => $document_image->getAttribute( 'height' ),
-			];
 
 			$editable = (bool) $document_image->getAttribute( 'editable' );
 
@@ -114,6 +109,7 @@ class TemplateParser {
 			$child->setAttribute( 'src', $editable->getAttribute( 'src' ) );
 			$child->setAttribute( 'width', $editable->getAttribute( 'width' ) );
 			$child->setAttribute( 'height', $editable->getAttribute( 'height' ) );
+			$child->setAttribute( 'size', $editable->getAttribute( 'size' ) );
 
 			$parent->appendChild( $child );
 		}
@@ -176,7 +172,8 @@ class TemplateParser {
 			$post_id = $post->ID;
 
 			$post_image = $post_table->getElementsByTagName( 'image-editable' );
-			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, 'horizontal_box' ) );
+
+			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, $post_image[0]->getAttribute('size') ) );
 
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
 			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );

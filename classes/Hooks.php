@@ -20,6 +20,10 @@ class Hooks {
 
 	public function __construct() {
 
+
+		add_action( 'after_setup_theme', [ $this, 'update_images_sizes' ] );
+
+
 		add_action( 'wp_ajax_autocampainger_load_list_details', [ $this, 'autocampainger_load_list_details' ] );
 		add_action( 'wp_ajax_autocampainger_update_used_lists', [ $this, 'autocampainger_update_used_lists' ] );
 		add_action( 'wp_ajax_autocampainger_upload_template', [ $this, 'autocampainger_upload_template' ] );
@@ -33,6 +37,36 @@ class Hooks {
 		add_action( 'admin_post_autocampaigner_schedule_campagin', [ $this, 'autocampaigner_schedule_campagin' ] );
 		add_action( 'admin_post_autocampaigner_sent_campaign', [ $this, 'autocampaigner_sent_campaign' ] );
 
+	}
+
+
+
+
+
+	function update_images_sizes() {
+
+		add_theme_support( 'post-thumbnails' );
+
+
+		$template_controller = new TemplatesController();
+
+		$templates = $template_controller->get_templates_with_description();
+
+
+		foreach ( $templates as $description ) {
+
+			if ( isset( $description->ImageSizes ) ) {
+
+				foreach ( $description->ImageSizes as $image_size ) {
+					add_image_size(
+						$image_size->Name,
+						$image_size->width,
+						$image_size->height,
+						$image_size->crop
+					);
+				}
+			}
+		}
 	}
 
 
@@ -56,8 +90,8 @@ class Hooks {
 
 	public function autocampaigner_sent_campaign() {
 
-		$this->verify_nonce('sent_campaign');
-		wp_die((new CampaignDrafts())->send() );
+		$this->verify_nonce( 'sent_campaign' );
+		wp_die( ( new CampaignDrafts() )->send() );
 	}
 
 
@@ -66,7 +100,7 @@ class Hooks {
 
 	public function autocampaigner_schedule_campagin() {
 
-		$this->verify_nonce('create_campaign');
+		$this->verify_nonce( 'create_campaign' );
 		wp_die( ( new CampaignDrafts() )->create_draft() );
 
 	}
@@ -78,7 +112,7 @@ class Hooks {
 	public function autocampaigner_save_content() {
 
 		$this->verify_nonce();
-		wp_die( (  new CampaignDrafts() )->save_content() );
+		wp_die( ( new CampaignDrafts() )->save_content() );
 	}
 
 
@@ -161,9 +195,9 @@ class Hooks {
 
 
 
-	public function verify_nonce($nonce = false) {
+	public function verify_nonce( $nonce = false ) {
 
-		$nonce = !$nonce ? 'wp_rest' : $nonce;
+		$nonce = ! $nonce ? 'wp_rest' : $nonce;
 
 		if ( ! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), $nonce ) ) {
 			wp_die( 'hack', 400 );

@@ -1,6 +1,26 @@
 {
-  "Name" : "Autocampaigner Default Template",
-  "TemplateID" : "",
+  "Name": "Autocampaigner Default Template",
+  "TemplateID": "",
+  "ImageSizes": [
+    {
+      "Name": "BannerImage",
+      "width": 700,
+      "height": 90,
+      "crop": true
+    },
+    {
+      "Name": "LargeImage",
+      "width": 700,
+      "height": 525,
+      "crop": true
+    },
+    {
+      "Name": "SmallImage",
+      "width": 325,
+      "height": 244,
+      "crop": true
+    }
+  ],
   "TemplateContent": {
     "Multilines": [
       {

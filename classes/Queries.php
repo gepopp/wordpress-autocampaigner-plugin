@@ -6,7 +6,9 @@ trait Queries {
 
 
 
-	public function search_posts($search, $post_type = 'post'){
+
+
+	public function search_posts( $search, $post_type = 'post' ) {
 
 
 		$query = new \WP_Query( [
@@ -33,7 +35,11 @@ trait Queries {
 		return $result;
 	}
 
-	public function search_images($search){
+
+
+
+
+	public function search_images( $search ) {
 
 		$args = [
 			'post_type'      => 'attachment',
@@ -46,14 +52,17 @@ trait Queries {
 
 		$images = [];
 
+
 		if ( $results->have_posts() ) {
 			while ( $results->have_posts() ) {
 				$results->the_post();
+
 				$images[] = [
-					'id'        => get_the_ID(),
-					'title'     => get_the_title(),
-					'thumbnail' => wp_get_attachment_thumb_url( get_the_ID(), 'thumbnail' ),
-					'full'      => wp_get_attachment_image_url( get_the_ID(), 'full' ),
+					'id'    => get_the_ID(),
+					'title' => get_the_title(),
+					'url'  => wp_get_attachment_image_url( get_the_ID(), sanitize_text_field($_POST['size']) ),
+					'thumbnail'  => wp_get_attachment_image_url( get_the_ID(), 'thumbnail' ),
+
 				];
 			}
 		}
@@ -61,8 +70,6 @@ trait Queries {
 
 		return $images;
 	}
-
-
 
 
 }
