@@ -98,7 +98,7 @@ class CampaignDrafts {
 
 		$header_data = maybe_unserialize( $draft['header_data'] );
 
-		$template_description = ( new TemplatesController() )->get_template_description();
+		$template_description = ( new TemplatesController() )->get_template_description($draft['template']);
 
 
 
