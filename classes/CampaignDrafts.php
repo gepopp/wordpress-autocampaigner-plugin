@@ -98,6 +98,8 @@ class CampaignDrafts {
 
 		$header_data = maybe_unserialize( $draft['header_data'] );
 
+		$description = file_get_contents(AUTOCAMPAIGNER_DIR . '/email_templates/' . $draft['template'] . '/description.json');
+		$template_id = $description->TemplateID;
 
 		if ( home_url() == 'https://ir.test' ) {
 			$template_id = '54e22dfe43a92539c14432b514e57543';

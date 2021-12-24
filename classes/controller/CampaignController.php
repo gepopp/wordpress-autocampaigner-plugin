@@ -5,6 +5,7 @@ namespace Autocampaigner\controller;
 use Carbon\Carbon;
 use Autocampaigner\Options;
 use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+use function Clue\StreamFilter\fun;
 
 
 
@@ -205,3 +206,4 @@ class CampaignController extends BaseController {
 	}
 
 }
+
