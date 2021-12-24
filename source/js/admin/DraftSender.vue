@@ -67,8 +67,7 @@ export default {
       if (this.campaign.cm_id == null) {
         this.$refs.templateupdater.updateTemplate()
       } else {
-        this.$refs.templateupdater.waiting = this.$refs.draftCreator.waiting = false;
-        this.$refs.templateupdater.updated = this.$refs.draftCreator.updated = true;
+        this.resetUpdateStatus();
         this.loadPreview();
       }
     }
@@ -121,8 +120,13 @@ export default {
           .then((rsp) => {
             this.iframe_src = rsp.data.PreviewURL.replace('http', 'https')
             this.draft_details = rsp.data;
+            this.resetUpdateStatus();
           });
     },
+    resetUpdateStatus(){
+      this.$refs.templateupdater.waiting = this.$refs.draftCreator.waiting = false;
+      this.$refs.templateupdater.updated = this.$refs.draftCreator.updated = true;
+    }
 
   }
 }
