@@ -33,6 +33,10 @@
                 <label class="ac-label">Antwort E-Mail</label>
                 <input class="ac-admin-input" type="text" v-model="campagne.reply_email" name="reply_email">
               </div>
+              <div class="ac-mb-4">
+                <label class="ac-label">Bestätigung senden an:</label>
+                <input class="ac-admin-input" type="text" v-model="campagne.confirm_email" name="confirm_email">
+              </div>
             </div>
             <div>
               <ul>
@@ -61,7 +65,7 @@
 
 export default {
   name: "CreateCampaign",
-  props: ['defaults', 'templates', 'adminurl', 'nonce', 'campaignnames'],
+  props: ['defaults', 'templates', 'adminurl', 'campaignnames'],
   data() {
     return {
       step: 1,
@@ -70,11 +74,13 @@ export default {
         subject: '',
         from_name: '',
         from_email: '',
-        reply_email: ''
+        reply_email: '',
+        confirm_email: ''
       },
       errors: [],
       template_name: false,
-      template_radio: Object.entries(this.templates)
+      template_radio: Object.entries(this.templates),
+      nonce: xhr.nonce
     }
   },
   mounted() {
@@ -107,9 +113,15 @@ export default {
         }
 
         if (key.includes('email')) {
-          if (!this.validateEmail(this.campagne[key])) {
-            this.errors.push('Bitte nur gültige E-Mail Adressen eingeben.')
-          }
+
+          var emails = this.campagne[key].split(',');
+
+          emails.forEach((email) => {
+            if (!this.validateEmail(email)) {
+              this.errors.push('Bitte nur gültige E-Mail Adressen eingeben.')
+            }
+          })
+
         }
       });
 

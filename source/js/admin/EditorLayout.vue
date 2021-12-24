@@ -7,14 +7,14 @@
       </div>
       <input type="text" class="ac-admin-input" v-model="search" @keyup="searchPosts" placeholder="search">
       <hr>
-      <div class="ac-flex ac-flex-col ac-w-72 ac-leding-none ac-z-50 ac-cursor-pointer">
+      <div class="ac-flex ac-flex-col ac-w-72 ac-leding-none ac-z-50 ac-cursor-pointer ac-bg-white ac-p-3 ac-shadow-2xl">
         <div v-for="postdata in searchresluts" class="ac-border-b ac-border-plugin ac-py-2">
-          <p v-text="postdata.title" class="ac-text-lg "></p>
-          <div class="ac-flex ac-justify-between">
-              <span class="ac-text-plugin"
+          <p v-html="postdata.title" class="ac-leading-none ac-line-clamp-1"></p>
+          <div class="ac-flex ac-justify-between ac-mt-3">
+              <span class="ac-text-white ac-bg-plugin ac-px-3"
                     @click="setPost(postdata, post)"
                     v-for="post in holdsPost"
-                    v-text="'Verwende für Post' + post"
+                    v-text="'Post ' + post"
               ></span>
           </div>
         </div>

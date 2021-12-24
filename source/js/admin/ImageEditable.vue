@@ -3,7 +3,7 @@
     <div>
       <img :src="editables.src" :width="width" :height="height">
     </div>
-    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl" v-show="edit == 'image'">
+    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl ac-w-80" v-show="edit == 'image'">
       <div class="ac-flex ac-justify-between ac-w-full ac-cursor-pointer ac-w-full" @click="edit = false">
         <p>Bild tauschen</p>
         <svg class="ac-w-6 ac-h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -18,17 +18,29 @@
         </div>
       </div>
     </div>
-    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl" v-show="edit == 'link'">
-      <div class="ac-flex ac-justify-end ac-w-full ac-cursor-pointer" @click="edit = false">
+
+
+    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl ac-w-80" v-show="edit == 'link'">
+      <div class="ac-flex ac-justify-between ac-w-full ac-cursor-pointer" @click="edit = false">
         <p>Link setzten</p>
         <svg class="ac-w-6 ac-h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </div>
-      <input type="text" class="ac-admin-input" v-model="editables.href" placeholder="link">
+      <div class="ac-relative">
+        <input type="text" class="ac-admin-input" v-model="editables.href" placeholder="link" @keyup.enter="edit = false">
+        <div class="ac-absolute ac-top-0 ac-right-0 ac-text-gray-500 ac-h-full ac-flex ac-items-center" @click="edit = false">
+          <svg class="ac-w-6 ac-h-6" :class="{ 'ac-text-green-500' : validateUrl }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+      <p class="ac-text-xs ac-text-red-900" v-if="!validateUrl">Bitte eine gültige Url eingeben</p>
     </div>
-    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl" v-show="edit == 'alt'">
-      <div class="ac-flex ac-justify-end ac-w-full ac-cursor-pointer" @click="edit = false">
+
+
+    <div class="ac-absolute ac-bg-white ac-top-0 ac-right-0 ac-bg-white ac-z-50 ac-bg-white ac-p-3 ac-shadow-xl ac-w-80" v-show="edit == 'alt'">
+      <div class="ac-flex ac-justify-between ac-w-full ac-cursor-pointer" @click="edit = false">
         <p>Alt tag setzten</p>
         <svg class="ac-w-6 ac-h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -36,7 +48,9 @@
       </div>
       <input type="text" class="ac-admin-input" v-model="editables.alt" placeholder="alt text">
     </div>
-    <div class="ac-absolute  ac-bottom-0 ac-right-0 ac-text-white  ">
+
+
+    <div class="ac-absolute  ac-bottom-0 ac-right-0 ac-text-white">
       <div class="ac-flex ac-space-x-2">
         <div class="ac-w-10 ac-h-10 ac-bg-plugin ac-rounded-full ac-flex ac-items-center ac-justify-center" @click="edit = 'image'">
           <svg class="ac-w-6 ac-h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -98,6 +112,15 @@ export default {
         Href: this.editables.href,
         Alt: this.editables.alt
       }
+    },
+  },
+  computed: {
+    validateUrl() {
+
+      if(this.editables.href == '' || this.editables.href == undefined) return false;
+
+      var regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+      return regex.test(this.editables.href);
     }
   }
 }

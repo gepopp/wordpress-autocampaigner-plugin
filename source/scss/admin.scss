@@ -7,7 +7,7 @@ img{
 }
 
 .ac-admin-input{
-  @apply ac-block ac-w-full ac-border ac-border-gray-600 ac-p-1 ac-rounded-none ac-w-72 !important;
+  @apply ac-block ac-w-full ac-border ac-border-gray-600 ac-p-1 ac-rounded-none !important;
   @apply focus:ac-border-plugin focus:ac-border-2 focus:ac-shadow-none !important;
 }
 
@@ -17,4 +17,27 @@ img{
 
 .ac-button{
   @apply ac-bg-plugin ac-text-white ac-text-center ac-py-3 ac-w-full;
+}
+
+.ql-container {
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  text-align: inherit !important;
+  color: inherit !important;
+  .ql-editor{
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    text-align: inherit !important;
+    color: inherit !important;
+    @apply ac-border ac-border-plugin ac-border-opacity-25;
+    p, a, strong, h1, h2, h3, h4, h5, h6{
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      text-align: inherit !important;
+      color: inherit !important;
+    }
+  }
 }

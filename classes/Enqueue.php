@@ -48,6 +48,8 @@ class Enqueue {
 			AUTOCAMPAIGNER_VERSION
 		);
 
+		wp_dequeue_style('common');
+
 	}
 
 }

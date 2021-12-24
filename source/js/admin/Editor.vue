@@ -1,47 +1,32 @@
 <template>
   <div>
-    <div v-show="!saved">
+    <div>
       <slot/>
-      <button class="ac-button save-button" @click="saveCampaign()">speichern</button>
     </div>
-    <div v-show="saved">
-      <form :action="adminurl" method="post">
-        <input type="hidden" name="action" value="autocampaigner_schedule_campagin">
+      <form :action="adminurl" method="post" @submit.prevent="saveCampaign" ref="form">
+        <input type="hidden" name="action" value="autocampaigner_save_draft_content">
         <input type="hidden" name="nonce" :value="nonce">
         <input type="hidden" name="draft" :value="draft">
-        <div class="ac-my-48 ac-flex ac-justify-center ac-items-center">
-          <div class="ac-w-3xl ac-p-10 ac-border ac-border-plugin">
-            <h3 class="ac-text-3xl ac-mb-10">Newsletter Versand</h3>
-            <div class="ac-mb-4">
-              <label class="ac-label">Bestätigung senden an:</label>
-              <input class="ac-admin-input" type="text" v-model="campagne.confirm_email" name="confirm_email">
-            </div>
-            <button class="ac-button" @click="">weiter</button>
-          </div>
-        </div>
+        <input type="hidden" name="content" :value="createContent">
+        <button class="ac-button">weiter</button>
       </form>
     </div>
-  </div>
 </template>
 <script>
-import Axios from "axios";
 import Qs from "qs";
+
 
 export default {
   name: "Editor",
-  props: ['draft', 'adminurl', 'nonce', 'confirm_email_setting'],
+  props: ['draft', 'adminurl', 'confirm_email_setting'],
   data() {
     return {
-      content: '',
+      content: false,
       multilines: [],
       images: [],
       repeaters: [],
       singlelines: [],
-      saved: false,
-      campagne: {
-        schedule: '',
-        confirm_email: this.confirm_email_setting
-      },
+      nonce: xhr.nonce
     }
   },
   mounted() {
@@ -60,46 +45,46 @@ export default {
     })
   },
   methods: {
+
     saveCampaign() {
+        this.$refs.form.submit();
+    },
+  },
+  computed: {
+    createContent() {
 
-      var images = [];
+        var images = [];
 
-      this.images.forEach((image) => {
-       images.push( image.saveData() );
-      })
+        this.images.forEach((image) => {
+          images.push(image.saveData());
+        })
 
-      var multilines = [];
+        var multilines = [];
 
-      this.multilines.forEach((multiline) => {
-        multilines.push(multiline.saveData());
-      })
+        this.multilines.forEach((multiline) => {
+          multilines.push(multiline.saveData());
+        })
 
-      var repeaters = [];
+        var repeaters = [];
 
-      this.repeaters.forEach((repeater) => {
-        repeaters.push(repeater.saveData());
-      })
+        this.repeaters.forEach((repeater) => {
+          repeaters.push(repeater.saveData());
+        })
 
-      var singlelines = [];
+        var singlelines = [];
 
-      this.singlelines.forEach((singleline) => {
-        singleline.push(singleline.saveData());
-      })
+        this.singlelines.forEach((singleline) => {
+          singleline.push(singleline.saveData());
+        })
 
-       // console.error(singlelines)
-       // console.error(repeaters)
 
-      Axios.post(xhr.ajaxurl, Qs.stringify({
-        action: 'autocampaigner_save_content',
-        nonce: xhr.nonce,
-        draft: this.draft,
-        content: {
+        return JSON.stringify({
           Images: images,
           Multilines: multilines,
           Repeaters: repeaters,
           Singlelines: singlelines
-        }
-      })).then((rsp) => this.saved = rsp.data)
+        });
+
     }
   }
 }

@@ -2,13 +2,20 @@
 
 namespace Autocampaigner\controller;
 
+use Carbon\Carbon;
 use Autocampaigner\Options;
 use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+
+
 
 class CampaignController extends BaseController {
 
 
+
+
+
 	use Options;
+
 
 
 	/**
@@ -17,16 +24,64 @@ class CampaignController extends BaseController {
 	protected $endpoint_str = 'campaignid';
 
 
+
+
+
 	/**
 	 * @var string[] used endpoints
 	 */
 	protected $endpoints = [
-		'create'    => 'campaigns/{clientid}/fromtemplate.json',
-		'send'      => 'campaigns/{campaignid}/send.json',
-		'sent'      => 'clients/{clientid}/campaigns.json',
-		'scheduled' => 'clients/{clientid}/scheduled.json',
-		'drafts'    => 'clients/{clientid}/drafts.json',
+		'create'     => 'campaigns/{clientid}/fromtemplate.json',
+		'send'       => 'campaigns/{campaignid}/send.json',
+		'sent'       => 'clients/{clientid}/campaigns.json',
+		'scheduled'  => 'clients/{clientid}/scheduled.json',
+		'unschedule' => 'campaigns/{campaignid}/unschedule.json',
+		'drafts'     => 'clients/{clientid}/drafts.json',
+		'preview'    => 'campaigns/{campaignid}/sendpreview.json',
+		'summary'    => 'campaigns/{campaignid}/summary.json',
 	];
+
+
+	public function unschedule(){
+		return $this->call($this->get_endpoint('unschedule'), 'post');
+	}
+
+
+
+	public function determine_cm_campaign_status( $campaign_id ) {
+
+
+		$stati = [ 'drafts', 'scheduled', 'sent' ];
+
+		foreach ( $stati as $status ) {
+
+			$all = $this->{$status}();
+
+			if ( is_array( $all ) ) {
+
+				$filtered = array_filter( $all, function ( $campaign ) use ( $campaign_id ) {
+
+					if ( $campaign->CampaignID == $campaign_id ) {
+						return $campaign;
+					}
+				} );
+
+				if ( ! empty( $filtered ) ) {
+
+					return [
+						'status' => $status,
+						'info'   => array_shift( $filtered ),
+					];
+
+				}
+			}
+		}
+
+		return [
+			'status' => 'new',
+			'info'   => [],
+		];
+	}
 
 
 
@@ -42,8 +97,10 @@ class CampaignController extends BaseController {
 	 */
 	public function send( $date_time = false ) {
 
-		if ( ! $date_time ) {
+		if ( ! $date_time || empty( $date_time ) ) {
 			$date_time = 'Immediately';
+		} else {
+			$date_time = Carbon::parse( $date_time )->format( 'Y-m-d H:i' );
 		}
 
 
@@ -52,6 +109,16 @@ class CampaignController extends BaseController {
 			'post',
 			[ 'ConfirmationEmail' => $this->get_confirm_email(), 'SendDate' => $date_time ]
 		);
+	}
+
+
+
+
+
+	public function preview( $recipients ) {
+
+		return $this->call( $this->get_endpoint( 'preview' ), 'post', [ 'PreviewRecipients' => explode( ',', $recipients ) ] );
+
 	}
 
 
@@ -111,11 +178,30 @@ class CampaignController extends BaseController {
 	public function default_values() {
 
 		return [
-			'from_name'   => $this->get_from_name(),
-			'from_email'  => $this->get_from_email(),
-			'reply_email' => $this->get_reply_email(),
+			'from_name'     => $this->get_from_name(),
+			'from_email'    => $this->get_from_email(),
+			'reply_email'   => $this->get_reply_email(),
+			'confirm_email' => $this->get_confirm_email(),
 		];
 
+	}
+
+
+
+
+
+	public function get_cm_draft_details( $draft_id ) {
+
+		$drafts = $this->drafts();
+
+		$filtered = array_filter( $drafts, function ( $draft ) use ( $draft_id ) {
+
+			if ( $draft_id == $draft->CampaignID ) {
+				return $draft;
+			}
+		} );
+
+		return array_shift( $filtered );
 	}
 
 }
