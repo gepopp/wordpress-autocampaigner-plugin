@@ -114,7 +114,7 @@ class CampaignDrafts {
 		$campaign['FromEmail']  = $header_data['from_email'];
 		$campaign['ReplyTo']    = $header_data['reply_email'];
 		$campaign['ListIDs']    = get_option( 'autocampaigner_used_lists' );
-		$campaign['TemplateID'] = $template_description->TemplateID;
+		$campaign['TemplateID'] = $template_description['TemplateID'];
 
 		$campaign['TemplateContent'] = maybe_unserialize( $draft['content'] );
 
