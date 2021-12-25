@@ -12,19 +12,21 @@ class CampaignApiModel extends BaseModel {
 
 
 
+
+
 	public function create_draft( $draft_id ) {
 
+
 		$draft       = new CampaignDraftModel( $draft_id );
+		$description = new Description( $draft->template );
 
 		if(!empty($draft->cm_id)){
 			try{
 				$this->delete('delete');
-			}catch (CmApiCallUnsuccsessfull $e){}
+			}catch (CmApiCallUnsuccsessfull $e){
 
+			}
 		}
-
-
-		$description = new Description( $draft->template );
 
 		$campaign_id = $this->create( 'post', [
 			'Name'            => $draft->header_data['campaign_name'],
