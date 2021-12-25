@@ -54,8 +54,21 @@ class TemplateModel extends BaseModel {
 		try{
 			return $this->update('put', $this->request_body());
 		}catch (CmApiCallUnsuccsessfull $e){
-			return $this->create('post', $this->request_body() );
+			return $this->create_template();
 		}
+
+
+	}
+
+	public function create_template(){
+
+		$template_id = $this->create('post', $this->request_body() );
+
+		$description = new Description($this->folder);
+		$description['TemplateID'] = $template_id;
+		$description->save();
+
+		return $template_id;
 
 
 	}
