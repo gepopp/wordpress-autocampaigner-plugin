@@ -13,25 +13,26 @@
         <div class="ac-col-span-2 ac-pr-5">
 
 
-          <div v-if="status == 'new'">
+          <div v-if="status != 'sent'">
             <template-updater :template-folder="campaign.template" ref="templateupdater" @templateUpdated="createDraft"></template-updater>
-            <create-draft-on-cm :campaign="campaign" ref="draftCreator" @draftCreated="reloadInfo"></create-draft-on-cm>
+            <create-draft-on-cm :campaign="campaign" ref="draftCreator" @draftCreated="reloadInfo(); isUpdating = false"></create-draft-on-cm>
           </div>
 
-          <div v-if="status == 'drafts'">
-            <send-preview :cm_id="cm_id"></send-preview>
-            <schduler :cm_id="cm_id" @scheduled="reloadInfo"></schduler>
+          <div v-show="!isUpdating">
+            <div v-if="status == 'drafts'">
+              <send-preview :cm_id="cm_id"></send-preview>
+              <schduler :cm_id="cm_id" @scheduled="reloadInfo"></schduler>
+            </div>
+
+
+            <div v-if="status == 'sent'">
+              <sent-campaign-info :statusinfo="statusinfo"></sent-campaign-info>
+            </div>
+
+            <div v-if="status == 'scheduled'">
+              <unscheduler :statusinfo="statusinfo" @unscheduled="reloadInfo"></unscheduler>
+            </div>
           </div>
-
-
-          <div v-if="status == 'sent'">
-            <sent-campaign-info :statusinfo="statusinfo"></sent-campaign-info>
-          </div>
-
-          <div v-if="status == 'scheduled'">
-            <unscheduler :statusinfo="statusinfo" @unscheduled="reloadInfo"></unscheduler>
-          </div>
-
 
         </div>
       </div>
@@ -60,7 +61,8 @@ export default {
       draft_details: false,
       scheduled: false,
       statusinfo: this.info.info,
-      status: this.info.status
+      status: this.info.status,
+      isUpdating: true
     }
   },
   mounted() {

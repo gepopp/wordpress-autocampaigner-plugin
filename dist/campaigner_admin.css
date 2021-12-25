@@ -832,12 +832,6 @@ video {
   justify-content: flex-start;
 }
 
-.ac-justify-end {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
 .ac-justify-center {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -997,6 +991,11 @@ video {
   padding-bottom: 0.75rem;
 }
 
+.ac-px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
 .ac-py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
@@ -1010,11 +1009,6 @@ video {
 .ac-px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-}
-
-.ac-px-10 {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
 }
 
 .ac-pb-3 {
