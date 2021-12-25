@@ -92,6 +92,8 @@ class CampaignDraftController extends BaseController {
 			$screen = sanitize_text_field( $_GET['screen'] );
 		}
 
+
+
 		switch ( $screen ) {
 
 			case 'create':
@@ -147,10 +149,17 @@ class CampaignDraftController extends BaseController {
 		$parser = new TemplateParser( $this->model->template, $this->model->content );
 		$html   = $parser->parse_template_html_for_editor();
 
+		$restart_link = add_query_arg([
+			'page' => 'autocampaigner_admin_page',
+			'screen' => 'create',
+			'draft' => $this->model->get_id()
+        ], admin_url());
+
 		ob_start();
 		?>
         <editor
                 :draft="<?php echo $this->model->get_id() ?>"
+                back="<?php  echo $restart_link  ?>"
         ><?php echo $html ?></editor>
 		<?php
 		return ob_get_clean();
@@ -167,12 +176,20 @@ class CampaignDraftController extends BaseController {
 
 		$statusinfo = ( new CampaignApiModel() )->determine_cm_campaign_status( $this->model->cm_id );
 
+		$restart_link = add_query_arg([
+			'page' => 'autocampaigner_admin_page',
+			'screen' => 'create',
+			'draft' => $this->model->get_id()
+		], admin_url());
+
+
 		ob_start();
 		?>
         <draft-sender
                 :campaign="<?php echo htmlentities( json_encode( $this->model ) ) ?>"
                 :info="<?php echo htmlentities( json_encode( $statusinfo ) ) ?>"
                 template-preview="<?php echo $this->get_templates_folder_url() . $this->model->template . '/index.html' ?>"
+                back="<?php  echo $restart_link  ?>"
         ></draft-sender>
 		<?php
 		return ob_get_clean();

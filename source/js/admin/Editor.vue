@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="ac-flex ac-justify-between">
+      <a :href="back" class="ac-bg-plugin ac-text-white ac-px-10 ac-py-3">zurück</a>
+      <form :action="adminurl" method="post" @submit.prevent="saveCampaign" ref="form">
+        <input type="hidden" name="action" value="autocampaigner_save_draft_content">
+        <input type="hidden" name="nonce" :value="nonce">
+        <input type="hidden" name="draft" :value="draft">
+        <input type="hidden" name="content" :value="createContent">
+        <button class="ac-bg-plugin ac-text-white ac-px-10 ac-py-3">weiter</button>
+      </form>
+    </div>
     <div class="ac-relative">
       <div class="ac-fixed ac-top-0 ac-right-0 ac-m-40 ac-bg-plugin ac-rounded-full ac-p-2 ac-text-white ac-w-12 ac-h-12 ac-z-50" v-if="autosavestatus">
         <svg v-if="autosavestatus == 'saving'" class="ac-animate-pulse ac-w-8 ac-h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -14,13 +24,7 @@
       </div>
       <slot/>
     </div>
-    <form :action="adminurl" method="post" @submit.prevent="saveCampaign" ref="form">
-      <input type="hidden" name="action" value="autocampaigner_save_draft_content">
-      <input type="hidden" name="nonce" :value="nonce">
-      <input type="hidden" name="draft" :value="draft">
-      <input type="hidden" name="content" :value="createContent">
-      <button class="ac-button">weiter</button>
-    </form>
+
   </div>
 </template>
 <script>
@@ -30,7 +34,7 @@ import debounce from "lodash.debounce";
 
 export default {
   name: "Editor",
-  props: ['draft', 'confirm_email_setting'],
+  props: ['draft', 'confirm_email_setting', 'back'],
   data() {
     return {
       content: false,

@@ -25,18 +25,18 @@ trait Endpoints {
 
 	protected $endpoints = [
 
-		'list'     => [
+		'list'        => [
 			'list'    => 'clients/{clientid}/lists.json',
 			'details' => 'lists/{listid}.json',
 			'stats'   => 'lists/{listid}/stats.json',
 		],
-		'template' => [
+		'template'    => [
 			'list'    => 'clients/{clientid}/templates.json',
 			'create'  => 'templates/{clientid}.json',
 			'update'  => 'templates/{templateid}.json',
 			'details' => 'templates/{templateid}.json',
 		],
-		'campaignapi'   => [
+		'campaignapi' => [
 			'sent'       => 'clients/{clientid}/campaigns.json',
 			'drafts'     => 'clients/{clientid}/drafts.json',
 			'scheduled'  => 'clients/{clientid}/scheduled.json',
@@ -45,7 +45,8 @@ trait Endpoints {
 			'unschedule' => 'campaigns/{campaignapiid}/unschedule.json',
 			'preview'    => 'campaigns/{campaignapiid}/sendpreview.json',
 			'summary'    => 'campaigns/{campaignapiid}/summary.json',
-		]
+			'delete'     => 'campaigns/{campaignapiid}.json',
+		],
 
 
 	];
