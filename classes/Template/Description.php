@@ -22,7 +22,7 @@ class Description implements \ArrayAccess {
 
 
 
-	private $description;
+	public $description;
 
 
 

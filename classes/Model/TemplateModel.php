@@ -52,9 +52,13 @@ class TemplateModel extends BaseModel {
 		}
 
 		try{
+			$template_details = $this->details();
+			if(empty($template_details)){
+				return $this->create_template();
+			}
 			return $this->update('put', $this->request_body());
 		}catch (CmApiCallUnsuccsessfull $e){
-			return $this->create_template();
+
 		}
 
 
