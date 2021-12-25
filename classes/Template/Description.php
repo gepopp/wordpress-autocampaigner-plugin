@@ -72,6 +72,7 @@ class Description implements \ArrayAccess {
 	public function save_template_description( $description ) {
 
 		file_put_contents( $this->get_templates_folder() . $this->folder . '/description.json', json_encode( $description ) );
+
 	}
 
 

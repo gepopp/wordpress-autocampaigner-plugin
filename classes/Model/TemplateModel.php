@@ -4,7 +4,6 @@ namespace Autocampaigner\Model;
 
 use Autocampaigner\Options;
 use Autocampaigner\Template\Description;
-use Carbon\Exceptions\UnknownMethodException;
 use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
 
 
@@ -29,11 +28,13 @@ class TemplateModel extends BaseModel {
 
 
 
-	public function set_folder($folder){
 
-		$this->folder = $folder;
+
+	public function set_folder( $folder ) {
+
+		$this->folder      = $folder;
 		$this->description = new Description( $folder );
-		$this->id = $this->description['TemplateID'];
+		$this->id          = $this->description['TemplateID'];
 	}
 
 
@@ -47,30 +48,40 @@ class TemplateModel extends BaseModel {
 	 */
 	public function create_or_update_on_cm( $folder = false ) {
 
-		if($folder){
-			$this->set_folder($folder);
+
+		if ( $folder ) {
+			$this->set_folder( $folder );
 		}
 
-		try{
+		try {
 			$template_details = $this->details();
-			if(empty($template_details)){
+			if ( empty( $template_details->Name ) ) {
 				return $this->create_template();
 			}
-			return $this->update('put', $this->request_body());
-		}catch (CmApiCallUnsuccsessfull $e){
-
+		} catch ( CmApiCallUnsuccsessfull $e ) {
+			return $this->create_template();
 		}
 
+
+		try {
+			return $this->update( 'put', $this->request_body() );
+		} catch ( CmApiCallUnsuccsessfull $e ) {
+			return $this->create_template();
+		}
 
 	}
 
-	public function create_template(){
 
-		$template_id = $this->create('post', $this->request_body() );
 
-		$description = new Description($this->folder);
+
+
+	public function create_template() {
+
+		$template_id               = $this->create( 'post', $this->request_body() );
+		$description               = new Description( $this->folder );
 		$description['TemplateID'] = $template_id;
-		$description->save();
+
+		$description->save_template_description( $description );
 
 		return $template_id;
 
@@ -86,7 +97,7 @@ class TemplateModel extends BaseModel {
 	 *
 	 * @return array
 	 */
-	public function     request_body(  ) {
+	public function request_body() {
 
 		$htmlurl = AUTOCAMPAIGNER_URL . '/email_templates/' . $this->folder . '/index.html';
 		$zipurl  = AUTOCAMPAIGNER_URL . '/email_templates/' . $this->folder . '/images.zip';
