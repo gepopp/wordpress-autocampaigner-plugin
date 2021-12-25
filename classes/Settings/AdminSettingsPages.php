@@ -3,11 +3,14 @@
 namespace Autocampaigner\Settings;
 
 
-use Autocampaigner\models\ListsModel;
-use Autocampaigner\models\CampaignModel;
-use Autocampaigner\models\TemplatesModel;
-use Autocampaigner\Templates as TemplateHandler;
+
+
+
+use Autocampaigner\Templates;
+use Autocampaigner\Controller\ListController;
+use Autocampaigner\Controller\TemplateController;
 use Autocampaigner\Settings\Sections\MainSettings;
+use Autocampaigner\Controller\CampaignDraftController;
 
 
 
@@ -17,7 +20,7 @@ class AdminSettingsPages {
 
 
 
-	use SettingsFieldsOutput, TemplateHandler;
+	use SettingsFieldsOutput, Templates;
 
 
 
@@ -50,12 +53,25 @@ class AdminSettingsPages {
 
 		add_submenu_page(
 			'autocampaigner_admin_page',
+			__( 'Drafts', 'autocampaigner' ),
+			__( 'Drafts', 'autocampaigner' ),
+			'administrator',
+			'autocampaigner_drafts_page',
+			[ $this, 'drafts_page_content' ],
+			2 );
+
+
+		add_submenu_page(
+			'autocampaigner_admin_page',
 			__( 'Subscriber Lists', 'autocampaigner' ),
 			__( 'Subscriber Lists', 'autocampaigner' ),
 			'administrator',
 			'autocampaigner_lists_page',
 			[ $this, 'lists_page_content' ],
-			1 );
+			3 );
+
+
+
 
 		add_submenu_page(
 			'autocampaigner_admin_page',
@@ -64,7 +80,7 @@ class AdminSettingsPages {
 			'administrator',
 			'autocampaigner_tepmplates_page',
 			[ $this, 'tempplates_page_content' ],
-			2 );
+			4 );
 
 		add_submenu_page(
 			'autocampaigner_admin_page',
@@ -73,12 +89,22 @@ class AdminSettingsPages {
 			'administrator',
 			'autocampaigner_settings_page',
 			[ $this, 'settings_page_content' ],
-			3 );
+			5 );
+
 
 	}
 
 
+	function drafts_page_content() {
 
+		$this->admin_template(
+			'base',
+			[
+				'title'   => __( 'Recent Drafts', 'autocampaigner' ),
+				'content' => ( new CampaignDraftController() )->list(),
+			] );
+
+	}
 
 
 	function tempplates_page_content() {
@@ -87,7 +113,7 @@ class AdminSettingsPages {
 			'base',
 			[
 				'title'   => __( 'Templates', 'autocampaigner' ),
-				'content' => ( new TemplatesModel() )->render(),
+				'content' => ( new TemplateController() )->list(),
 			] );
 	}
 
@@ -101,7 +127,7 @@ class AdminSettingsPages {
 			'base',
 			[
 				'title'   => __( 'Subscriber lists', 'autocampaigner' ),
-				'content' => ( new ListsModel() )->render(),
+				'content' => ( new ListController() )->list(),
 			] );
 
 	}
@@ -116,7 +142,7 @@ class AdminSettingsPages {
 			'base',
 			[
 				'title'   => __( 'New Campaign', 'autocampaigner' ),
-				'content' => ( new CampaignModel() )->render(),
+				'content' => ( new CampaignDraftController() )->render(),
 			] );
 
 	}

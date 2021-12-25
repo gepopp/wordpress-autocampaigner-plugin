@@ -11,12 +11,18 @@
         <li v-for="list in listDetails" :key="list.ListID" class="ac-p-2 ac-mb-2 ac-border-b ac-border-plugin">
           <label class="ac-flex ac-items-center ac-space-x-4 ac-w-full">
             <input type="checkbox" v-model="setLists" :value="list.ListID" @change="save">
-            <div class="ac-w-full">
+            <div class="ac-w-full ac-flex ac-w-full ac-justify-between">
               <p class="ac-font-bold ac-w-full" v-text="list.Name"></p>
-              <div class="ac-flex ac-w-full ac-justify-between">
-                <span>Aktive Empänger gesamt: <strong v-text="list.TotalActiveSubscribers"></strong></span>
-                <span>Aktive Empänger diesen Monat: <strong v-text="list.NewActiveSubscribersThisMonth"></strong></span>
-                <span>Aktive Empänger diese Woche: <strong v-text="list.NewActiveSubscribersThisWeek"></strong></span>
+              <div class="ac-flex ac-flex-col ac-px-5" :class="{ 'ac-animate-pulse ac-blur-sm' : list.TotalActiveSubscribers == undefined }">
+                <p class="ac-whitespace-nowrap ac-flex ac-justify-between">
+                  <span class="ac-mr-10">Aktive Empänger gesamt:</span>
+                  <strong class="ac-w-10 ac-text-right" v-text="list.TotalActiveSubscribers"></strong></p>
+                <p class="ac-whitespace-nowrap ac-flex ac-justify-between">
+                  <span class="ac-mr-10">Aktive Empänger diesen Monat:</span>
+                  <strong class="ac-w-10 ac-text-right" v-text="list.NewActiveSubscribersThisMonth"></strong></p>
+                <p class="ac-whitespace-nowrap ac-flex ac-justify-between">
+                  <span class="ac-mr-10">Aktive Empänger diese Woche:</span>
+                  <strong class="ac-w-10 ac-text-right" v-text="list.NewActiveSubscribersThisWeek"></strong></p>
               </div>
             </div>
           </label>
@@ -42,29 +48,17 @@ export default {
   props: ['lists', 'usedListsPreload'],
   data() {
     return {
-      listDetails: [],
-      isLoading: true,
-      setLists: this.usedListsPreload
+      listDetails: this.lists,
+      isLoading: false,
+      setLists: this.usedListsPreload,
+      retry: []
     }
   },
   mounted() {
-    this.lists.forEach((list) => {
-      Axios.post(xhr.ajaxurl, Qs.stringify({
-        action: 'autocampainger_load_list_details',
-        nonce: xhr.nonce,
-        list_id: list.ListID
-      })).then((rsp) => {
-        this.listDetails.push({...list, ...rsp.data});
-        if (this.lists.length == this.listDetails.length){
-
-          this.listDetails.sort((a,b) => b.TotalActiveSubscribers - a.TotalActiveSubscribers);
-          this.isLoading = false;
-        }
-      });
-    })
+    this.listDetails.forEach((list, index) => this.loadListDetails(list, index));
   },
-  methods:{
-    save(){
+  methods: {
+    save() {
 
       this.isLoading = true;
 
@@ -73,9 +67,23 @@ export default {
         nonce: xhr.nonce,
         lists: this.setLists
       })).then((rsp) => this.isLoading = false)
+    },
+    loadListDetails(list, index) {
+
+      Axios.post(xhr.ajaxurl, Qs.stringify({
+        action: 'autocampainger_load_list_details',
+        nonce: xhr.nonce,
+        list_id: list.ListID
+      })).then((rsp) => {
+        this.listDetails[index] = {...this.listDetails[index], ...rsp.data};
+        this.listDetails.sort((a, b) => b.TotalActiveSubscribers - a.TotalActiveSubscribers);
+      }).catch(() => {
+        this.loadListDetails(list, index)
+      });
     }
   }
 }
+
 </script>
 
 <style scoped>

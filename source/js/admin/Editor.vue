@@ -18,7 +18,7 @@ import Qs from "qs";
 
 export default {
   name: "Editor",
-  props: ['draft', 'adminurl', 'confirm_email_setting'],
+  props: ['draft', 'confirm_email_setting'],
   data() {
     return {
       content: false,
@@ -26,7 +26,8 @@ export default {
       images: [],
       repeaters: [],
       singlelines: [],
-      nonce: xhr.nonce
+      nonce: xhr.nonce,
+      adminurl: xhr.posturl
     }
   },
   mounted() {

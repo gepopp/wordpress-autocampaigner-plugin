@@ -49,6 +49,7 @@ class Tables {
 		template VARCHAR(255) NULL,		
 		content TEXT NULL,
 		cm_id VARCHAR(255) NULL,
+		status VARCHAR(50) NULL AFTER cm_id
 		created_at TIMESTAMP NOT NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";

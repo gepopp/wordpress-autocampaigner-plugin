@@ -48,7 +48,7 @@ export default {
         cm_id: this.statusinfo.CampaignID
       })).then((rsp) => {
         this.$emit('unscheduled', { cm_id: this.statusinfo.CampaignID })
-      });
+      }).catch(() => this.status = false);
     }
   }
 }

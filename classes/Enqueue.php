@@ -31,11 +31,11 @@ class Enqueue {
 		], AUTOCAMPAIGNER_VERSION, true );
 
 
-
 		wp_localize_script( 'autocampaigner_admin_script', 'xhr', [
 			'rootapiurl' => esc_url_raw( rest_url() ),
 			'nonce'      => wp_create_nonce( 'wp_rest' ),
 			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+			'posturl'   => admin_url( 'admin-post.php' ),
 		] );
 
 
@@ -48,7 +48,7 @@ class Enqueue {
 			AUTOCAMPAIGNER_VERSION
 		);
 
-		wp_dequeue_style('common');
+		wp_dequeue_style( 'common' );
 
 	}
 

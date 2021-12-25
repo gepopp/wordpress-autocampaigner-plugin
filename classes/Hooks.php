@@ -3,9 +3,10 @@
 namespace Autocampaigner;
 
 
-use Autocampaigner\controller\ListsController;
-use Autocampaigner\controller\CampaignController;
-use Autocampaigner\controller\TemplatesController;
+use Autocampaigner\Model\ListModel;
+use Autocampaigner\Model\TemplateModel;
+use Autocampaigner\Model\CampaignApiModel;
+use Autocampaigner\Model\CampaignDraftModel;
 use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
 
 
@@ -33,7 +34,7 @@ class Hooks {
 		add_action( 'wp_ajax_autocampainger_update_used_lists', [ $this, 'autocampainger_update_used_lists' ] );
 
 		//uploads or updates templates on cm
-		add_action( 'wp_ajax_autocampainger_upload_template', [ $this, 'autocampainger_upload_template' ] );
+		add_action( 'wp_ajax_autocampaigner_update_template_on_cm', [ $this, 'autocampainger_upload_template' ] );
 
 		// gets the templates from cm
 		add_action( 'wp_ajax_autocampainger_get_templates', [ $this, 'autocampainger_get_templates' ] );
@@ -47,14 +48,9 @@ class Hooks {
 		// saves content from editor
 		add_action( 'wp_ajax_autocampaigner_save_content', [ $this, 'autocampaigner_save_content' ] );
 
-		// saves header data to new draft
-		add_action( 'admin_post_autocampaigner_create_campaign', [ $this, 'create_campaign' ] );
 
 		// saves content to given draft
 		add_action( 'admin_post_autocampaigner_save_draft_content', [ $this, 'autocampaigner_save_draft_content' ] );
-
-		// tries to update template on cm by given local folder
-		add_action( 'wp_ajax_autocampaigner_update_template_on_cm', [ $this, 'update_template_on_cm' ] );
 
 
 		// creates a cm draft by given local draft id
@@ -82,6 +78,35 @@ class Hooks {
 
 		add_action( 'admin_post_autocampaigner_sent_campaign', [ $this, 'autocampaigner_sent_campaign' ] );
 
+		// creates or updates local draft
+		add_action( 'admin_post_autocampaigner_create_draft', [ $this, 'create_draft' ] );
+
+	}
+
+
+
+
+
+	/**
+	 * Creates or updates a local draft in the db
+	 */
+	public function create_draft() {
+
+		$this->verify_nonce();
+		$model = new CampaignDraftModel();
+
+		if ( $model->update_or_create() ) {
+			wp_safe_redirect(
+				add_query_arg( [
+					'draft'  => $model->get_id(),
+					'screen' => 'edit',
+				],
+					$_SERVER['HTTP_REFERER'] ) );
+			exit();
+		}
+
+		global $wpdb;
+		wp_die( $wpdb->last_error );
 	}
 
 
@@ -90,14 +115,9 @@ class Hooks {
 
 	public function unschedule_campaign() {
 
-
 		$this->verify_nonce();
-		$controller = new CampaignController();
-		$controller->itemId = sanitize_text_field( $_POST['cm_id'] );
 		try {
-
-			wp_die(  $controller->unschedule() );
-
+			wp_die( ( new CampaignApiModel(sanitize_text_field($_POST['cm_id'])) )->unschedule('post') );
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 			wp_die( $e->getMessage(), 400 );
 		}
@@ -110,11 +130,9 @@ class Hooks {
 	public function load_cm_draft_status() {
 
 		$this->verify_nonce();
-
-		$controller = new CampaignController();
 		try {
 
-			wp_die( json_encode( $controller->determine_cm_campaign_status( sanitize_text_field( $_POST['cm_id'] ) ) ) );
+			wp_die( json_encode( ( new CampaignApiModel() )->determine_cm_campaign_status( sanitize_text_field( $_POST['cm_id'] ) ) ) );
 
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 			wp_die( $e->getMessage(), 400 );
@@ -129,12 +147,9 @@ class Hooks {
 
 		$this->verify_nonce();
 
-		$controller         = new CampaignController();
-		$controller->itemId = sanitize_text_field( $_POST['cm_id'] );
-
 		try {
 
-			wp_die( json_encode( $controller->summary() ) );
+			wp_die( json_encode( ( new CampaignApiModel( sanitize_text_field() ) )->summary() ) );
 
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 			wp_die( $e->getMessage(), 400 );
@@ -149,12 +164,9 @@ class Hooks {
 
 
 		$this->verify_nonce();
-
-		$controller         = new CampaignController();
-		$controller->itemId = sanitize_text_field( $_POST['cm_id'] );
-
 		try {
-			wp_die( $controller->send( sanitize_text_field( $_POST['schedule'] ) ) );
+			wp_die( (new CampaignApiModel(sanitize_text_field($_POST['cm_id'])))
+				->schedule_campaign( sanitize_text_field( $_POST['schedule'] ) ) );
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 			wp_die( $e->getMessage(), 400 );
 		}
@@ -168,11 +180,12 @@ class Hooks {
 
 		$this->verify_nonce();
 
-		$controller         = new CampaignController();
-		$controller->itemId = sanitize_text_field( $_POST['cm_id'] );
-
 		try {
-			wp_die( $controller->preview( sanitize_text_field( $_POST['recipients'] ) ) );
+			wp_die( ( new CampaignApiModel( sanitize_text_field( $_POST['cm_id'] ) ) )
+				->preview( 'post', [
+					'PreviewRecipients' =>
+						explode( ',', sanitize_text_field( $_POST['recipients'] ) ),
+				] ) );
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 			wp_die( $e->getMessage(), 400 );
 		}
@@ -187,11 +200,9 @@ class Hooks {
 
 		$this->verify_nonce();
 
-		$campaign_controller = new CampaignController();
-
 		try {
 
-			wp_die( json_encode( $campaign_controller->get_cm_draft_details( $_POST['cm_id'] ) ) );
+			wp_die( json_encode( ( new CampaignApiModel() )->get_cm_draft_details( $_POST['cm_id'] ) ) );
 
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 
@@ -210,35 +221,14 @@ class Hooks {
 
 		$this->verify_nonce();
 
-		$draft_handler = new CampaignDrafts();
-
 		try {
 
-			wp_die( $draft_handler->create_draft() );
+			wp_die( ( new CampaignApiModel() )->create_draft( sanitize_text_field( $_POST['draft'] ) ) );
 
 		} catch ( CmApiCallUnsuccsessfull $e ) {
 
 			wp_die( $e->getMessage(), 400 );
 
-		}
-
-
-	}
-
-
-
-
-
-	public function update_template_on_cm() {
-
-		$this->verify_nonce();
-
-		$templates_controller = new TemplatesController();
-
-		try {
-			wp_die( $templates_controller->create_or_update_on_cm( sanitize_text_field( $_POST['folder'] ) ) );
-		} catch ( CmApiCallUnsuccsessfull $e ) {
-			wp_die( $e->getMessage(), 400 );
 		}
 
 
@@ -253,7 +243,7 @@ class Hooks {
 		add_theme_support( 'post-thumbnails' );
 
 
-		$template_controller = new TemplatesController();
+		$template_controller = new TemplateModel();
 
 		$templates = $template_controller->get_templates_with_description();
 
@@ -278,14 +268,28 @@ class Hooks {
 
 
 
-	public function autocampaigner_search_posts() {
+	public function autocampaigner_sent_campaign() {
+
+//		$this->verify_nonce( 'sent_campaign' );
+		wp_die( ( new CampaignDrafts() )->send() );
+	}
+
+
+
+
+
+	public function autocampaigner_save_draft_content() {
 
 		$this->verify_nonce();
-		$results = $this->search_posts(
-			sanitize_text_field( $_POST['search'] ),
-			sanitize_text_field( $_POST['type'] ) == '' ? 'post' : sanitize_text_field( $_POST['type'] )
-		);
-		wp_die( json_encode( $results ) );
+		$draft = new CampaignDraftModel();
+
+		if ( $draft->save_content() ) {
+			wp_safe_redirect( add_query_arg( 'screen', 'send', $_SERVER['HTTP_REFERER'] ) );
+			exit;
+		}
+
+		global $wpdb;
+		wp_die( $wpdb->last_error );
 
 	}
 
@@ -293,10 +297,38 @@ class Hooks {
 
 
 
-	public function autocampaigner_sent_campaign() {
+	public function autocampainger_upload_template() {
 
-//		$this->verify_nonce( 'sent_campaign' );
-		wp_die( ( new CampaignDrafts() )->send() );
+		$this->verify_nonce();
+		try {
+			wp_die( ( new TemplateModel() )->create_or_update_on_cm( sanitize_text_field( $_POST['template_name'] ) ) );
+		} catch ( CmApiCallUnsuccsessfull $e ) {
+			wp_die( $e->getMessage(), 400 );
+		}
+
+	}
+
+
+
+
+
+	public function autocampainger_load_list_details() {
+
+		$this->verify_nonce();
+		wp_die( json_encode( ( new ListModel( sanitize_text_field( $_POST['list_id'] ) ) )->stats() ) );
+
+	}
+
+
+
+
+
+	public function autocampainger_update_used_lists() {
+
+		$this->verify_nonce();
+		wp_die( json_encode( ( new ListModel() )->toggle_used_list( $_POST['lists'] ) ) );
+
+
 	}
 
 
@@ -313,78 +345,14 @@ class Hooks {
 
 
 
-	public function autocampaigner_save_draft_content() {
+	public function autocampaigner_search_posts() {
 
 		$this->verify_nonce();
-		$draft = new CampaignDrafts();
-
-		if ( $draft->save_content() ) {
-			wp_safe_redirect( $draft->route() );
-		} else {
-			wp_safe_redirect( $_SERVER['HTTP_REFERER'] );
-		}
-
-	}
-
-
-
-
-
-	public function create_campaign() {
-
-		$this->verify_nonce();
-
-		$draft = new CampaignDrafts();
-
-		if ( $draft->save_header() ) {
-			wp_safe_redirect( $draft->route() );
-		} else {
-			wp_safe_redirect( $_SERVER['HTTP_REFERER'] );
-		}
-
-	}
-
-
-
-
-
-	public function autocampainger_get_templates() {
-
-		$this->verify_nonce();
-		wp_die( json_encode( ( new TemplatesController() )->list() ) );
-	}
-
-
-
-
-
-	public function autocampainger_upload_template() {
-
-		$this->verify_nonce();
-		wp_die( ( new TemplatesController() )->create_or_update_on_cm( sanitize_text_field( $_POST['template_name'] ) ) );
-
-	}
-
-
-
-
-
-	public function autocampainger_load_list_details() {
-
-		$this->verify_nonce();
-		wp_die( json_encode( ( new ListsController() )->stats( sanitize_text_field( $_POST['list_id'] ) ) ) );
-
-	}
-
-
-
-
-
-	public function autocampainger_update_used_lists() {
-
-		$this->verify_nonce();
-		wp_die( json_encode( ( new ListsController() )->toggle_used_list( $_POST['lists'] ) ) );
-
+		$results = $this->search_posts(
+			sanitize_text_field( $_POST['search'] ),
+			sanitize_text_field( $_POST['type'] ) == '' ? 'post' : sanitize_text_field( $_POST['type'] )
+		);
+		wp_die( json_encode( $results ) );
 
 	}
 

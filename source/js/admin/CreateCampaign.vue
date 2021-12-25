@@ -1,8 +1,9 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div>
     <form @keydown="errors = []" @submit.prevent method="post" :action="adminurl" ref="form">
-      <input type="hidden" name="action" value="autocampaigner_create_campaign">
+      <input type="hidden" name="action" value="autocampaigner_create_draft">
       <input type="hidden" name="nonce" :value="nonce">
+      <input type="hidden" name="draft" :value="draftId">
       <div class="ac-my-48 ac-flex ac-justify-center ac-items-center">
         <div class="ac-w-3xl ac-p-10 ac-border ac-border-plugin">
           <h3 class="ac-text-3xl ac-mb-10">Neuer Newsletter</h3>
@@ -15,7 +16,7 @@
             <div>
               <div class="ac-mb-4">
                 <label class="ac-label">Campagnen Name</label>
-                <input class="ac-admin-input" type="text" v-model="campagne.name" name="cmpaign_name">
+                <input class="ac-admin-input" type="text" v-model="campagne.campaign_name" name="cmpaign_name">
               </div>
               <div class="ac-mb-4">
                 <label class="ac-label">Betreff</label>
@@ -65,12 +66,12 @@
 
 export default {
   name: "CreateCampaign",
-  props: ['defaults', 'templates', 'adminurl', 'campaignnames'],
+  props: ['defaults', 'draftId', 'templates', 'template', 'campaignnames'],
   data() {
     return {
       step: 1,
       campagne: {
-        name: '',
+        campaign_name: '',
         subject: '',
         from_name: '',
         from_email: '',
@@ -78,9 +79,10 @@ export default {
         confirm_email: ''
       },
       errors: [],
-      template_name: false,
+      template_name: this.template,
       template_radio: Object.entries(this.templates),
-      nonce: xhr.nonce
+      nonce: xhr.nonce,
+      adminurl: xhr.posturl
     }
   },
   mounted() {
@@ -125,7 +127,8 @@ export default {
         }
       });
 
-      if (this.campaignnames.includes(this.campagne.name)) {
+      if (this.campagne.campaign_name !== this.defaults.campaign_name &&
+          this.campaignnames.includes(this.campagne.campaign_name)) {
         this.errors.push('Dieser Kampagnen Name ist schon vergeben.')
       }
 

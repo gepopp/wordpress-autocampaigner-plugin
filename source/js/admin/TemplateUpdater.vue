@@ -42,8 +42,6 @@ export default {
       error: ''
     }
   },
-  mounted() {
-  },
   methods: {
     updateTemplate() {
 
@@ -53,7 +51,7 @@ export default {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: "autocampaigner_update_template_on_cm",
         nonce: xhr.nonce,
-        folder: this.templateFolder
+        template_name: this.templateFolder
       }))
           .then((rsp) => this.updated = rsp.data)
           .catch((rsp) => this.error = rsp.response.data)

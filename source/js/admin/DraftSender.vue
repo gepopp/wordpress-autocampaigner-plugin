@@ -2,27 +2,22 @@
   <div class="ac-border-plugin ac-border">
     <div class="ac-grid ac-grid-cols-6 ac-gap-10 ac-py-5">
       <div class="ac-col-span-4 ac-border-r ac-border-plugin">
-        <div class="ac-w-full ac-h-full ac-flex ac-justify-center ac-items-center ac-bg-plugin" v-if="iframe_src == ''">
-          <svg class="ac-animate-spin ac-h-16 ac-w-16 ac-text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="ac-opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="ac-opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </div>
-        <iframe :src="iframe_src" width="100%" height="800"></iframe>
+        <iframe :src="templatePreview" width="100%" height="800" class="ac-blur ac-animate-pulse" v-if="status == 'new'"></iframe>
+        <iframe :src="iframe_src" width="100%" height="800" v-else></iframe>
       </div>
       <div class="ac-col-span-2 ac-pr-5">
 
 
-        <div v-if="status == 'drafts' || status == 'new'">
+        <div v-if="status == 'new'">
           <template-updater :template-folder="campaign.template" ref="templateupdater" @templateUpdated="createDraft"></template-updater>
           <create-draft-on-cm :campaign="campaign" ref="draftCreator" @draftCreated="reloadInfo"></create-draft-on-cm>
-
-          <div v-if="cm_id">
-            <send-preview :cm_id="cm_id"></send-preview>
-            <schduler :cm_id="cm_id" @scheduled="reloadInfo"></schduler>
-          </div>
-
         </div>
+
+        <div v-if="status == 'drafts'">
+          <send-preview :cm_id="cm_id"></send-preview>
+          <schduler :cm_id="cm_id" @scheduled="reloadInfo"></schduler>
+        </div>
+
 
         <div v-if="status == 'sent'">
           <sent-campaign-info :statusinfo="statusinfo"></sent-campaign-info>
@@ -51,7 +46,7 @@ import Unscheduler from "./Unscheduler.vue";
 export default {
   name: "DraftSender",
   components: {Unscheduler, SentCampaignInfo, Schduler, SendPreview, CreateDraftOnCm, TemplateUpdater},
-  props: ['campaign', 'info'],
+  props: ['campaign', 'info', 'templatePreview'],
   data() {
     return {
       cm_id: this.campaign.cm_id,
@@ -63,13 +58,13 @@ export default {
     }
   },
   mounted() {
-    if (this.status == 'drafts' || this.status == 'new') {
-      if (this.campaign.cm_id == null) {
-        this.$refs.templateupdater.updateTemplate()
-      } else {
-        this.resetUpdateStatus();
-        this.loadPreview();
-      }
+
+    if (this.status == 'new') {
+      this.$refs.templateupdater.updateTemplate();
+    }
+
+    if (this.status == 'drafts') {
+      this.loadPreview();
     }
 
     if (this.status == 'sent') {
@@ -104,7 +99,7 @@ export default {
 
         tries++;
 
-        if(tries> 4) clearInterval(interval);
+        if (tries > 4) clearInterval(interval);
 
       }, 3000);
     },
@@ -123,15 +118,13 @@ export default {
             this.resetUpdateStatus();
           });
     },
-    resetUpdateStatus(){
-      this.$refs.templateupdater.waiting = this.$refs.draftCreator.waiting = false;
-      this.$refs.templateupdater.updated = this.$refs.draftCreator.updated = true;
+    resetUpdateStatus() {
+      if(this.status == 'new'){
+        this.$refs.templateupdater.waiting = this.$refs.draftCreator.waiting = false;
+        this.$refs.templateupdater.updated = this.$refs.draftCreator.updated = true;
+      }
     }
 
   }
 }
 </script>
-
-<style scoped>
-
-</style>

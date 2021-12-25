@@ -20,6 +20,32 @@ trait Options {
 
 
 
+	private $templates_folder = 'email_templates';
+
+
+
+
+
+	private $table_names = [
+
+		'CampaignDraft' => 'ac_campaign_drafts',
+
+	];
+
+
+
+
+
+	public function get_driver() {
+
+		return 'CampaignMonitor';
+
+	}
+
+
+
+
+
 	/**
 	 * @return string
 	 */
@@ -159,6 +185,37 @@ trait Options {
 	public function get_confirm_email() {
 
 		return $this->get_general_setting( 'confirm_email' );
+	}
+
+
+
+
+
+	public function get_templates_folder() {
+
+		return trailingslashit( AUTOCAMPAIGNER_DIR . '/' . $this->templates_folder );
+	}
+
+	public function get_templates_folder_url() {
+
+		return trailingslashit( AUTOCAMPAIGNER_URL . '/' . $this->templates_folder );
+	}
+
+
+
+
+
+	public function get_table_name() {
+
+
+		$model = get_class( $this );
+		$model = explode( '\\', $model );
+
+		global $wpdb;
+
+		return $wpdb->prefix . $this->table_names[ str_replace( 'Model', '', array_pop( $model ) ) ];
+
+
 	}
 
 }

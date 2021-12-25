@@ -1,29 +1,11 @@
 <?php
 
-namespace Autocampaigner\controller;
-
-class ListsController extends BaseController {
+namespace Autocampaigner\Model;
 
 
+class ListModel  extends BaseModel {
 
 
-	/**
-	 * @var string $endpoint_str to replace in endpoint with $item_id
-	 */
-	protected $endpoint_str = 'listid';
-
-
-
-
-
-	/**
-	 * @var string[] used api endpoints
-	 */
-	protected $endpoints = [
-		'list'    => 'clients/{clientid}/lists.json',
-		'details' => 'lists/{listid}.json',
-		'stats'   => 'lists/{listid}/stats.json',
-	];
 
 
 

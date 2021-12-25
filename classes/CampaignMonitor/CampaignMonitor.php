@@ -1,30 +1,15 @@
 <?php
 
-namespace Autocampaigner;
+namespace Autocampaigner\CampaignMonitor;
 
 
+use Autocampaigner\Options;
 use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
 
-class CampaignMonitorApi {
+class CampaignMonitor {
 
-	use Options;
+	use Options, Endpoints;
 
-	/**
-	 * @var string $endpoint_str the string to replace in the endpoint
-	 */
-	protected $endpoint_str;
-
-
-	/**
-	 * @var string base api url
-	 */
-	protected $endpoint_base = 'https://api.createsend.com/api/v3.2/';
-
-
-	/**
-	 * @var array holds used endpoints in controller
-	 */
-	protected $endpoints = [];
 
 
 	/**
@@ -48,7 +33,7 @@ class CampaignMonitorApi {
 	 * @return mixed|string|void|null
 	 * @throws CmApiCallUnsuccsessfull
 	 */
-	public function call( $endpoint, $type = 'get', $body = [], $args = [], $headers = [] ) {
+	public function call( $endpoint, $type = 'get', $body = [] ) {
 
 		$args = [
 			'method'   => strtoupper( $type ),
@@ -116,25 +101,5 @@ class CampaignMonitorApi {
 
 
 
-
-
-
-
-	/**
-	 * @param $endpoint
-	 *
-	 * @return string
-	 */
-	public function get_endpoint( $endpoint ) {
-
-		$endpoint = $this->endpoint_base . $this->endpoints[$endpoint];
-
-		if ( str_contains( $endpoint, $this->endpoint_str ) ) {
-			$endpoint = str_replace( "{{$this->endpoint_str}}", $this->itemId, $endpoint );
-		}
-
-		return str_replace( '{clientid}', $this->get_client_id(), $endpoint );
-
-	}
 
 }

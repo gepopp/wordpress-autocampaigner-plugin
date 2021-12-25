@@ -30,17 +30,32 @@ class TemplateParser {
 
 
 
+	public $saved_content;
+
+
+
+
+
 	public $folder;
 
 
 
 
 
-	public function __construct( $folder ) {
+	public $multilines;
+
+
+
+
+
+	public function __construct( $folder, $content = [] ) {
+
+
+		$this->saved_content = $content;
 
 		$this->folder = $folder;
 
-		$this->template_direcotry = AUTOCAMPAIGNER_DIR . '/email_templates/' . $folder;
+		$this->template_direcotry = $this->get_templates_folder() . $folder;
 
 		$this->index_path = $this->template_direcotry . '/index.html';
 
@@ -67,11 +82,185 @@ class TemplateParser {
 		}
 
 		$this->make_images_editable( $document );
+		$this->fill_images_with_content( $document );
+
 		$this->replace_repeaters( $document );
+
 		$this->make_post_tables_editable( $document );
+
+		$this->fill_multiliens_with_content( $document );
+		$this->fill_singlelines_with_content( $document );
+
+		$repeaters = $document->getElementsByTagName( 'repeater' );
+		for ( $repeater_index = 0; $repeater_index < count( $repeaters ); $repeater_index ++ ) {
+
+			$layouts = $repeaters[ $repeater_index ]->getElementsByTagName( 'layout' );
+
+			for ( $layout_index = 0; $layout_index < count( $layouts ); $layout_index ++ ) {
+
+				$this->fill_images_with_content( $layouts[ $layout_index ], true, $repeater_index, $layout_index );
+				$this->fill_multiliens_with_content( $layouts[ $layout_index ], true, $repeater_index, $layout_index );
+				$this->fill_singlelines_with_content( $layouts[ $layout_index ], true, $repeater_index, $layout_index );
+
+			}
+		}
 
 
 		return $document->saveHTML();
+
+	}
+
+
+
+
+
+	public function fill_singlelines_with_content( $document, $is_repeater = false, $repeater_index = 0, $layout_index = 0 ) {
+
+		if ( ! isset( $this->saved_content->Singlelines ) ) {
+			return $document;
+		}
+
+
+		$to_remove    = [];
+		$single_lines = $document->getElementsByTagName( 'singleline' );
+
+
+		if ( ! $is_repeater ) {
+
+			for ( $i = 0; $i < count( $single_lines ); $i ++ ) {
+
+				$singleline = $single_lines[ $i ];
+
+				while ( $singleline->parentNode ) {
+
+					if ( $singleline->tagName == 'repeater' ) {
+						$to_remove[] = $i;
+					}
+					$singleline = $singleline->parentNode;
+				}
+			}
+		}
+
+		$set = 0;
+		for ( $i = 0; $i < count( $single_lines ); $i ++ ) {
+
+			if ( in_array( $i, $to_remove ) ) {
+				continue;
+			}
+
+			if ( ! $is_repeater ) {
+				$single_lines[ $i ]->setAttribute( 'link', $this->saved_content->Singlelines[ $i ]->Href ?? '' );
+
+			} else {
+				$single_lines[ $i ]->setAttribute( 'link', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Singlelines[ $i ]->Href ?? '' );
+			}
+			$set ++;
+		}
+
+
+	}
+
+
+
+
+
+	public function fill_multiliens_with_content( $document, $is_repeater = false, $repeater_index = 0, $layout_index = 0 ) {
+
+		if ( ! isset( $this->saved_content->Images ) ) {
+			return $document;
+		}
+
+
+		$to_remove       = [];
+		$document_images = $document->getElementsByTagName( 'multiline' );
+
+
+		if ( ! $is_repeater ) {
+
+			for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+
+				$image = $document_images[ $i ];
+
+				while ( $image->parentNode ) {
+
+					if ( $image->tagName == 'repeater' ) {
+						$to_remove[] = $i;
+					}
+					$image = $image->parentNode;
+				}
+			}
+		}
+
+		$set = 0;
+		for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+
+			if ( in_array( $i, $to_remove ) ) {
+				continue;
+			}
+
+			if ( ! $is_repeater ) {
+
+				$document_images[ $i ]->setAttribute( 'text', $this->saved_content->Multilines[ $set ]->Content ?? '' );
+			} else {
+				$document_images[ $i ]->setAttribute( 'text', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Multilines[ $i ]->Content ?? '' );
+			}
+			$set ++;
+		}
+
+
+	}
+
+
+
+
+
+	public function fill_images_with_content( $document, $is_repeater = false, $repeater_index = 0, $layout_index = 0 ) {
+
+
+		if ( ! isset( $this->saved_content->Images ) ) {
+			return $document;
+		}
+
+		$to_remove       = [];
+		$document_images = $document->getElementsByTagName( 'image-editable' );
+
+
+		if ( ! $is_repeater ) {
+
+
+			for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+
+				$image = $document_images[ $i ];
+
+				while ( $image->parentNode ) {
+
+					if ( $image->tagName == 'repeater' ) {
+						$to_remove[] = $i;
+					}
+					$image = $image->parentNode;
+				}
+			}
+		}
+
+		$set =0;
+		for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+
+			if ( in_array( $i, $to_remove ) ) {
+				continue;
+			}
+
+			if ( ! $is_repeater ) {
+
+				$document_images[ $i ]->setAttribute( 'src', $this->saved_content->Images[ $i ]->Content ?? '' );
+				$document_images[ $i ]->setAttribute( 'alt', $this->saved_content->Images[ $i ]->Alt ?? '' );
+				$document_images[ $i ]->setAttribute( 'link', $this->saved_content->Images[ $i ]->Href ?? '' );
+			} else {
+				$document_images[ $i ]->setAttribute( 'src', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Content ?? '' );
+				$document_images[ $i ]->setAttribute( 'alt', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Alt ?? '' );
+				$document_images[ $i ]->setAttribute( 'link', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Href ?? '' );
+			}
+			$set ++;
+		}
 
 	}
 
@@ -138,6 +327,24 @@ class TemplateParser {
 
 
 
+	public function make_singlelines_editable( $document ) {
+
+		$singlelines  = $document->getElementsByTagName( 'singleline' );
+		$single_lines = [];
+
+		foreach ( $single_lines as $single_line ) {
+
+			$single_line->setAttribute( 'text', $single_line->textContent );
+			$single_line->textContent = '';
+
+		}
+
+	}
+
+
+
+
+
 	public function make_post_tables_editable( $document ) {
 
 		$tables      = $document->getElementsByTagName( 'table' );
@@ -173,7 +380,7 @@ class TemplateParser {
 
 			$post_image = $post_table->getElementsByTagName( 'image-editable' );
 
-			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, $post_image[0]->getAttribute('size') ) );
+			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, $post_image[0]->getAttribute( 'size' ) ) );
 			$post_image[0]->setAttribute( 'href', get_the_permalink( $post_id ) );
 
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
