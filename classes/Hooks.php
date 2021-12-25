@@ -72,6 +72,9 @@ class Hooks {
 		// reloads cm cmapaign statis info
 		add_action( 'wp_ajax_autocampaigner_reload_cm_info', [ $this, 'load_cm_draft_status' ] );
 
+		//save content on chance
+		add_action( 'wp_ajax_autocampaigner_autosave', [ $this, 'autocampaigner_save_draft_content' ] );
+
 		// set scheduled campaign back to draft
 		add_action( 'wp_ajax_autocampaigner_unschedule_campaign', [ $this, 'unschedule_campaign' ] );
 
@@ -284,6 +287,11 @@ class Hooks {
 		$draft = new CampaignDraftModel();
 
 		if ( $draft->save_content() ) {
+
+			if(wp_doing_ajax()){
+				wp_die('success');
+			}
+
 			wp_safe_redirect( add_query_arg( 'screen', 'send', $_SERVER['HTTP_REFERER'] ) );
 			exit;
 		}
