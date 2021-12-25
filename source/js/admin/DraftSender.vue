@@ -67,9 +67,7 @@ export default {
   },
   mounted() {
 
-    if (this.status == 'new') {
-      this.$refs.templateupdater.updateTemplate();
-    }
+    this.$refs.templateupdater.updateTemplate();
 
     if (this.status == 'drafts') {
       this.loadPreview();
