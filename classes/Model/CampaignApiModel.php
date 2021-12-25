@@ -27,8 +27,7 @@ class CampaignApiModel extends BaseModel {
 			'FromEmail'       => $draft->header_data['from_email'],
 			'ReplyTo'         => $draft->header_data['reply_email'],
 			'ListIDs'         => get_option( 'autocampaigner_used_lists' ),
-			'TemplateID'      => '1cb32491bfea09d2d0976012867bcc7c',
-			//$description['TemplateID'], // TODO Delete before publish
+			'TemplateID'      => $description['TemplateID'],
 			'TemplateContent' => $draft->content,
 		] );
 
