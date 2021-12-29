@@ -13,7 +13,14 @@ class TemplateController extends BaseController {
 
 
 
-	public TemplateModel $model;
+	public TemplateModel $templates;
+
+
+    public function __construct() {
+
+        $this->templates = new TemplateModel();
+
+    }
 
 
 
@@ -21,7 +28,7 @@ class TemplateController extends BaseController {
 
 	public function list() {
 
-		$all = $this->model->all();
+		$all = $this->templates->all();
 
 		ob_start();
 		?>
