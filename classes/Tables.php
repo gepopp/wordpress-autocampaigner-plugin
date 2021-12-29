@@ -49,9 +49,9 @@ class Tables {
 		template VARCHAR(255) NULL,		
 		content TEXT NULL,
 		cm_id VARCHAR(255) NULL,
-		html_url VARCHAR(255) NULL AFTER cm_id,
-		status VARCHAR(50) NULL AFTER cm_id,
-		scheduled VARCHAR(20) NULL AFTER cm_id,
+		html_url VARCHAR(255) NULL,
+		status VARCHAR(50) NULL,
+		scheduled VARCHAR(20) NULL,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		PRIMARY KEY  (id)
 	) $charset_collate;";
