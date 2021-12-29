@@ -3,17 +3,9 @@
     <h3 class="ac-text-xl ac-font-semibold">Gesendeter Newsletter</h3>
     <div class="ac-mb-5 ac-pb-5 ac-border-b ac-border-plugin">
       <ul>
-        <li class="ac-flex ac-justify-between">
-          <span>Betreff:</span>
-          <span v-text="statusinfo.Subject"></span>
-        </li>
-        <li class="ac-flex ac-justify-between">
-          <span>Gesendet:</span>
-          <span v-text="statusinfo.SentDate"></span>
-        </li>
-        <li class="ac-flex ac-justify-between">
-          <span>Empfänger:</span>
-          <span v-text="statusinfo.TotalRecipients"></span>
+        <li class="ac-flex ac-justify-between" v-for="data in campaigndata">
+          <span v-text="data[0]"></span>
+          <span v-text="data[1]"></span>
         </li>
       </ul>
     </div>
@@ -34,20 +26,28 @@ import Qs from "qs";
 
 export default {
   name: "SentCampaignInfo",
-  props: ['statusinfo'],
+  props: ['draftId', 'draft'],
   data() {
     return {
-      campaigndata: {}
+      campaigndata: []
     }
   },
   mounted() {
     Axios.post(xhr.ajaxurl, Qs.stringify({
       action: 'autocampaigner_get_cm_campaigninfo',
       nonce: xhr.nonce,
-      cm_id: this.statusinfo.CampaignID
-    })).then((rsp) => this.campaigndata = rsp.data)
-  }
+      draft_id: this.draftId
+    })).then((rsp) => {
 
+      this.campaigndata = Object.keys(rsp.data)
+          .filter(key => !key.includes('URL'))
+          .reduce((obj, key) => {
+            obj[key] = rsp.data[key];
+            return obj;
+          }, {});
+
+    });
+  }
 }
 </script>
 

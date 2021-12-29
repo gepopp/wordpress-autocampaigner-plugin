@@ -3,16 +3,17 @@
 namespace Autocampaigner\Model;
 
 use Autocampaigner\Options;
+use Autocampaigner\Editor\HtmlFileCreator;
 
 
 
-class CampaignDraftModel extends BaseModel {
+class CampaignDraftModel extends DbModel implements ModelInterface {
 
 
 
 
 
-	use Options, HasDbTable;
+	use Options;
 
 
 
@@ -39,7 +40,15 @@ class CampaignDraftModel extends BaseModel {
 
 
 
+
 	public $status;
+
+
+
+
+
+	public $scheduled;
+
 
 
 
@@ -50,30 +59,47 @@ class CampaignDraftModel extends BaseModel {
 
 
 
-	public function __construct($id = false) {
+	public $html_url;
 
-		parent::__construct($id);
+
+
+
+
+	public CampaignApiModel $api_model;
+
+
+
+
+
+	public function __construct( $id = false ) {
+
+		$this->id = $id;
+
 
 		if ( isset( $_GET['draft'] ) && ! empty( sanitize_text_field( $_GET['draft'] ) ) ) {
 			$this->id = (int) sanitize_text_field( $_GET['draft'] );
 		}
 
+
 		if ( isset( $_POST['draft'] ) && ! empty( sanitize_text_field( $_POST['draft'] ) ) ) {
-			$this->id = (int) sanitize_text_field( $_POST['draft'] );
+			$this->id = (int) sanitize_text_field( $_POST   ['draft'] );
 		}
 
-		$this->details();
+		$this->api_model = new CampaignApiModel( $this->cm_id );
 
 	}
 
 
-	public function update_or_create(){
-		if($this->id){
-			return $this->update_header();
-		}else{
-			return $this->create();
-		}
+
+
+
+	public function update_status() {
+
+		$this->status = $this->api_model->status ?? 'new';
+
 	}
+
+
 
 
 
@@ -81,14 +107,20 @@ class CampaignDraftModel extends BaseModel {
 
 		global $wpdb;
 
+		$this->validate();
+		$this->status = 'new';
+
 		$insert = $wpdb->insert(
 			$this->get_table_name(),
-			$this->validate_header()
+			[
+				'header_data' => maybe_serialize( $this->header_data ),
+				'content'     => maybe_serialize( $this->content ),
+				'status'      => $this->status,
+				'template'    => $this->template,
+			],
 		);
 
 		$this->id = $wpdb->insert_id;
-		$this->status = 'new';
-		$this->update_status();
 
 		return ! is_wp_error( $insert );
 
@@ -98,67 +130,74 @@ class CampaignDraftModel extends BaseModel {
 
 
 
-	public function update_header() {
+	public function update() {
 
 		global $wpdb;
-		$insert = $wpdb->update(
-			$this->get_table_name(),
-			$this->validate_header(),
-			[ 'id' => $this->id ]
-		);
 
-		return !is_wp_error($insert);
+		return $wpdb->update( $this->get_table_name(), [
+			'header_data' => maybe_serialize( $this->header_data ),
+			'cm_id'       => $this->cm_id,
+			'html_url'    => $this->html_url,
+			'content'     => maybe_serialize( $this->content ),
+			'status'      => $this->status,
+			'scheduled'   => $this->scheduled,
+			'template'    => $this->template,
+		], [ 'id' => $this->id ] );
+
 
 	}
 
 
-	public function update_status(){
-		global $wpdb;
-		$wpdb->update($this->get_table_name(), ['status' => $this->status], ['id' => $this->id]);
 
+
+
+	public function delete_on_api() {
+
+		if ( in_array( $this->status, [ 'sent', 'scheduled' ] ) ) {
+			return;
+		}
+
+		$this->api_model->delete();
+		$this->cm_id  = null;
+		$this->status = 'new';
+		$this->update();
 	}
 
 
 
-	public function validate_header() {
 
-		$header_data = [
-			'campaign_name' => sanitize_text_field( $_POST['cmpaign_name'] ),
-			'subject'       => sanitize_text_field( $_POST['subject'] ),
-			'from_name'     => sanitize_text_field( $_POST['from_name'] ),
-			'from_email'    => sanitize_email( $_POST['from_email'] ),
-			'reply_email'   => sanitize_email( $_POST['reply_email'] ),
-			'confrim_email' => sanitize_text_field( $_POST['confirm_email'] ),
+
+	public function validate() {
+
+		$this->header_data = [
+			'campaign_name' => sanitize_text_field( $_POST['cmpaign_name'] ?? $this->header_data['campaign_name'] ),
+			'subject'       => sanitize_text_field( $_POST['subject'] ?? $this->header_data['subject'] ),
+			'from_name'     => sanitize_text_field( $_POST['from_name'] ?? $this->header_data['from_name'] ),
+			'from_email'    => sanitize_email( $_POST['from_email'] ?? $this->header_data['from_email'] ),
+			'reply_email'   => sanitize_email( $_POST['reply_email'] ?? $this->header_data['reply_email'] ),
+			'confirm_email' => sanitize_text_field( $_POST['confirm_email'] ?? $this->header_data['confirm_email'] ),
 		];
 
-		$template_folder = sanitize_text_field( $_POST['template_name'] );
 
-		return [
-			'header_data' => maybe_serialize( $header_data ),
-			'template'    => $template_folder,
-		];
-	}
+		$template = sanitize_text_field( $_POST['template'] ?? '' );
 
 
+		//empty content if templates changed
+		if ( ! empty( $template ) && $template != $this->template ) {
+			$this->content  = null;
+			$this->template = $template;
+		}
+
+		$content = wp_kses_post( $_POST['content'] ?? null );
+
+		if ( ! empty( $content ) ) {
+			$this->content = json_decode( html_entity_decode( stripslashes( $content ) ) );
+			new HtmlFileCreator( $this );
+		}
 
 
+		return $this;
 
-	public function save_content() {
-
-		$content = json_decode( html_entity_decode( stripslashes( wp_kses_post( $_POST['content'] ) ) ) );
-
-		global $wpdb;
-		$update = $wpdb->update(
-			$this->get_table_name(),
-			[
-				'content' => maybe_serialize( $content ),
-			],
-			[
-				'id' => $this->id,
-			]
-		);
-
-		return ! is_wp_error( $update );
 	}
 
 
@@ -180,5 +219,13 @@ class CampaignDraftModel extends BaseModel {
 		], (array) $this->header_data );
 
 	}
+
+
+
+
+
+	public function delete() {
+	}
+
 
 }

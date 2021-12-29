@@ -4,7 +4,7 @@ namespace Autocampaigner\Model;
 
 use Autocampaigner\Options;
 use Autocampaigner\Template\Description;
-use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+use Autocampaigner\exceptions\RessourceNotExist;
 
 
 
@@ -18,7 +18,13 @@ class TemplateModel extends BaseModel {
 
 
 
-	protected $folder;
+	public Description $description_file;
+
+
+
+
+
+	public $name;
 
 
 
@@ -30,61 +36,43 @@ class TemplateModel extends BaseModel {
 
 
 
-	public function set_folder( $folder ) {
+	public $folder;
 
-		$this->folder      = $folder;
-		$this->description = new Description( $folder );
-		$this->id          = $this->description['TemplateID'];
+
+
+
+
+	public $images;
+
+
+
+
+
+	public function __construct( $id = null ) {
+
+		parent::__construct( $id );
 	}
 
 
 
 
 
-	/**
-	 * @param $folder where template lives
-	 *
-	 * @return string cm template id
-	 */
-	public function create_or_update_on_cm( $folder = false ) {
+	public function load() {
+
+		if ( $this->is_valid() ) {
 
 
-		if ( $folder ) {
-			$this->set_folder( $folder );
+			$this->description_file = new Description( $this->id );
+
+			$this->name        = $this->description_file['Name'] ?? '';
+			$this->description = $this->description_file['Description'] ?? '';
+			$this->images      = $this->description_file['ImageSizes'] ?? [];
+			$this->folder      = $this->id;
+
+
+		} else {
+			throw new RessourceNotExist( $this->id );
 		}
-
-		try {
-			$template_details = $this->details();
-			if ( empty( $template_details->Name ) ) {
-				return $this->create_template();
-			}
-		} catch ( CmApiCallUnsuccsessfull $e ) {
-			return $this->create_template();
-		}
-
-
-		try {
-			return $this->update( 'put', $this->request_body() );
-		} catch ( CmApiCallUnsuccsessfull $e ) {
-			return $this->create_template();
-		}
-
-	}
-
-
-
-
-
-	public function create_template() {
-
-		$template_id               = $this->create( 'post', $this->request_body() );
-		$description               = new Description( $this->folder );
-		$description['TemplateID'] = $template_id;
-
-		$description->save_template_description( $description );
-
-		return $template_id;
-
 
 	}
 
@@ -92,29 +80,23 @@ class TemplateModel extends BaseModel {
 
 
 
-	/**
-	 * @param $folder where template lives
-	 *
-	 * @return array
-	 */
-	public function request_body() {
+	public function update() {
 
-		$htmlurl = AUTOCAMPAIGNER_URL . '/email_templates/' . $this->folder . '/index.html';
-		$zipurl  = AUTOCAMPAIGNER_URL . '/email_templates/' . $this->folder . '/images.zip';
+		$this->description_file->save();
+	}
 
 
-		$body = [
-			'Name'        => $this->description['Name'],
-			'HtmlPageURL' => $htmlurl,
-		];
-
-		if ( $this->has_zip( $this->folder ) ) {
-			$body['ZipFileURL'] = $zipurl;
-		}
 
 
-		return $body;
 
+	public function create() {
+	}
+
+
+
+
+
+	public function delete() {
 	}
 
 
@@ -142,20 +124,41 @@ class TemplateModel extends BaseModel {
 	/**
 	 * @return array of folders in the templates directory that contains min index and description
 	 */
-	public function get_valid_template_folders() {
+	public function all() {
 
 		$templates_folders = [];
 
 		foreach ( glob( $this->get_templates_folder() . '*' ) as $dir ) {
 
-			// a teplate must have at least an index and an description file
-			if ( file_exists( $dir . '/description.json' ) && file_exists( $dir . '/index.html' ) ) {
-				$folder              = explode( '/', $dir );
-				$templates_folders[] = array_pop( $folder );
+			$folder = explode( '/', $dir );
+			$folder = array_pop( $folder );
+
+			if ( $this->is_valid( $folder ) ) {
+
+				$templates_folders[] = new TemplateModel( $folder );
 			}
+
 		}
 
+
 		return $templates_folders;
+	}
+
+
+
+
+
+	public function is_valid( $folder = false ) {
+
+		if ( ! $folder ) {
+			$folder = $this->id;
+		}
+
+		$path = $this->get_templates_folder() . $folder;
+
+		// a teplate must have at least an index and an description file
+		return file_exists( $path . '/description.json' ) && file_exists( $path . '/index.html' );
+
 	}
 
 
@@ -167,9 +170,9 @@ class TemplateModel extends BaseModel {
 	 *
 	 * @return bool if zip file in template folder
 	 */
-	public function has_zip( $folder ) {
+	public function has_zip() {
 
-		return file_exists( $this->get_templates_folder() . $folder . '/images.zip' );
+		return file_exists( $this->get_templates_folder() . $this->id . '/images.zip' );
 
 	}
 

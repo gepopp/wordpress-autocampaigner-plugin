@@ -7,19 +7,19 @@ namespace Autocampaigner\Controller;
 abstract class BaseController {
 
 
-	public function __construct() {
+
+	public function get_as_html_attribute( $value ) {
+
+		return htmlentities( json_encode( $value ) );
+	}
 
 
-		$classname = get_class($this);
-		$classname = str_replace('Controller', 'Model', $classname);
 
 
 
-		if(class_exists($classname)){
-			$this->model = new $classname;
-		}
+	public function as_html_attribute( $function ) {
 
-
+		echo $this->get_as_html_attribute( $function );
 	}
 
 

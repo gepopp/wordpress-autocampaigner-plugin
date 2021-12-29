@@ -77,7 +77,14 @@ import Qs from "qs";
 
 export default {
   name: "ImageEditable",
-  props: ['src', 'width', 'height', 'size', 'href'],
+  props: {
+    'src': { type: String, default: ''},
+    'width': String,
+    'height': String,
+    'size': String,
+    'href': { type: String, default: ''},
+    'alt': { type: String, default: ''},
+  },
   data() {
     return {
       search: '',
@@ -86,7 +93,7 @@ export default {
       editables: {
         src: this.src,
         href: this.href,
-        alt: ''
+        alt: this.alt
       },
       current: {}
     }
@@ -117,7 +124,7 @@ export default {
   computed: {
     validateUrl() {
 
-      if(this.editables.href == '' || this.editables.href == undefined) return false;
+      if (this.editables.href == '' || this.editables.href == undefined) return false;
 
       var regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
       return regex.test(this.editables.href);

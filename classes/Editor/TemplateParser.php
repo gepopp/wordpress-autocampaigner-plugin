@@ -1,6 +1,11 @@
 <?php
 
-namespace Autocampaigner;
+namespace Autocampaigner\Editor;
+
+use Autocampaigner\Options;
+use Autocampaigner\Model\CampaignDraftModel;
+
+
 
 class TemplateParser {
 
@@ -48,14 +53,14 @@ class TemplateParser {
 
 
 
-	public function __construct( $folder, $content = [] ) {
+	public function __construct( CampaignDraftModel $campaign ) {
 
 
-		$this->saved_content = $content;
+		$this->saved_content = $campaign->content;
 
-		$this->folder = $folder;
+		$this->folder = $campaign->template;
 
-		$this->template_direcotry = $this->get_templates_folder() . $folder;
+		$this->template_direcotry = $this->get_templates_folder() . $this->folder;
 
 		$this->index_path = $this->template_direcotry . '/index.html';
 
@@ -172,14 +177,14 @@ class TemplateParser {
 
 
 		$to_remove       = [];
-		$document_images = $document->getElementsByTagName( 'multiline' );
+		$document_multilines = $document->getElementsByTagName( 'multiline' );
 
 
 		if ( ! $is_repeater ) {
 
-			for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+			for ( $i = 0; $i < count( $document_multilines ); $i ++ ) {
 
-				$image = $document_images[ $i ];
+				$image = $document_multilines[ $i ];
 
 				while ( $image->parentNode ) {
 
@@ -192,7 +197,7 @@ class TemplateParser {
 		}
 
 		$set = 0;
-		for ( $i = 0; $i < count( $document_images ); $i ++ ) {
+		for ( $i = 0; $i < count( $document_multilines ); $i ++ ) {
 
 			if ( in_array( $i, $to_remove ) ) {
 				continue;
@@ -200,9 +205,9 @@ class TemplateParser {
 
 			if ( ! $is_repeater ) {
 
-				$document_images[ $i ]->setAttribute( 'text', $this->saved_content->Multilines[ $set ]->Content ?? '' );
+				$document_multilines[ $i ]->setAttribute( 'text', $this->saved_content->Multilines[ $set ]->Content ?? '' );
 			} else {
-				$document_images[ $i ]->setAttribute( 'text', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Multilines[ $i ]->Content ?? '' );
+				$document_multilines[ $i ]->setAttribute( 'text', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Multilines[ $set ]->Content ?? '' );
 			}
 			$set ++;
 		}
@@ -242,20 +247,29 @@ class TemplateParser {
 			}
 		}
 
-		$set =0;
+		$set = 0;
 		for ( $i = 0; $i < count( $document_images ); $i ++ ) {
 
 			if ( in_array( $i, $to_remove ) ) {
 				continue;
 			}
 
+
+
+			$old_src = $document_images[$i]->getAttribute('src');
+
 			if ( ! $is_repeater ) {
 
-				$document_images[ $i ]->setAttribute( 'src', $this->saved_content->Images[ $i ]->Content ?? '' );
+				$src = $this->saved_content->Images[ $i ]->Content;
+
+				$document_images[ $i ]->setAttribute( 'src',  !empty($src) ? $src : $old_src );
 				$document_images[ $i ]->setAttribute( 'alt', $this->saved_content->Images[ $i ]->Alt ?? '' );
 				$document_images[ $i ]->setAttribute( 'link', $this->saved_content->Images[ $i ]->Href ?? '' );
 			} else {
-				$document_images[ $i ]->setAttribute( 'src', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Content ?? '' );
+
+				$src = $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Content;
+
+				$document_images[ $i ]->setAttribute( 'src',  !empty($src) ? $src : $old_src );
 				$document_images[ $i ]->setAttribute( 'alt', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Alt ?? '' );
 				$document_images[ $i ]->setAttribute( 'link', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Images[ $i ]->Href ?? '' );
 			}
@@ -278,7 +292,7 @@ class TemplateParser {
 
 			$src  = $document_image->getAttribute( 'src' );
 			$info = pathinfo( $src );
-			$document_image->setAttribute( 'src', AUTOCAMPAIGNER_URL . "/email_templates/$this->folder/images/" . $info['basename'] );
+			$document_image->setAttribute( 'src', AUTOCAMPAIGNER_URL . "email_templates/$this->folder/images/" . $info['basename'] );
 
 
 			$editable = (bool) $document_image->getAttribute( 'editable' );

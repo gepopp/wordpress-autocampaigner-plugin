@@ -4,11 +4,31 @@ namespace Autocampaigner\CampaignMonitor;
 
 
 use Autocampaigner\Options;
-use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+use Autocampaigner\Model\ListModel;
+use Autocampaigner\Model\DraftApiModel;
+
+
 
 class CampaignMonitor {
 
-	use Options, Endpoints;
+
+
+
+
+	use Options;
+
+
+	public $endpoints;
+
+
+
+	public function __construct() {
+
+		$this->endpoints = new Endpoints();
+
+	}
+
+
 
 
 
@@ -17,41 +37,10 @@ class CampaignMonitor {
 	 */
 	public function test_connection() {
 
-		$endpoint = 'https://api.createsend.com/api/v3.2/systemdate.json';
-		return (bool) $this->call( $endpoint );
+		return 'https://api.createsend.com/api/v3.2/systemdate.json';
 
 	}
 
-
-	/**
-	 * @param        $endpoint
-	 * @param string $type
-	 * @param array  $body
-	 * @param array  $args
-	 * @param array  $headers
-	 *
-	 * @return mixed|string|void|null
-	 * @throws CmApiCallUnsuccsessfull
-	 */
-	public function call( $endpoint, $type = 'get', $body = [] ) {
-
-		$args = [
-			'method'   => strtoupper( $type ),
-			'headers'  => $this->create_headers(),
-			'blocking' => true,
-			'timeout'  => 20
-		];
-
-		if ( ! empty( $body ) ) {
-			$args['body'] = json_encode( $body );
-		}
-
-		$result = wp_remote_request( $endpoint, $args );
-
-
-		return $this->isSuccess( $result, $type, $body, $endpoint );
-
-	}
 
 
 	/**
@@ -71,35 +60,31 @@ class CampaignMonitor {
 
 
 
+	public function translate_draft( DraftApiModel $model, object $data ) {
 
 
-	/**
-	 * @param $result
-	 * @param $type
-	 * @param $body
-	 *
-	 * @return mixed|string|void|null
-	 * @throws CmApiCallUnsuccsessfull
-	 */
-	public function isSuccess( $result, $type, $body, $endpoint ) {
+		$model->id          = $data->CampaignID;
+		$model->name        = $data->Name;
+		$model->subject     = $data->Subject;
+		$model->from_name   = $data->FromName;
+		$model->from_email  = $data->FromEmail;
+		$model->reply_email = $data->ReplyTo;
+		$model->preview_url = $data->PreviewUrl;
 
-		$status = wp_remote_retrieve_response_code( $result );
 
-		if ( $status < 300 && $status >= 200 ) {
-
-			$body = json_decode( wp_remote_retrieve_body( $result ) );
-			if ( empty( $body ) ) {
-				$body = __( 'Request successfull', 'autocampaigner' );
-			}
-
-			return $body;
-		}
-
-		throw new CmApiCallUnsuccsessfull( $result, $type, $body, $endpoint);
 	}
 
 
 
+
+
+	public function translate_list( ListModel $model, object $data ) {
+
+		$model->id   = $data->ListID;
+		$model->name = $data->Name;
+
+
+	}
 
 
 }

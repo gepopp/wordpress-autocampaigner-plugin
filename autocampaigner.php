@@ -3,7 +3,7 @@
  * Plugin Name:       Campaign Monitor Autocampaigner
  * Plugin URI:        https://poppgerhard.at/plugins/autocampaigner/
  * Description:       Creates Campaigns from your content
- * Version:           0.1.1
+ * Version:           0.1.4
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Popp Gerhard

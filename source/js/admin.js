@@ -62,7 +62,6 @@ Vue.use(VueQuillEditor, {
     theme: 'bubble', modules: {
         toolbar: [
             [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-            [{'header': [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
             [{ 'align': [] }],
             [{'header': 3}, {'header': 4}], // custom button values

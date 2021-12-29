@@ -2,16 +2,15 @@
 
 namespace Autocampaigner\Model;
 
-trait HasDbTable {
+class DbModel extends BaseModel {
 
 
 
-
-
-	public function details() {
+	public function load() {
 
 		global $wpdb;
-		$data = (array) $wpdb->get_row( sprintf( 'SELECT * FROM %s WHERE id = %d LIMIT 1', $this->get_table_name(), $this->id ), ARRAY_A );
+		$data = (array) $wpdb->get_row( sprintf( 'SELECT * FROM %s WHERE id = %d LIMIT 1', $this->get_table_name(), $this->id
+		), ARRAY_A );
 
 		foreach ( $data as $key => $value ) {
 			if ( property_exists( $this, $key ) ) {
@@ -20,10 +19,12 @@ trait HasDbTable {
 		}
 	}
 
+
 	public function all(){
 
 		global $wpdb;
 		$ids = $wpdb->get_col(sprintf('SELECT id FROM %s ORDER BY created_at DESC', $this->get_table_name()));
+
 
 		$all =[];
 		$classname = get_class($this);
@@ -35,5 +36,6 @@ trait HasDbTable {
 		return $all;
 
 	}
+
 
 }

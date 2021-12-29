@@ -24,7 +24,7 @@
 <script>
 export default {
   name: "Singleline",
-  props: ['text', 'link'],
+  props: {'text':{ type: String, default: ''}, 'link':{ type: String, default: ''}},
   data() {
     return {
       edit: false,

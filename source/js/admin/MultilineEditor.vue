@@ -8,7 +8,7 @@
 <script>
 export default {
   name: "Multiline",
-  props: ['text'],
+  props: {'text':{ type: String, default: ''}},
   data() {
     return {
       textEditable: this.text.trim(),

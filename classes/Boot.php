@@ -2,6 +2,10 @@
 
 namespace Autocampaigner;
 
+use Autocampaigner\Hook\Drafts;
+use Autocampaigner\Hook\Images;
+use Autocampaigner\Hook\Campaigns;
+use Autocampaigner\Hook\SubscriberList;
 use Autocampaigner\Settings\AdminSettingsPages;
 
 class Boot {
@@ -12,9 +16,13 @@ class Boot {
 
 	private $boot_classes = [
 		AdminSettingsPages::class,
-		Hooks::class,
 		Enqueue::class,
-		Tables::class
+		Tables::class,
+		Campaigns::class,
+		Drafts::class,
+		Images::class,
+		\Autocampaigner\Hook\Queries::class,
+		SubscriberList::class,
 	];
 
 

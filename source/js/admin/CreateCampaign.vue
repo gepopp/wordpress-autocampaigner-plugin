@@ -41,14 +41,14 @@
             </div>
             <div>
               <ul>
-                <li v-for="template in template_radio" class="ac-pb-3 ac-mb-3 ac-border-b ac-border-plugin">
+                <li v-for="template in templates" class="ac-pb-3 ac-mb-3 ac-border-b ac-border-plugin">
                   <div class="ac-flex ac-space-x-4 ac-items-center">
-                    <input type="radio" v-model="template_name" :value="template[0]" @change="errors = []" name="template_name">
+                    <input type="radio" v-model="template_name" :value="template.folder" @change="errors = []" name="template">
                     <div>
                       <label class="ac-label">
-                        {{ template[1].Name }}
+                        {{ template.name }}
                       </label>
-                      <p v-text="template[1].Description"></p>
+                      <p v-text="template.description"></p>
                     </div>
                   </div>
                 </li>
@@ -80,7 +80,6 @@ export default {
       },
       errors: [],
       template_name: this.template,
-      template_radio: Object.entries(this.templates),
       nonce: xhr.nonce,
       adminurl: xhr.posturl
     }
@@ -119,7 +118,7 @@ export default {
           var emails = this.campagne[key].split(',');
 
           emails.forEach((email) => {
-            if (!this.validateEmail(email)) {
+            if (!this.validateEmail(email.trim())) {
               this.errors.push('Bitte nur gültige E-Mail Adressen eingeben.')
             }
           })

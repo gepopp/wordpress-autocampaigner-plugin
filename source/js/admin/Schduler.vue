@@ -28,7 +28,7 @@ import Qs from "qs";
 
 export default {
   name: "Schduler",
-  props: ['cm_id'],
+  props: ['draftId'],
   data() {
     return {
       schedulestatus: false,
@@ -43,12 +43,12 @@ export default {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: "autocampaigner_cm_schedule_campaign",
         nonce: xhr.nonce,
-        cm_id: this.cm_id,
+        draft_id: this.draftId,
         schedule: this.send_at
       }))
           .then((rsp) => {
             this.send_at = '';
-            this.$emit('scheduled', {cm_id: this.cm_id});
+            this.$emit('scheduled', rsp.data);
           })
           .catch((rsp) => {
 
