@@ -2,6 +2,12 @@
 
 namespace Autocampaigner;
 
+use Autocampaigner\Model\ApiModel;
+use WPMailSMTP\Providers\Sendinblue\Api;
+use Autocampaigner\exceptions\CmApiCallUnsuccsessfull;
+
+
+
 trait Templates {
 
 
@@ -32,7 +38,24 @@ trait Templates {
 
 	public function admin_template( $template_name, $args = [] ) {
 
+
+		try{
+
+			( new ApiModel() )->test_connection();
+
+
+			$args['content'] = ( new $args['content'][0]() )->{$args['content'][1]}();
+
+
+		}catch (CmApiCallUnsuccsessfull $e){
+
+			$args['error'] = $e->getMessage();
+			$template_name = 'error';
+
+		}
+
 		$args = $this->setup_args( $args );
+
 
 		extract( $args );
 

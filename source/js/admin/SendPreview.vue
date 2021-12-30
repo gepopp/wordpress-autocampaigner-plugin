@@ -30,7 +30,7 @@ import Qs from "qs";
 
 export default {
   name: "SendPreview",
-  props: ['cm_id'],
+  props: ['draftId'],
   data() {
     return {
       previewstatus: false,
@@ -40,7 +40,6 @@ export default {
   methods: {
     sendPreview() {
 
-
       if (this.preview_to == '') {
         this.previewstatus = 'error';
         setTimeout(() => this.previewstatus = false, 3000)
@@ -49,11 +48,10 @@ export default {
 
       this.previewstatus = 'sending';
 
-
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: "autocampaigner_cm_send_preview",
         nonce: xhr.nonce,
-        cm_id: this.cm_id,
+        draft_id: this.draftId,
         recipients: this.preview_to
       }))
           .then((rsp) => {

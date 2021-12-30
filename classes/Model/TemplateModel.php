@@ -48,15 +48,6 @@ class TemplateModel extends BaseModel {
 
 
 
-	public function __construct( $id = null ) {
-
-		parent::__construct( $id );
-	}
-
-
-
-
-
 	public function load() {
 
 		if ( $this->is_valid() ) {
@@ -87,17 +78,6 @@ class TemplateModel extends BaseModel {
 
 
 
-
-
-	public function create() {
-	}
-
-
-
-
-
-	public function delete() {
-	}
 
 
 
@@ -174,6 +154,19 @@ class TemplateModel extends BaseModel {
 
 		return file_exists( $this->get_templates_folder() . $this->id . '/images.zip' );
 
+	}
+
+
+
+
+	public function create() {
+	}
+
+
+
+
+
+	public function delete() {
 	}
 
 

@@ -33,6 +33,16 @@ class ApiModel extends BaseModel {
 
 
 
+	/**
+	 * @return bool if systemtime received
+	 */
+	public function test_connection() {
+
+		$this->call($this->get_endpoint('test'));
+
+	}
+
+
 
 
 	/**

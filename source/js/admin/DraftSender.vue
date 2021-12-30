@@ -33,7 +33,7 @@
           </div>
 
           <div v-if="current_campaign.status == 'created'">
-            <send-preview :cm_id="current_campaign.cm_id"></send-preview>
+            <send-preview :draftId="campaignId"></send-preview>
             <schduler :draftId="campaignId" @scheduled="reloadInfo"></schduler>
           </div>
 

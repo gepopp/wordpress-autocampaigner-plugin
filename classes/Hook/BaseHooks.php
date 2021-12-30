@@ -1,7 +1,29 @@
 <?php
+
 namespace Autocampaigner\Hook;
 
 class BaseHooks {
+
+
+
+
+
+	public $model;
+
+
+
+
+
+	public function execute() {
+
+		$this->verify_nonce();
+
+		$action = sanitize_text_field( $_POST['action'] );
+
+		$this->{$action}();
+
+
+	}
 
 
 

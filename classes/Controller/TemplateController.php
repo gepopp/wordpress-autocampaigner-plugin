@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpHierarchyChecksInspection */
+<?php
 
 namespace Autocampaigner\Controller;
 
@@ -13,14 +13,8 @@ class TemplateController extends BaseController {
 
 
 
-	public TemplateModel $templates;
+	public TemplateModel $templatemodel;
 
-
-    public function __construct() {
-
-        $this->templates = new TemplateModel();
-
-    }
 
 
 
@@ -28,7 +22,8 @@ class TemplateController extends BaseController {
 
 	public function list() {
 
-		$all = $this->templates->all();
+
+		$all = $this->templatemodel->all();
 
 		ob_start();
 		?>

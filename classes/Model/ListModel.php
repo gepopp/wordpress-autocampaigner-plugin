@@ -38,7 +38,7 @@ class ListModel extends ApiModel implements ModelInterface {
 		$list = array_shift( $filtered );
 		$this->driver->translate_list( $this, $list );
 
-		$this->in_use = in_array( $this->id, $this->get_used_lists());
+		$this->in_use = in_array( $this->id, $this->get_used_lists() );
 
 		return $this;
 
@@ -58,30 +58,6 @@ class ListModel extends ApiModel implements ModelInterface {
 
 		return $all;
 
-	}
-
-
-
-
-
-	public function create() {
-		// TODO: Implement create() method.
-	}
-
-
-
-
-
-	public function update() {
-		// TODO: Implement update() method.
-	}
-
-
-
-
-
-	public function delete() {
-		// TODO: Implement delete() method.
 	}
 
 
@@ -114,6 +90,30 @@ class ListModel extends ApiModel implements ModelInterface {
 		}
 
 		return $saved;
+	}
+
+
+
+
+
+	public function create() {
+		// TODO: Implement create() method.
+	}
+
+
+
+
+
+	public function update() {
+		// TODO: Implement update() method.
+	}
+
+
+
+
+
+	public function delete() {
+		// TODO: Implement delete() method.
 	}
 
 

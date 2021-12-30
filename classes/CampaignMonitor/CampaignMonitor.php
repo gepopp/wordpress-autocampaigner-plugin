@@ -18,7 +18,16 @@ class CampaignMonitor {
 	use Options;
 
 
+
 	public $endpoints;
+
+
+
+
+
+	public $test_connection_entpoint = 'clients/{clientid}.json';
+
+
 
 
 
@@ -29,17 +38,6 @@ class CampaignMonitor {
 	}
 
 
-
-
-
-	/**
-	 * @return bool if systemtime received
-	 */
-	public function test_connection() {
-
-		return 'https://api.createsend.com/api/v3.2/systemdate.json';
-
-	}
 
 
 

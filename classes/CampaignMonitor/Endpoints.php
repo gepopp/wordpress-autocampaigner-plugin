@@ -16,7 +16,9 @@ class Endpoints {
 
 
 	protected $endpoints = [
-
+		'api'         => [
+			'test' => 'clients/{clientid}.json',
+		],
 		'list'        => [
 			'list'    => 'clients/{clientid}/lists.json',
 			'details' => 'lists/{listid}.json',
