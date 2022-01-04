@@ -12,7 +12,7 @@ trait Queries {
 
 
 		$query = new \WP_Query( [
-			'post_type'      => $type, // for ir
+			'post_type'      => $post_type, // for ir
 			'posts_per_page' => 10,
 			's'              => $search,
 		] );
