@@ -44,8 +44,6 @@ class Images extends BaseHooks {
 					add_image_size(
 						$image->Name,
 						$image->width,
-						$image->height,
-						$image->crop
 					);
 				}
 			}

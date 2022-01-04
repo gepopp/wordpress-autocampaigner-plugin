@@ -5,7 +5,7 @@
 
 
 		foreach ( $all_drafts as $draft ): ?>
-			<?php if ( in_array( $draft->status, [ 'drafts', 'scheduled' ] ) ): ?>
+			<?php if ( in_array( $draft->status, [ 'drafts', 'scheduled', 'new' ] ) ): ?>
 				<li data-v-5b67b1bd="" class="ac-p-2 ac-mb-2 ac-border-b ac-border-plugin last:ac-border-none">
 					<label class="ac-flex ac-items-center ac-space-x-4 ac-w-full">
 						<div class="ac-w-full ac-flex ac-w-full ac-justify-between">

@@ -13,6 +13,8 @@ import Singleline from "./admin/Singleline.vue";
 import ImageEditable from "./admin/ImageEditable.vue";
 import EditorRepeater from "./admin/EditorRepeater.vue";
 import EditorLayout from "./admin/EditorLayout.vue";
+import Relationship from "./admin/Relationship.vue";
+import Relation from "./admin/Relation.vue";
 import VueQuillEditor from 'vue-quill-editor'
 
 (function ($) {
@@ -57,6 +59,9 @@ Vue.component('image-editable', ImageEditable);
 Vue.component('repeater', EditorRepeater);
 
 Vue.component('layout', EditorLayout);
+
+Vue.component('relationship', Relationship);
+Vue.component('relation', Relation);
 
 Vue.use(VueQuillEditor, {
     theme: 'bubble', modules: {

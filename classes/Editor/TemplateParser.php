@@ -158,6 +158,7 @@ class TemplateParser {
 
 			} else {
 				$single_lines[ $i ]->setAttribute( 'link', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Singlelines[ $i ]->Href ?? '' );
+				$single_lines[ $i ]->setAttribute( 'text', $this->saved_content->Repeaters[ $repeater_index ]->Items[ $layout_index ]->Singlelines[ $i ]->Content ?? '' );
 			}
 			$set ++;
 		}
@@ -313,6 +314,7 @@ class TemplateParser {
 			$child->setAttribute( 'width', $editable->getAttribute( 'width' ) );
 			$child->setAttribute( 'height', $editable->getAttribute( 'height' ) );
 			$child->setAttribute( 'size', $editable->getAttribute( 'size' ) );
+			$child->setAttribute( 'style', $editable->getAttribute( 'style' ) );
 
 			$parent->appendChild( $child );
 		}
@@ -332,6 +334,11 @@ class TemplateParser {
 
 			$child->setAttribute( 'text', $document_multiline->textContent );
 
+			if($document_multiline->hasAttribute('meta')){
+				$child->setAttribute('meta', $document_multiline->getAttribute('meta'));
+			}
+
+
 			$parent->replaceChild( $child, $document_multiline );
 		}
 
@@ -345,6 +352,7 @@ class TemplateParser {
 
 		$singlelines  = $document->getElementsByTagName( 'singleline' );
 		$single_lines = [];
+
 
 		foreach ( $single_lines as $single_line ) {
 
@@ -397,14 +405,35 @@ class TemplateParser {
 			$post_image[0]->setAttribute( 'src', get_the_post_thumbnail_url( $post_id, $post_image[0]->getAttribute( 'size' ) ) );
 			$post_image[0]->setAttribute( 'href', get_the_permalink( $post_id ) );
 
+
 			$post_table->getElementsByTagName( 'multiline' )->item( 0 )->setAttribute( 'text', get_the_title( $post_id ) );
 			$post_table->getElementsByTagName( 'multiline' )->item( 1 )->setAttribute( 'text', get_the_excerpt( $post_id ) );
-			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'link', get_the_permalink( $post_id ) );
-			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->setAttribute( 'text', trim( $post_table->getElementsByTagName( 'singleline' )->item( 0 )->textContent ) );
-			$post_table->getElementsByTagName( 'singleline' )->item( 0 )->textContent = '';
+
+			$singlelines = $post_table->getElementsByTagName( 'singleline' );
+
+			for($i = 0; $i < count($singlelines); $i++){
+
+				if($post_table->getElementsByTagName( 'singleline' )->item( $i )->hasAttribute('meta')){
+
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'text', get_post_meta( $post_id, $post_table->getElementsByTagName( 'singleline' )->item( $i )->getAttribute('meta'), true ) );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'link', get_the_permalink( $post_id ) );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'meta', $post_table->getElementsByTagName( 'singleline' )->item( $i )->getAttribute('meta') );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
+
+				}else{
+
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'link', get_the_permalink( $post_id ) );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'meta', 'link' );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'text', trim( $post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent ) );
+					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
+				}
+
+			}
 
 		}
 
 	}
+
+
 
 }

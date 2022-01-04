@@ -1,25 +1,15 @@
 {
-  "Name": "Autocampaigner Default Template",
-  "Description": "Standart Templeate für den wöchentlichen Newsletter",
-  "TemplateID": "54e22dfe43a92539c14432b514e57543",
+  "Name": "Simple Text Responsive with thee articles",
+  "Description": "Starter responsive template for simple Text E-Mails",
+  "TemplateID": "",
   "ImageSizes": [
     {
-      "Name": "BannerImage",
-      "width": 700,
-      "height": 90,
-      "crop": true
-    },
-    {
       "Name": "LargeImage",
-      "width": 700,
-      "height": 525,
-      "crop": true
+      "width": 600
     },
     {
       "Name": "SmallImage",
-      "width": 325,
-      "height": 244,
-      "crop": true
+      "width": 325
     }
   ],
   "TemplateContent": {
