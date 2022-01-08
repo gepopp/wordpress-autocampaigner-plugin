@@ -1,15 +1,15 @@
 <template>
   <div class="ac-my-5 ac-py-5 ac-border-b ac-border-plugin">
-    <h3 class="ac-text-xl ac-font-semibold">Geplanter Newsletter</h3>
+    <h3 class="ac-text-xl ac-font-semibold ac-mb-10">Geplanter Newsletter</h3>
     <div class="ac-mb-5 ac-pb-5 ac-border-b ac-border-plugin">
       <ul>
         <li class="ac-flex ac-justify-between">
           <span>Betreff:</span>
-          <span v-text="statusinfo.Subject"></span>
+          <span v-text="draft.header_data.subject"></span>
         </li>
         <li class="ac-flex ac-justify-between">
           <span>Geplant für:</span>
-          <span v-text="statusinfo.DateScheduled"></span>
+          <span v-text="draft.scheduled"></span>
         </li>
       </ul>
     </div>
@@ -31,7 +31,7 @@ import Qs from "qs";
 
 export default {
   name: "Unscheduler",
-  props: ['statusinfo'],
+  props: ['draftId', 'draft'],
   data(){
     return{
       status: false
@@ -45,9 +45,9 @@ export default {
       Axios.post(xhr.ajaxurl, Qs.stringify({
         action: "autocampaigner_unschedule_campaign",
         nonce: xhr.nonce,
-        cm_id: this.statusinfo.CampaignID
+        draft_id: this.draftId
       })).then((rsp) => {
-        this.$emit('unscheduled', { cm_id: this.statusinfo.CampaignID })
+        this.$emit('unscheduled', rsp.data)
       }).catch(() => this.status = false);
     }
   }

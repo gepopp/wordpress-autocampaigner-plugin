@@ -8,11 +8,11 @@
         <p class="ac-font-semibold">Diese Liste für Ihre Aussendungen verwenden</p>
       </div>
       <ul>
-        <li v-for="list in listDetails" :key="list.ListID" class="ac-p-2 ac-mb-2 ac-border-b ac-border-plugin">
+        <li v-for="list in listDetails" :key="list.id" class="ac-p-2 ac-mb-2 ac-border-b ac-border-plugin">
           <label class="ac-flex ac-items-center ac-space-x-4 ac-w-full">
-            <input type="checkbox" v-model="setLists" :value="list.ListID" @change="save">
+            <input type="checkbox" v-model="setLists" :value="list.id" @change="save">
             <div class="ac-w-full ac-flex ac-w-full ac-justify-between">
-              <p class="ac-font-bold ac-w-full" v-text="list.Name"></p>
+              <p class="ac-font-bold ac-w-full" v-text="list.name"></p>
               <div class="ac-flex ac-flex-col ac-px-5" :class="{ 'ac-animate-pulse ac-blur-sm' : list.TotalActiveSubscribers == undefined }">
                 <p class="ac-whitespace-nowrap ac-flex ac-justify-between">
                   <span class="ac-mr-10">Aktive Empänger gesamt:</span>
@@ -55,9 +55,23 @@ export default {
     }
   },
   mounted() {
+
     this.listDetails.forEach((list, index) => this.loadListDetails(list, index));
   },
   methods: {
+    loadListDetails(list, index) {
+
+      Axios.post(xhr.ajaxurl, Qs.stringify({
+        action: 'autocampainger_load_list_details',
+        nonce: xhr.nonce,
+        list_id: list.id
+      })).then((rsp) => {
+        this.listDetails[index] = {...this.listDetails[index], ...rsp.data};
+        this.listDetails.sort((a, b) => b.TotalActiveSubscribers - a.TotalActiveSubscribers);
+      }).catch(() => {
+        this.loadListDetails(list, index)
+      });
+    },
     save() {
 
       this.isLoading = true;
@@ -68,22 +82,8 @@ export default {
         lists: this.setLists
       })).then((rsp) => this.isLoading = false)
     },
-    loadListDetails(list, index) {
-
-      Axios.post(xhr.ajaxurl, Qs.stringify({
-        action: 'autocampainger_load_list_details',
-        nonce: xhr.nonce,
-        list_id: list.ListID
-      })).then((rsp) => {
-        this.listDetails[index] = {...this.listDetails[index], ...rsp.data};
-        this.listDetails.sort((a, b) => b.TotalActiveSubscribers - a.TotalActiveSubscribers);
-      }).catch(() => {
-        this.loadListDetails(list, index)
-      });
-    }
   }
 }
-
 </script>
 
 <style scoped>

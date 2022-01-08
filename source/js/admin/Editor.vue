@@ -71,7 +71,7 @@ export default {
   created() {
     this.debouncedWatch = debounce((newValue, oldValue) => {
       this.autosave();
-    }, 2000);
+    }, 3000);
   },
   beforeUnmount() {
     this.debouncedWatch.cancel();
@@ -129,16 +129,18 @@ export default {
       })
 
 
-      var content = JSON.stringify({
+      var content = {
         Images: images,
         Multilines: multilines,
         Repeaters: repeaters,
         Singlelines: singlelines
-      });
+      };
+
+
 
       this.content = content;
 
-      return content;
+      return JSON.stringify(content);
     }
   }
 }

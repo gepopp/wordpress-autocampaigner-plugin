@@ -4,7 +4,13 @@ namespace Autocampaigner\exceptions;
 
 use Autocampaigner\Options;
 
+
+
 class CmApiCallUnsuccsessfull extends \Exception {
+
+
+
+
 
 	use Options;
 
@@ -12,14 +18,17 @@ class CmApiCallUnsuccsessfull extends \Exception {
 
 	public function __construct( $result, $type, $body, $endpoint ) {
 
-//		$code    = wp_remote_retrieve_response_code( $result );
-//
-		parent::__construct( wp_remote_retrieve_body( $result ), $code, null );
+		$remote_body = json_decode( wp_remote_retrieve_body( $result ) );
 
-		$this->send_error_mail($result, $type, $body, $endpoint);
+		parent::__construct( wp_remote_retrieve_body( $result ), $remote_body->Code, null );
+
+		$this->send_error_mail( $result, $type, $remote_body, $endpoint, $body );
 
 
 	}
+
+
+
 
 
 	/**
@@ -30,16 +39,21 @@ class CmApiCallUnsuccsessfull extends \Exception {
 		return $this->message;
 	}
 
-	public function send_error_mail($result, $type, $body, $endpoint) {
+
+
+
+
+	public function send_error_mail( $result, $type, $body, $endpoint, $sent ) {
 
 		$subject = __( 'Autocampaigner Errror', 'autocampaigner' ) . ' - ' . $this->get_message();
 
-		$body  = print_r( $body, true );
-		$result = print_r( $result , true);
+		$body   = print_r( $body, true );
+		$result = print_r( $result, true );
+		$sent   = print_r( $sent, true );
 
-		$line = $this->getLine();
+		$line    = $this->getLine();
 		$message = $this->getMessage();
-		$file = $this->getFile();
+		$file    = $this->getFile();
 
 		$callstack = $this->getTraceAsString();
 
@@ -55,7 +69,7 @@ class CmApiCallUnsuccsessfull extends \Exception {
 	</code>
 </pre>
 
-<h3>Sent:</h3>
+<h3>Answer:</h3>
 <pre>
 	<code>
 		$body
@@ -65,6 +79,11 @@ class CmApiCallUnsuccsessfull extends \Exception {
 <pre>
 	<code>
 		$result
+	</code>
+</pre>
+<pre>
+	<code>
+		$sent
 	</code>
 </pre>
 EOM;

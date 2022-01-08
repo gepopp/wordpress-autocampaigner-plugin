@@ -8,7 +8,7 @@
 <script>
 export default {
   name: "Multiline",
-  props: ['text'],
+  props: {'text':{ type: String, default: ''}, 'meta': { type: String, default: ''}},
   data() {
     return {
       textEditable: this.text.trim(),
@@ -17,7 +17,7 @@ export default {
   },
   methods:{
     setFromPost(post){
-      this.textEditable = post;
+      this.textEditable = post[this.meta];
     },
     saveData(){
       return {

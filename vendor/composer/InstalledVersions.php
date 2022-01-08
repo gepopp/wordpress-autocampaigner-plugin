@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'be0a20f96e8833bc24f3f7305b9eff8285b0d67d',
+    'reference' => 'fc2f7e4f3060809d1fe6c141596d1c9a82fda0e1',
     'name' => 'gerha/autocampaigner',
   ),
   'versions' => 
@@ -51,7 +51,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'be0a20f96e8833bc24f3f7305b9eff8285b0d67d',
+      'reference' => 'fc2f7e4f3060809d1fe6c141596d1c9a82fda0e1',
     ),
     'nesbot/carbon' => 
     array (
@@ -70,6 +70,24 @@ private static $installed = array (
       array (
       ),
       'reference' => '6f981ee24cf69ee7ce9736146d1c57c2780598a8',
+    ),
+    'symfony/dom-crawler' => 
+    array (
+      'pretty_version' => 'v5.4.0',
+      'version' => '5.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '5b06626e940a3ad54e573511d64d4e00dc8d0fd8',
+    ),
+    'symfony/polyfill-ctype' => 
+    array (
+      'pretty_version' => 'v1.23.0',
+      'version' => '1.23.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '46cd95797e9df938fdd2b03693b5fca5e64b01ce',
     ),
     'symfony/polyfill-mbstring' => 
     array (

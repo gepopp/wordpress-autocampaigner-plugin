@@ -26,6 +26,7 @@
 <script>
 import Axios from "axios";
 import Qs from "qs";
+import debounce from "lodash.debounce";
 
 export default {
   name: "EditorLayout",
@@ -37,6 +38,7 @@ export default {
       default: 0
     },
     edit: false,
+    posts: [],
 
   },
   data() {
@@ -44,6 +46,7 @@ export default {
       multilines: [],
       images: [],
       singlelines: [],
+      relationships: [],
       search: '',
       searchresluts: []
     }
@@ -59,33 +62,28 @@ export default {
     this.singlelines = this.$children.filter(child => {
       return child.$options.name === "Singleline";
     })
+    this.singlelines = this.$children.filter(child => {
+      return child.$options.name === "Relationship";
+    })
   },
   methods: {
     setPost(postdata, postnumber) {
 
+
       var children = this.$children;
+      var chunklength = this.$children.length / this.holdsPost;
+
 
       var sliced = [];
-      for (let i = 0; i < children.length; i += 4) {
-        const chunk = children.slice(i, i + 4);
+      for (let i = 0; i < children.length; i += chunklength) {
+        const chunk = children.slice(i, i + chunklength);
         sliced.push(chunk);
       }
 
       sliced[postnumber - 1].forEach((child, index) => {
-
-        if (index == 0 || index == 3) {
           child.setFromPost(postdata)
-        }
-
-        if (index == 1) {
-          child.setFromPost(postdata.title)
-        }
-
-        if (index == 2) {
-          child.setFromPost(postdata.excerpt)
-        }
-
       })
+
       this.searchresluts = [];
       this.search = '';
     },
@@ -107,6 +105,7 @@ export default {
       var multilines = [];
       var singlelines = [];
       var images = [];
+      var relationships = [];
 
       this.images.forEach((image) => {
         images.push(image.saveData())
@@ -120,11 +119,19 @@ export default {
         singlelines.push(singleline.saveData())
       })
 
+      this.relationships.forEach((relation) => {
+        relation.push(relation.saveData())
+      })
+
+
+
+
       return {
         Layout: this.label,
         Multilines: multilines,
         Images: images,
-        Singlelines: singlelines
+        Singlelines: singlelines,
+        Relationships: relationships
       }
 
 

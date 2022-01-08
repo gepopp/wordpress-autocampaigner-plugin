@@ -24,19 +24,31 @@
 <script>
 export default {
   name: "Singleline",
-  props: ['text', 'link'],
+  props: {
+    'meta': {type: String, default: 'link'},
+    'text': {type: String, default: ''},
+    'link': {type: String, default: ''}
+  },
   data() {
     return {
       edit: false,
       editable: {
         text: this.text,
-        link: this.link
+        link: this.link,
+        meta: this.meta
       }
     }
   },
   methods: {
     setFromPost(post) {
       this.editable.link = post.permalink
+
+      Object.entries(post.meta).forEach(((entriy) => {
+        if (entriy[0] == this.editable.meta) {
+          this.editable.text = entriy[1];
+        }
+
+      }))
     },
     saveData() {
       return {

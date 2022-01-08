@@ -8,6 +8,7 @@
     ],
     "require": {
         "a7/autoload": "^2.1",
-        "nesbot/carbon": "^2.55"
+        "nesbot/carbon": "^2.55",
+        "symfony/dom-crawler": "^5.4"
     }
 }

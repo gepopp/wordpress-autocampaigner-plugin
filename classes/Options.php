@@ -209,6 +209,7 @@ trait Options {
 
 
 		$model = get_class( $this );
+
 		$model = explode( '\\', $model );
 
 		global $wpdb;

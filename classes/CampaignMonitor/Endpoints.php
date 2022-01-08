@@ -3,17 +3,9 @@
 namespace Autocampaigner\CampaignMonitor;
 
 
-use Autocampaigner\Options;
+class Endpoints {
 
 
-
-trait Endpoints {
-
-
-
-
-
-	use Options;
 
 
 
@@ -24,24 +16,20 @@ trait Endpoints {
 
 
 	protected $endpoints = [
-
+		'api'         => [
+			'test' => 'clients/{clientid}.json',
+		],
 		'list'        => [
 			'list'    => 'clients/{clientid}/lists.json',
 			'details' => 'lists/{listid}.json',
 			'stats'   => 'lists/{listid}/stats.json',
-		],
-		'template'    => [
-			'list'    => 'clients/{clientid}/templates.json',
-			'create'  => 'templates/{clientid}.json',
-			'update'  => 'templates/{templateid}.json',
-			'details' => 'templates/{templateid}.json',
 		],
 		'campaignapi' => [
 			'sent'       => 'clients/{clientid}/campaigns.json',
 			'drafts'     => 'clients/{clientid}/drafts.json',
 			'scheduled'  => 'clients/{clientid}/scheduled.json',
 			'send'       => 'campaigns/{campaignapiid}/send.json',
-			'create'     => 'campaigns/{clientid}/fromtemplate.json',
+			'create'     => 'campaigns/{clientid}.json',
 			'unschedule' => 'campaigns/{campaignapiid}/unschedule.json',
 			'preview'    => 'campaigns/{campaignapiid}/sendpreview.json',
 			'summary'    => 'campaigns/{campaignapiid}/summary.json',
@@ -56,23 +44,12 @@ trait Endpoints {
 
 
 	/**
-	 * @param $endpoint
-	 *
-	 * @return string
+	 * @return \string
 	 */
-	public function get_endpoint( $model, $endpoint, $api_endpint_id ) {
+	public function get_endpoints( $model, $endpoint ) {
 
-		$model = str_replace( 'model', '', $model );
-
-		$endpoint = $this->endpoint_base . $this->endpoints[ $model ][ $endpoint ];
-
-		$model .= 'id';
-
-		if ( str_contains( $endpoint, $model ) ) {
-			$endpoint = str_replace( "{{$model}}", $api_endpint_id, $endpoint );
-		}
-
-		return str_replace( '{clientid}', $this->get_client_id(), $endpoint );
-
+		return $this->endpoint_base . $this->endpoints[ $model ][ $endpoint ];
 	}
+
+
 }

@@ -8,11 +8,11 @@ trait Queries {
 
 
 
-	public function search_posts( $search, $post_type = 'post' ) {
+	public function search_posts( $search, $post_type = 'any' ) {
 
 
 		$query = new \WP_Query( [
-			'post_type'      => $post_type,
+			'post_type'      => $post_type, // for ir
 			'posts_per_page' => 10,
 			's'              => $search,
 		] );
@@ -28,6 +28,7 @@ trait Queries {
 					'title'     => get_the_title(),
 					'excerpt'   => get_the_excerpt(),
 					'permalink' => get_the_permalink(),
+					'meta'      => get_fields(get_the_ID())
 				];
 			}
 		}

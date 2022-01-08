@@ -1,0 +1,633 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"/>
+    <title>Die unabh&auml;ngige Immobilien Redaktion</title>
+    <style type="text/css">
+        body {
+            width: 100%;
+            background-color: #FFF;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            mso-margin-top-alt: 0px;
+            mso-margin-bottom-alt: 0px;
+            mso-padding-alt: 0px 0px 0px 0px;
+        }
+
+        p, h1, h2, h3, h4 {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        a {
+            color: #5c97d0 !important;
+            text-decoration: none !important;
+        }
+
+        span.preheader {
+            display: none;
+            font-size: 1px;
+        }
+
+        html {
+            width: 100%;
+        }
+
+        table {
+            font-size: 12px;
+            border: 0;
+        }
+
+        @media only screen and (max-width: 640px) {
+            body {
+                width: auto !important;
+            }
+
+            body[yahoo] .main {
+                width: 440px !important;
+            }
+
+            body[yahoo] .two-left {
+                width: 420px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .full {
+                width: 100% !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .alaine {
+                text-align: center;
+            }
+
+            body[yahoo] .menu-space {
+                padding-right: 0px;
+            }
+
+            body[yahoo] .banner {
+                width: 438px !important;
+            }
+
+            body[yahoo] .menu {
+                width: 438px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .date {
+                width: 438px !important;
+                margin: 0px auto;
+                text-align: center;
+            }
+
+            body[yahoo] .two-left-inner {
+                width: 400px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .menu-icon {
+                display: block;
+            }
+
+            body[yahoo] .two-left-menu {
+                text-align: center;
+            }
+        }
+
+        @media only screen and (max-width: 479px) {
+            body {
+                width: auto !important;
+            }
+
+            body[yahoo] .main {
+                width: 310px !important;
+            }
+
+            body[yahoo] .two-left {
+                width: 300px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .full {
+                width: 100% !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .alaine {
+                text-align: center;
+            }
+
+            body[yahoo] .menu-space {
+                padding-right: 0px;
+            }
+
+            body[yahoo] .banner {
+                width: 308px !important;
+            }
+
+            body[yahoo] .menu {
+                width: 308px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .date {
+                width: 308px !important;
+                margin: 0px auto;
+                text-align: center;
+            }
+
+            body[yahoo] .two-left-inner {
+                width: 280px !important;
+                margin: 0px auto;
+            }
+
+            body[yahoo] .menu-icon {
+                display: none;
+            }
+
+            body[yahoo] .two-left-menu {
+                width: 310px !important;
+                margin: 0px auto;
+            }
+        }
+    </style>
+</head>
+<body yahoo="fix" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background:#FFF;">
+    <tr>
+        <td align="center" valign="top">
+
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                            <tr>
+                                <td height="70" align="center" valign="top" style="line-height:70px;">&nbsp;</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <repeater>
+                <layout label="Logo">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td align="center" valign="top" style="border-top:none; border-bottom:none;">
+                                            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td align="left" valign="top">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" valign="top">
+                                                        <table border="0" align="center" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td align="center" valign="middle" width="200">
+                                                                    <img editable="true" src="./images/logo.png" width="200" style="display:block;"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td height="25" align="center" valign="top" style="line-height:25px;">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" valign="top" style="border-top:#e5e8e8 solid 1px;border-bottom:#e5e8e8 solid 1px;">
+                                                        <table width="300" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                            <tr>
+                                                                <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:14px; color:#717070; font-weight:bold; text-transform:uppercase; padding-top:4px;">
+                                                                    <a href="https://immobilien-redaktion.com" style="text-decoration:none;color:#717070;">HOME</a> &nbsp;&nbsp;
+                                                                    <a href="https://immobilien-redaktion.com/aktuelle_presse/" style="text-decoration:none;color:#717070;">AKTUELLES</a> &nbsp;&nbsp;
+                                                                    <a href="https://immobilien-redaktion.com/sehen-2/" style="text-decoration:none;color:#717070;">SEHEN</a> &nbsp;&nbsp;
+                                                                    <a href="https://immobilien-redaktion.com/live/" style="text-decoration:none;color:#717070;">LIVE</a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td height="20" align="center" valign="top" style="line-height:20px;">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+            </repeater>
+
+
+            <repeater>
+                <layout label="Header Banner">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main" style="border-bottom:#e5e8e8 solid 1px;">
+                                    <tr>
+                                        <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" valign="top" width="200">
+                                            <img editable="true" src="./images/banner.jpg" width="700" style="display:block;width:100% !important; height:auto !important;" size="LargeImage"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+            </repeater>
+
+            <repeater>
+                <layout label="Intro Heading">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td align="center" valign="top" style="border:none;">
+                                            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td height="50" colspan="3" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" align="left" valign="top">
+                                                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                            <tr>
+                                                                <td align="left" valign="top" style="
+                                                        font-family:Times, Times New Roman, serif;
+                                                        font-size:36px;
+                                                        color:#5c97d0;
+                                                        font-weight:bold;"
+                                                                >
+                                                                    <multiline>Die Woche auf der unabhängigen Immobilien Redaktion</multiline>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+                <layout label="Introtext">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main" style="border-bottom:#e5e8e8 solid 1px;">
+                                    <tr>
+                                        <td align="center" valign="top" style="border: none; border-top:none; border-bottom:none;">
+                                            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td height="30" colspan="3" align="center" valign="top" style="line-height:30px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" align="left" valign="top">
+                                                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                            <tr>
+                                                                <td colspan="2" align="left" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:16px; line-height:24px; color:#636260; text-align:justify; padding-left:2px;">
+                                                                    <multiline>
+                                                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, an unknown printer took a but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                                                    </multiline>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" height="50" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+
+                <layout label="Signature">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main" style="border-bottom:#e5e8e8 solid 1px;">
+                                    <tr>
+                                        <td align="center" valign="top" style="border: none; border-top:none; border-bottom:none;">
+                                            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td height="30" colspan="3" align="center" valign="top" style="line-height:30px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" align="left" valign="top">
+                                                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                            <tr>
+                                                                <td align="left" valign="top">
+                                                                    <img editable="true" src="./images/walter.png" width="150" alt="" size="thumbnail"/>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                    <table width="400" border="0" cellspacing="0" cellpadding="0">
+                                                                        <tr>
+                                                                            <td align="left" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:16px; line-height:30px; color:#2d2c2b; padding-top:8px;">
+                                                                                <multiline>Walter Senk</multiline>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#5c97d0;font-weight:normal;">
+                                                                                <multiline>Journalist, Blogger, Moderator</multiline>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td height="50" colspan="3" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+            </repeater>
+
+
+            <repeater>
+                <layout label="heading">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td height="50" colspan="3" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" valign="top" style="
+                                                        font-family:Times, Times New Roman, serif;
+                                                        font-size:36px;
+                                                        color:#5c97d0;
+                                                        font-weight:bold;
+                                                        text-align: center">
+                                            <multiline>Neueste Artikel</multiline>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="50" colspan="3" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+                <layout label="Large Post" fill="post" :holds-post="1" type="post">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td align="center" valign="top" style="border:none;">
+                                            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" fill="post">
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <img editable="true" src="./images/livestream.jpg" width="700" style="display:block;width:100% !important; height:auto !important;" size="LargeImage"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" align="left" valign="top">
+                                                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                            <tr>
+                                                                <td align="left" valign="top" style="
+                                                        font-family:Times, Times New Roman, serif;
+                                                        font-size:36px;
+                                                        color:#5c97d0;
+                                                        font-weight:bold;"
+                                                                >
+                                                                    <multiline>Die Woche auf der unabhängigen Immobilien Redaktion</multiline>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:16px; line-height:24px; color:#636260; text-align:justify; padding-left:2px;">
+                                                                    <multiline>
+                                                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, an unknown printer took a but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                                                    </multiline>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center" valign="top"
+                                                                    style="color:#5c97d0 !important;
+                                                                    font-family:Arial, Helvetica, sans-serif;
+                                                                    font-size:18px;
+                                                                    text-transform:uppercase;
+                                                                    padding:8px 0px;
+                                                                    text-decoration: none !important;
+                                                                    ">
+                                                                    <singleline>
+                                                                        jetzt lesen
+                                                                    </singleline>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+
+
+                <layout label="Two Post" :holds-post="2">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td colspan="3" height="50" align="center" valign="top" style="line-height:50px;">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="325" valign="top">
+                                            <table width="325" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left" fill="post">
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <img editable="true" src="./images/livestream.jpg" width="325" style="display:block;width:100% !important; height:auto !important;" size="SmallImage" size="SmallImage"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" valign="top" style="
+                                                        font-family:Times, Times New Roman, serif;
+                                                        font-size:18px;
+                                                        color:#5c97d0;
+                                                        font-weight:bold;"
+                                                    >
+                                                        <multiline>Die Woche auf der unabhängigen Immobilien Redaktion</multiline>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:16px; line-height:24px; color:#636260; text-align:justify; padding-left:2px;">
+                                                        <multiline>
+                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, an unknown printer took a but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                                        </multiline>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" valign="top" style="text-decoration: none !important;color:#5c97d0 !important; font-family:Arial, Helvetica, sans-serif; font-size:18px; text-transform:uppercase; padding:8px 0px;">
+                                                        <singleline>
+                                                            jetzt lesen
+                                                        </singleline>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td width="50" height="50" align="center" valign="top" style="line-height:50px;"></td>
+                                        <td width="325" valign="top">
+                                            <table width="325" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left" fill="post">
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <img editable="true" src="./images/livestream.jpg" width="325" style="display:block;width:100% !important; height:auto !important;" size="SmallImage"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" valign="top" style="
+                                                        font-family:Times, Times New Roman, serif;
+                                                        font-size:18px;
+                                                        color:#5c97d0;
+                                                        font-weight:bold;">
+                                                        <multiline>Die Woche auf der unabhängigen Immobilien Redaktion</multiline>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:16px; line-height:24px; color:#636260; text-align:justify; padding-left:2px;">
+                                                        <multiline>
+                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, an unknown printer took a but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                                        </multiline>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="18" align="center" valign="top" style="line-height:18px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" valign="top" style="text-decoration: none !important;color:#5c97d0 !important; font-family:Arial, Helvetica, sans-serif; font-size:18px; text-transform:uppercase; padding:8px 0px;">
+                                                        <singleline>
+                                                            jetzt lesen
+                                                        </singleline>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+            </repeater>
+
+            <repeater>
+                <layout label="Footer">
+                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                                <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                                    <tr>
+                                        <td align="left" valign="top" style="border: none; border-top:none; border-bottom:none;">
+                                            <table width="500" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left">
+                                                <tr>
+                                                    <td height="30" align="left" valign="top" style="line-height:30px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                            <tr>
+                                                                <td align="center" valign="top" style="font-family:Verdana, Geneva, sans-serif; font-size:12px; color:#636260;">
+                                                                    <multiline>Copyright &copy; Die unabh&auml;ngige Immobilien Redaktion. All Rights Reserved.</multiline>
+                                                                    <unsubscribe>Abmelden</unsubscribe>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left" valign="top">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" align="center" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td align="center" valign="top">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </layout>
+            </repeater>
+
+
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF" style="background:#FFF;">
+                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" class="main">
+                            <tr>
+                                <td align="center" valign="top">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="70" align="center" valign="top" style="line-height:70px;">&nbsp;</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

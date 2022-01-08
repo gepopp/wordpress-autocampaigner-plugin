@@ -2,7 +2,14 @@
 
 namespace Autocampaigner\Controller;
 
+
 class ListController extends BaseController {
+
+
+
+
+
+	public $listmodel;
 
 
 
@@ -10,15 +17,16 @@ class ListController extends BaseController {
 
 	public function list() {
 
+		$lists = $this->listmodel->all();
+
 		ob_start();
 		?>
         <subscriber-lists
-                :lists="<?php $this->model->as_html_attribute( 'list' ) ?>"
-                :used-lists-preload="<?php $this->model->as_html_attribute( 'get_used_lists' ) ?>"
+                :lists="<?php $this->as_html_attribute( $lists ) ?>"
+                :used-lists-preload="<?php $this->as_html_attribute( $this->listmodel->get_used_lists() ) ?>"
         ></subscriber-lists>
 		<?php
 		return ob_get_clean();
 	}
-
 
 }

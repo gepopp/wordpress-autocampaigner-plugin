@@ -7,6 +7,9 @@ use Autocampaigner\Options;
 
 
 
+/**
+ *
+ */
 abstract class BaseModel {
 
 
@@ -17,65 +20,36 @@ abstract class BaseModel {
 
 
 
-	public $id;
+	/**
+	 * @var bool|string|int $id
+	 */
+	private $id;
 
 
 
 
 
-	public function __construct( $id = false ) {
 
-		$this->id = $id;
-
-	}
-
-
-
-
-
-	public function get_id() {
-
-		return $this->id;
-	}
+	/**
+	 * loads data from API or db if id is given
+	 *
+	 *
+	 * @param null|string|int $id
+	 */
+	public function __construct( $id = null ) {
 
 
 
+		/**
+		 * @var bool|string|int $id
+		 */
+		if ( ! is_null( $id ) ) {
 
+			$this->id = $id;
 
-	public function __call( string $name, array $arguments ) {
+			$this->load();
+		}
 
-		$driver = $this->getDriver();
-
-		$model = get_class( $this );
-
-		$model = explode( '\\', $model );
-		$model = array_pop( $model );
-		$model = strtolower( str_replace( 'model', '', $model ) );
-
-		$endpoint = $driver->get_endpoint( $model, $name, $this->id );
-
-		return $driver->call( $endpoint, $arguments[0] ?? 'get', $arguments[1] ?? [] );
-
-	}
-
-
-
-
-
-	public function get_as_html_attribute( $function ) {
-
-		$result = $this->{$function}();
-
-		return htmlentities( json_encode( $result ) );
-	}
-
-
-
-
-
-	public function as_html_attribute( $function ) {
-
-		echo $this->get_as_html_attribute( $function );
 	}
 
 
@@ -83,14 +57,39 @@ abstract class BaseModel {
 
 
 	/**
-	 * @return mixed
+	 * refresh model data if id changes
+	 *
+	 * @param string $name
+	 * @param        $value
 	 */
-	protected function getDriver() {
+	public function __set( string $name, $value ): void {
 
-		$driver_name = 'Autocampaigner\\' . $this->get_driver() . '\\' . $this->get_driver();
-		$driver      = new $driver_name;
+		if ( $name == 'id' ) {
+			$this->id = $value;
+			$this->load();
 
-		return $driver;
+		}
 	}
+
+
+
+
+
+	/**
+	 * @param string $name
+	 */
+	public function __get( string $name ) {
+
+		if ( $name == 'id' ) {
+			return $this->id;
+		}
+	}
+
+
+
+
+
+
+
 
 }

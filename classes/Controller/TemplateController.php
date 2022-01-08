@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpHierarchyChecksInspection */
+<?php
 
 namespace Autocampaigner\Controller;
 
@@ -11,20 +11,27 @@ class TemplateController extends BaseController {
 
 
 
-    public TemplateModel $model;
+
+
+	public TemplateModel $templatemodel;
+
+
+
 
 
 
 	public function list() {
 
+
+		$all = $this->templatemodel->all();
+
 		ob_start();
 		?>
         <template-list
-                :exisitng="<?php $this->model->as_html_attribute( 'get_valid_template_folders' ) ?>"
-                :templates="<?php $this->model->as_html_attribute('list');  ?>"
+                :templates="<?php $this->as_html_attribute( $all ); ?>"
         ></template-list>
 		<?php
-
+        
 		return ob_get_clean();
 	}
 

@@ -13,6 +13,8 @@ import Singleline from "./admin/Singleline.vue";
 import ImageEditable from "./admin/ImageEditable.vue";
 import EditorRepeater from "./admin/EditorRepeater.vue";
 import EditorLayout from "./admin/EditorLayout.vue";
+import Relationship from "./admin/Relationship.vue";
+import Relation from "./admin/Relation.vue";
 import VueQuillEditor from 'vue-quill-editor'
 
 (function ($) {
@@ -58,11 +60,13 @@ Vue.component('repeater', EditorRepeater);
 
 Vue.component('layout', EditorLayout);
 
+Vue.component('relationship', Relationship);
+Vue.component('relation', Relation);
+
 Vue.use(VueQuillEditor, {
     theme: 'bubble', modules: {
         toolbar: [
             [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-            [{'header': [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
             [{ 'align': [] }],
             [{'header': 3}, {'header': 4}], // custom button values
