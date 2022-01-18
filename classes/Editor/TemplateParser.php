@@ -413,19 +413,20 @@ class TemplateParser {
 
 			for($i = 0; $i < count($singlelines); $i++){
 
-				if($post_table->getElementsByTagName( 'singleline' )->item( $i )->hasAttribute('meta')){
+				if($post_table->getElementsByTagName( 'singleline' )->item( $i )->hasAttribute('meta')
+				   && $post_table->getElementsByTagName( 'singleline' )->item( $i )->getAttribute('meta') !== 'link'){
 
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'text', get_post_meta( $post_id, $post_table->getElementsByTagName( 'singleline' )->item( $i )->getAttribute('meta'), true ) );
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'link', get_the_permalink( $post_id ) );
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'meta', $post_table->getElementsByTagName( 'singleline' )->item( $i )->getAttribute('meta') );
-					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
+//					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
 
 				}else{
 
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'link', get_the_permalink( $post_id ) );
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'meta', 'link' );
 					$post_table->getElementsByTagName( 'singleline' )->item( $i )->setAttribute( 'text', trim( $post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent ) );
-					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
+//					$post_table->getElementsByTagName( 'singleline' )->item( $i )->textContent = '';
 				}
 
 			}
